@@ -24,6 +24,13 @@ Responsibility:
 - Test one hypothesis only.
 - Include observable failure and success signals.
 
+Prototype-hypothesis rules (inlined because Gemini does not auto-load skills):
+- Output exactly three sections: 1. Hypothesis, 2. Failure Signal, 3. Success Signal.
+- Absolute cap: 1 page or about 80 lines.
+- Hypothesis length: 1-3 sentences.
+- One cycle tests one hypothesis only. Treat "and", "also", "while also", and stacked-bullet hypotheses as suspicious unless they describe one testable claim.
+- Failure and success signals must be observable during a prototype run.
+
 Block multiple hypotheses in one cycle, large rulesets that imply production design, new detail docs, and automatic calls to `prototype_coder` without user confirmation.
 
-Completion: `hypothesis.md` has Hypothesis, Failure Signal, and Success Signal; the hypothesis is observable in play or a small prototype; and the user is asked to confirm build type.
+Completion: `hypothesis.md` has Hypothesis, Failure Signal, and Success Signal; the hypothesis is observable in a small prototype; default build type is Python and the user is asked only if HTML is wanted instead.

@@ -5,6 +5,8 @@ tools: Read, Glob, Grep, Write, Edit
 model: inherit
 permissionMode: auto
 maxTurns: 12
+skills:
+  - pitch-one-pager
 ---
 
 You are the `concept_interviewer` subagent for the v2 game-design harness.

@@ -224,13 +224,6 @@
 - **산출**: `docs/game/details/<slug>.md` (1-2p)
 - **추가 시점**: Stage 4 진입 시 (= VS 완료 후)
 
-#### `paper_proto_designer`
-- **단계**: Stage 2
-- **목적**: 종이 프로토타입 룰 시트 + 인쇄용 카드 PDF 설계
-- **입력**: hypothesis + 룰셋
-- **산출**: 인쇄용 PDF + 룰 시트 마크다운
-- **추가 시점**: 카드/보드/턴제 장르 게임 시
-
 #### `kill_arbiter`
 - **단계**: Cross-stage
 - **목적**: 각 단계 kill 조건 자동 검증, 사용자에게 kill 권고
@@ -276,12 +269,6 @@
   - 메타 섹션 금지
 - **추가 시점**: Stage 4 진입 시
 
-#### `paper-prototype`
-- **단계**: Stage 2
-- **목적**: 종이 프로토타입 카드/룰 시트 표준 형식
-- **강제 제약**: 인쇄용 표준 카드 크기, 룰 1페이지 캡
-- **추가 시점**: 카드/보드 게임 진행 시
-
 #### `kill-criteria`
 - **단계**: Cross-stage
 - **목적**: 각 단계의 kill 조건 명시 + 자동 검증
@@ -309,6 +296,7 @@
 **에이전트**:
 - `concept_reviewer`, `risk_extractor` (간단한 검증은 사람이)
 - `killed_recorder` (`learnings_accumulator`로 통합 가능)
+- `paper_proto_designer` (1인 개발에서 종이 프로토타입은 효용이 낮음 — 코드 프로토타입으로 일원화)
 - `tech_spike_runner`, `vs_builder`, `playtest_coordinator` (제작 활동 자체이지 자동화 대상 아님)
 - `detail_reviewer` (`decision_recorder`로 통합 가능)
 - `content_pipeline`, `balance_tuner`, `playtest_aggregator` (Stage 5 양산 시)
@@ -318,6 +306,7 @@
 - `concept-gate`, `pillars-vocabulary` (사람이 채우면 됨)
 - `risk-to-hypothesis` (`prototype-hypothesis`로 통합 가능)
 - `dirty-code-html` (Python으로 충분한 경우 다수)
+- `paper-prototype` (1인 개발에서 종이 경로 제거에 따라 사용 안 함)
 - `cycle-review-criteria`, `learnings-format` (자유 형식 허용)
 - `architecture-vs-scope`, `vs-spec-template`, `vs-only-validator`, `scope-estimate-method` (Stage 3 진입 시 결정)
 - `content-batch-generation`, `telemetry-analysis`, `playtest-aggregation` (Stage 5 시)
@@ -332,7 +321,7 @@
 |---|---|---|---|
 | **Tier 1 (필수)** | 6 | 5 | **11** |
 | **Tier 2 (1차 확장)** | 5 | 3 | **19** |
-| **Tier 3 (필요시)** | 7 | 6 | **32** |
+| **Tier 3 (필요시)** | 6 | 5 | **30** |
 
 **시작은 11개.** Tier 3 항목들은 *실제로 막힐 때만* 추가하세요. 만들어 놓고 안 쓰는 컴포넌트가 생기면 그건 명세가 틀린 신호이고, 명세를 수정합니다.
 

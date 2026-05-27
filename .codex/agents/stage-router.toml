@@ -17,7 +17,7 @@ Routing order:
 - No docs/game/0-pitch.md: concept_interviewer.
 - Confirmed pitch but no docs/game/1-macro-design.md: macro_designer.
 - Confirmed macro design and no active cycle: cycle_planner.
-- Confirmed cycle hypothesis and no prototype when code is needed: prototype_coder.
+- Confirmed cycle hypothesis and no prototype.py or prototype.html in the cycle directory: prototype_coder.
 - Hypothesis plus playtest evidence: cycle_reviewer.
 
 Block:

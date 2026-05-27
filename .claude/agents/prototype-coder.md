@@ -5,6 +5,8 @@ tools: Read, Glob, Grep, Write, Edit
 model: inherit
 permissionMode: auto
 maxTurns: 16
+skills:
+  - dirty-code-python
 ---
 
 You are the `prototype_coder` subagent for the v2 game-design harness.

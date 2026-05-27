@@ -23,6 +23,6 @@ Block:
 
 Completion:
 - hypothesis.md has Hypothesis, Failure Signal, and Success Signal.
-- The hypothesis is observable in play or a small prototype.
-- Ask the user to confirm build type: paper, Python, or HTML.
+- The hypothesis is observable in a small prototype.
+- Default build type is Python. Ask the user only if they want HTML instead (e.g., to share a link with a friend).
 """

@@ -47,8 +47,24 @@ Every harness agent, skill, or generated prompt must preserve these rules:
 - Claude Code subagents: `.claude/agents/<agent>.md`.
 - Gemini CLI subagents: `.gemini/agents/<agent>.md`.
 - Codex repo skills: `.agents/skills/<skill-name>/SKILL.md`.
+- Claude Code repo skills: `.claude/skills/<skill-name>/SKILL.md`. Same Agent Skills format as Codex.
 
 Do not place all providers into one file. Each tool discovers its own directory and schema.
+
+## Skill Distribution Across Providers
+
+Skills are an open standard but each provider discovers them in different paths and has different auto-load rules. When you add or modify a Tier 1/2/3 skill, distribute it the same way every time:
+
+1. **Author once under `.agents/skills/<name>/SKILL.md`** as the canonical source.
+2. **Codex**: nothing more to do. Codex scans `.agents/skills/` automatically.
+3. **Claude Code**: create `.claude/skills/<name>` as a symlink to `../../.agents/skills/<name>` so both providers share one source. Then add the skill to the relevant subagent's `skills:` frontmatter so its content preloads at startup.
+4. **Gemini CLI**: Gemini has no skill auto-loading mechanism. Inline the skill's hard rules into each Gemini agent body under a `<skill-name> rules (inlined because Gemini does not auto-load skills):` block. Keep it tight — the harness anti-encyclopedia principle still applies.
+
+Verification after adding a new skill:
+
+- `ls .claude/skills/<name>/SKILL.md` resolves through the symlink.
+- The Claude subagent frontmatter lists the skill under `skills:`.
+- The corresponding Gemini agent body contains the inlined rules.
 
 ## Authoring Contract
 

@@ -193,7 +193,7 @@ flowchart TD
 |---|---|---|---|---|
 | **0** | 컨셉 정의 | `pitch.md` | 1p | 만들 가치 있나? |
 | **1** | 게임 형태 정의 | `macro-design.md` | 5p | 무엇을 검증할까? |
-| **2** | 재미 검증 | `cycle-NN.md` × N + 프로토타입들 | 1~2p/사이클 | 재미가 있나? |
+| **2** | 재미 검증 | `cycle-NN.md` × N + 프로토타입들 | 1p/사이클 | 재미가 있나? |
 | **3** | 제작 가능성 증명 | 플레이 가능한 vertical slice | 빌드 + 25-30p 문서 | 만들 수 있나? |
 | **4** | 검증된 결정 기록 | `details/*.md` (얇음) | 1-2p/시스템 | 무엇이 결정됐나? |
 | **5** | 나머지 양산 | 본 게임 | — | 출시 |
@@ -306,7 +306,7 @@ AI가 코드를 빨리 만들어주면 인간은 자연스럽게 *코드를 더 
 ```
 
 **(2) Build (반나절~3일)**
-종이든 AI 코드든, *가설만 검증할 수 있는 최소 셋업*. 다른 기능 추가 금지.
+AI 코드 프로토타입으로 *가설만 검증할 수 있는 최소 셋업*. 다른 기능 추가 금지.
 
 **(3) Play (1~3시간)**
 본인 + 가능하면 1-2명 외부. 최소 5판. *플레이 중 룰 변경 금지* (관측 오염).
@@ -326,21 +326,11 @@ Decision for next cycle:
 - 후보 효과를 같은 턴 대비 같은 기댓값으로 재조정
 ```
 
-#### 종이 vs AI 코드 — 언제 무엇을 쓰나
+#### 프로토타입 = AI 코드 (1인 개발 기준)
 
-**종이가 빠른 경우**:
-- 룰 자체가 미정
-- 매 판 효과를 바꾸고 싶을 때
-- 엣지 케이스 발견
-- 한 판이 15분 이하
+1인 개발에서는 종이 프로토타입의 외부 플레이어 마찰이 코드 프로토타입보다 큽니다. 이 하네스는 모든 사이클을 **단일 파일 Python(또는 HTML) 코드**로 진행합니다.
 
-**AI 코드가 빠른 경우**:
-- 룰은 안정, 수치 튜닝
-- 50판+ 반복 필요
-- 랜덤성/절차적 생성 검증
-- 통계가 필요한 질문
-
-일반적으로 *Cycle 1-2는 종이, Cycle 3+는 AI 코드*가 자연스러운 분기입니다.
+종이가 더 빠른 좁은 케이스(카드 텍스트 밸런스, 보드 공간감)는 스프레드시트나 핀터레스트 모드보드 같은 *별도 도구*로 처리하고, 하네스의 1급 경로로는 두지 않습니다.
 
 #### AI 코드 프로토타입의 함정 — 명시적으로 막아야 할 것
 
@@ -366,10 +356,10 @@ AI가 코드를 빨리 만들수록 매몰비용 함정도 빨리 옵니다.
 
 ```
 prototypes/
-  cycle-01-<topic>/        ← 종이, 사진만
-  cycle-02-<topic>/        ← 종이
-  cycle-03-<topic>/        ← Python, 자기완결
-  cycle-04-<topic>/        ← Python, cycle-03 코드 참조 금지
+  cycle-01-<topic>/        ← Python, 자기완결
+  cycle-02-<topic>/        ← Python, cycle-01 코드 참조 금지
+  cycle-03-<topic>/        ← Python
+  cycle-04-<topic>/        ← Python
   cycle-05-<topic>/        ← Python
   cycle-06-<topic>/        ← Python
   learnings.md             ← 모든 사이클의 결론 누적
@@ -587,7 +577,6 @@ Cross-stage Agents (단계 무관 게이트키퍼)
 |---|---|---|---|
 | `cycle_planner` | 다음 사이클의 가설/룰셋 설계 | `cycle-plan.md` + 이전 `learnings.md` | `cycle-NN-hypothesis.md` |
 | `prototype_coder` | 더러운 코드로 프로토타입 생성 | hypothesis + 룰셋 | 단일 파일 코드 (Python/HTML) |
-| `paper_proto_designer` | 종이 프로토타입 설계 | hypothesis + 룰셋 | 인쇄용 PDF + 룰 시트 |
 | `playtest_recorder` | 플레이 후 사실/해석 분리 인터뷰 | 사용자 플레이 메모 | `cycle-NN-playtest.md` |
 | `cycle_reviewer` | 사이클 종료 시 진행/재시도/회귀/Kill 결정 | playtest log | 의사결정 권고 (사용자 confirm) |
 | `learnings_accumulator` | 결론을 `learnings.md`로 누적 | cycle 결과 | `learnings.md` 갱신 |
@@ -690,7 +679,6 @@ Cross-stage Agents (단계 무관 게이트키퍼)
 | `prototype-hypothesis` | 1 사이클 = 1 가설. 실패/성공 신호 명시 강제 |
 | `dirty-code-python` | Python 단일 파일, 200줄 캡, 타입힌트/docstring 금지 |
 | `dirty-code-html` | 단일 HTML, 인라인 JS, 200줄 캡 |
-| `paper-prototype` | 종이 프로토타입 룰 시트 형식 + 인쇄용 카드 템플릿 |
 | `playtest-log-template` | Facts / Interpretations / Decisions 분리 강제 |
 | `cycle-isolation` | 이전 사이클 코드 import 금지 검증 |
 | `cycle-review-criteria` | 다음 행동(진행/재시도/회귀/Kill) 결정 기준 |
@@ -742,7 +730,6 @@ Cross-stage Agents (단계 무관 게이트키퍼)
 | `macro_designer` | `macro-design-5p` | `forbidden-in-macro`, `pillars-vocabulary` |
 | `cycle_planner` | `prototype-hypothesis` | `risk-to-hypothesis` |
 | `prototype_coder` | `dirty-code-python` / `dirty-code-html` | `cycle-isolation` |
-| `paper_proto_designer` | `paper-prototype` | — |
 | `playtest_recorder` | `playtest-log-template` | — |
 | `cycle_reviewer` | `cycle-review-criteria` | `kill-criteria` |
 | `tech_decider` | `tech-decision-template` | — |
@@ -774,40 +761,38 @@ my-game/
 │   │   └── details/                # Stage 4 (얇은 detail docs)
 │   │       └── *.md                # 각 1-2p
 │   │
-│   ├── prototypes/                 # Stage 2 산출물
-│   │   ├── cycle-01-<topic>/
-│   │   │   ├── hypothesis.md
-│   │   │   ├── rules.md
-│   │   │   ├── prototype.py        # 또는 .html / 종이 사진
-│   │   │   └── playtest.md
-│   │   ├── cycle-02-<topic>/
-│   │   ├── ...
-│   │   ├── learnings.md            # 모든 사이클 학습 누적
-│   │   ├── killed-hypotheses.md    # 죽은 가설들
-│   │   └── assumptions.md          # 미검증 가정 격리
-│   │
 │   └── decisions/
 │       └── stage-transitions.md    # 단계 전환 이력
 │
 ├── .agents/
-│   ├── skills/                     # 위 §8의 스킬들
-│   │   ├── pitch-one-pager/
-│   │   ├── macro-design-5p/
-│   │   ├── prototype-hypothesis/
-│   │   ├── dirty-code-python/
-│   │   └── ...
-│   │
-│   └── definitions/                # 에이전트 정의 (Codex/Claude Code 등)
-│       ├── stage-0/
-│       │   └── concept_interviewer.toml
-│       ├── stage-1/
-│       ├── stage-2/
-│       └── ...
+│   └── skills/                     # 위 §8의 스킬들 (Codex)
+│       ├── pitch-one-pager/
+│       ├── macro-design-5p/
+│       ├── forbidden-in-macro/
+│       ├── prototype-hypothesis/
+│       └── dirty-code-python/
 │
-├── prototypes/                     # 실제 프로토타입 코드 (Stage 2)
-│   ├── cycle-03-<topic>/
-│   │   └── main.py
-│   └── ...
+├── .claude/
+│   ├── agents/                     # Claude Code 서브에이전트 (kebab-case)
+│   └── skills/                     # .agents/skills/로 심볼릭 링크
+│
+├── .codex/
+│   ├── agents/                     # Codex 서브에이전트 (snake_case .toml)
+│   └── config.toml
+│
+├── .gemini/
+│   └── agents/                     # Gemini CLI 서브에이전트
+│
+├── prototypes/                     # Stage 2 산출물 (docs + 코드 한 디렉터리)
+│   ├── cycle-01-<topic>/
+│   │   ├── hypothesis.md
+│   │   ├── prototype.py            # 또는 .html (단일 파일, 200줄 캡)
+│   │   └── playtest.md
+│   ├── cycle-02-<topic>/
+│   ├── ...
+│   ├── learnings.md                # 모든 사이클 학습 누적
+│   ├── killed-hypotheses.md        # 죽은 가설들
+│   └── assumptions.md              # 미검증 가정 격리
 │
 └── game/                           # 본 게임 코드 (Stage 3+)
     └── ...

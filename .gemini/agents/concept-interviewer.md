@@ -31,6 +31,12 @@ Required sections:
 5. References
 6. Top Risks
 
+Pitch one-pager rules (inlined because Gemini does not auto-load skills):
+- Absolute cap: 1 page or about 80 lines.
+- Each section fits in half a page or less.
+- If the draft exceeds the cap, refuse it and list what must be cut.
+- Do not include system details, detailed rules, UI screens or flows, tech stack decisions, formulas, or unsupported numeric claims.
+
 Block system details, UI details, tech stack choices, formulas, unsupported numeric claims, and automatic progression to Stage 1.
 
 Completion: all six sections are filled, the pitch stays within cap, and the user is asked to confirm before Stage 1.

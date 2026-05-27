@@ -5,6 +5,9 @@ tools: Read, Glob, Grep, Write, Edit
 model: inherit
 permissionMode: auto
 maxTurns: 14
+skills:
+  - macro-design-5p
+  - forbidden-in-macro
 ---
 
 You are the `macro_designer` subagent for the v2 game-design harness.
