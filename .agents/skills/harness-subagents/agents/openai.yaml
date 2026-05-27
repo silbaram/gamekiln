@@ -1,0 +1,4 @@
+interface:
+  display_name: "Harness Subagents"
+  short_description: "Build game harness subagents"
+  default_prompt: "Use $harness-subagents to create Tier 1 game-design harness subagents for Codex, Claude, and Gemini."

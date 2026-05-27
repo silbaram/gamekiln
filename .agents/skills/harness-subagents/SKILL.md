@@ -1,0 +1,78 @@
+---
+name: harness-subagents
+description: Use when creating, updating, or reviewing v2 game-design harness subagents or supporting skills for Codex, Claude Code, or Gemini CLI. Enforces the plans' philosophy: short staged documents, kill gates, throwaway prototypes, source-backed numbers, and provider-specific agent file formats.
+---
+
+# Harness Subagents
+
+Use this skill to author the AI game-design harness agents and skills described in `plans/`.
+
+## Required Sources
+
+Read these before writing or changing harness agents:
+
+- `plans/game-design-harness-v2.md` for the philosophy, stages, gates, output caps, and anti-encyclopedia rules.
+- `plans/agents-skills-spec.md` for the Tier 1/2/3 agent and skill roster.
+- `references/provider-formats.md` before writing Codex, Claude Code, or Gemini CLI files.
+
+Use the plan files as source of truth. Do not duplicate the whole plan into generated agents.
+
+## Non-Negotiables
+
+Every harness agent, skill, or generated prompt must preserve these rules:
+
+- Documents record decisions; they do not predict a complete game up front.
+- Every stage decides proceed, retry, regress, or kill. Never auto-advance without user confirmation.
+- Stage 2 prototype code is intentionally disposable. Keep it small, single-purpose, and separate from production code.
+- Enforce the caps from the plans: pitch 1 page, macro design 5 pages, prototype hypothesis 1 hypothesis per cycle, detail docs 1-2 pages per system.
+- Numeric values, formulas, tables, and balance claims need either observed playtest/prototype evidence or an explicitly named reference game/source.
+- Stage 4 detail docs are only written after a vertical slice proves the relevant decision.
+- Prefer Tier 1 only unless the user explicitly asks for a Tier 2/3 component or the project is already blocked at that point.
+
+## Workflow
+
+1. Identify target provider(s): `codex`, `claude`, `gemini`, or all three. If unspecified, create provider-neutral guidance and ask before writing provider files.
+2. Identify the smallest useful tier. Default to Tier 1: `concept_interviewer`, `macro_designer`, `cycle_planner`, `prototype_coder`, `cycle_reviewer`, and `stage_router`.
+3. For each agent, write one responsibility only: stage, purpose, inputs, outputs, blocking rules, and completion condition.
+4. Convert names by provider:
+   - Internal harness id: keep plan names such as `concept_interviewer`.
+   - Codex agent `name`: keep snake_case.
+   - Claude/Gemini agent `name`: use lowercase kebab-case, such as `concept-interviewer`.
+5. Use the provider templates in `assets/templates/` when creating files. Adjust tool access narrowly instead of inheriting broad write permissions by default.
+6. After writing, validate frontmatter/TOML shape and scan for forbidden expansion: broad future specs, unverified numbers, automatic stage advancement, and Stage 4 details before Stage 3 evidence.
+
+## Provider Targets
+
+- Codex custom agents: `.codex/agents/<agent>.toml`; optional global settings in `.codex/config.toml`.
+- Claude Code subagents: `.claude/agents/<agent>.md`.
+- Gemini CLI subagents: `.gemini/agents/<agent>.md`.
+- Codex repo skills: `.agents/skills/<skill-name>/SKILL.md`.
+
+Do not place all providers into one file. Each tool discovers its own directory and schema.
+
+## Authoring Contract
+
+Every generated subagent must include:
+
+- Single responsibility and stage.
+- Trigger guidance in the description.
+- Required inputs and exact output path or response shape.
+- Explicit stop condition.
+- Blocking rules for the harness philosophy.
+- A user-confirm gate before stage transitions, kill decisions, or scope expansion.
+
+Avoid:
+
+- "This document decides / does not decide" meta sections in game docs.
+- Large explanatory essays inside agent prompts.
+- Tier 3 components created in advance.
+- Provider-specific fields invented from memory. Check `references/provider-formats.md` first.
+
+## Final Response Shape
+
+When this skill is used, report:
+
+- Files created or updated.
+- Provider docs consulted.
+- Tier coverage.
+- Any skipped agents or skills and why.
