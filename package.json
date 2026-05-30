@@ -1,0 +1,31 @@
+{
+  "name": "create-gamekiln",
+  "version": "0.1.0",
+  "description": "Create a new project with the Game Design Harness v2 Tier 1 scaffold.",
+  "type": "commonjs",
+  "bin": {
+    "create-gamekiln": "bin/create-gamekiln.js"
+  },
+  "files": [
+    "bin/",
+    "AGENTS.md",
+    "CLAUDE.md",
+    "GEMINI.md",
+    ".agents/skills/",
+    ".codex/",
+    ".claude/agents/",
+    ".gemini/agents/",
+    "docs/harness/",
+    "docs/decisions/.gitkeep",
+    "docs/game/details/.gitkeep",
+    "game/.gitkeep",
+    "prototypes/learnings.md",
+    "prototypes/killed-hypotheses.md"
+  ],
+  "scripts": {
+    "smoke": "node bin/create-gamekiln.js /private/tmp/gamekiln-smoke"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
