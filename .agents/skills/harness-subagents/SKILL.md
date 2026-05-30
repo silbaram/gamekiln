@@ -1,21 +1,21 @@
 ---
 name: harness-subagents
-description: Use when creating, updating, or reviewing v2 game-design harness subagents or supporting skills for Codex, Claude Code, or Gemini CLI. Enforces the plans' philosophy: short staged documents, kill gates, throwaway prototypes, source-backed numbers, and provider-specific agent file formats.
+description: "Use when creating, updating, or reviewing v2 game-design harness subagents or supporting skills for Codex, Claude Code, or Gemini CLI. Enforces the harness reference docs' philosophy: short staged documents, kill gates, throwaway prototypes, source-backed numbers, and provider-specific agent file formats."
 ---
 
 # Harness Subagents
 
-Use this skill to author the AI game-design harness agents and skills described in `plans/`.
+Use this skill to author the AI game-design harness agents and skills described in `docs/harness/`.
 
 ## Required Sources
 
 Read these before writing or changing harness agents:
 
-- `plans/game-design-harness-v2.md` for the philosophy, stages, gates, output caps, and anti-encyclopedia rules.
-- `plans/agents-skills-spec.md` for the Tier 1/2/3 agent and skill roster.
+- `docs/harness/design-guide.md` for the philosophy, stages, gates, output caps, and anti-encyclopedia rules.
+- `docs/harness/agents-skills-spec.md` for the Tier 1/2/3 agent and skill roster.
 - `references/provider-formats.md` before writing Codex, Claude Code, or Gemini CLI files.
 
-Use the plan files as source of truth. Do not duplicate the whole plan into generated agents.
+Use the harness reference docs as source of truth for authoring. Do not duplicate the whole reference docs into generated agents.
 
 ## Non-Negotiables
 
@@ -24,10 +24,11 @@ Every harness agent, skill, or generated prompt must preserve these rules:
 - Documents record decisions; they do not predict a complete game up front.
 - Every stage decides proceed, retry, regress, or kill. Never auto-advance without user confirmation.
 - Stage 2 prototype code is intentionally disposable. Keep it small, single-purpose, and separate from production code.
-- Enforce the caps from the plans: pitch 1 page, macro design 5 pages, prototype hypothesis 1 hypothesis per cycle, detail docs 1-2 pages per system.
+- Enforce the caps from the harness reference docs: pitch 1 page, macro design 5 pages, prototype hypothesis 1 hypothesis per cycle, detail docs 1-2 pages per system.
 - Numeric values, formulas, tables, and balance claims need either observed playtest/prototype evidence or an explicitly named reference game/source.
 - Stage 4 detail docs are only written after a vertical slice proves the relevant decision.
 - Prefer Tier 1 only unless the user explicitly asks for a Tier 2/3 component or the project is already blocked at that point.
+- Ordinary runtime agents should not require reading `docs/harness/`. Put the necessary behavior in AGENTS.md, the relevant SKILL.md files, or the agent body.
 
 ## Workflow
 
@@ -35,7 +36,7 @@ Every harness agent, skill, or generated prompt must preserve these rules:
 2. Identify the smallest useful tier. Default to Tier 1: `concept_interviewer`, `macro_designer`, `cycle_planner`, `prototype_coder`, `cycle_reviewer`, and `stage_router`.
 3. For each agent, write one responsibility only: stage, purpose, inputs, outputs, blocking rules, and completion condition.
 4. Convert names by provider:
-   - Internal harness id: keep plan names such as `concept_interviewer`.
+   - Internal harness id: keep harness ids such as `concept_interviewer`.
    - Codex agent `name`: keep snake_case.
    - Claude/Gemini agent `name`: use lowercase kebab-case, such as `concept-interviewer`.
 5. Use the provider templates in `assets/templates/` when creating files. Adjust tool access narrowly instead of inheriting broad write permissions by default.

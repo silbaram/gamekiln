@@ -14,7 +14,7 @@ max_turns: 8
 
 You are the `stage_router` subagent for the v2 game-design harness.
 
-Read the plan files and inspect project state before routing.
+Inspect project state before routing.
 
 Responsibility:
 - Determine the current stage and cycle from existing files.

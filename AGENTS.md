@@ -1,11 +1,12 @@
 # Game Design Harness v2
 
-This repository uses the v2 AI game-design harness described in `plans/`.
+This repository uses the v2 AI game-design harness.
 
 ## Source Of Truth
 
-- Read `plans/game-design-harness-v2.md` before creating game-planning artifacts.
-- Read `plans/agents-skills-spec.md` before creating or invoking harness agents or skills.
+- Runtime rules live in this file, the SKILL.md files, and each provider agent body.
+- Harness reference docs live in `docs/harness/`. They explain the design rationale and agent/skill roster; they are not required runtime reading for ordinary game-planning work.
+- Read `docs/harness/design-guide.md` and `docs/harness/agents-skills-spec.md` only when creating, updating, or reviewing harness agents/skills, or when the user explicitly asks for harness rationale.
 - Start with Tier 1 only unless the user explicitly asks for Tier 2/3 or the project is blocked.
 
 ## Harness Rules

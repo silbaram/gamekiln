@@ -1,6 +1,8 @@
 # Game Design Harness v2
 
-Follow `AGENTS.md` and the planning documents under `plans/` for all game-design harness work.
+Follow `AGENTS.md` for game-design harness runtime rules.
+
+`docs/harness/` contains harness reference material. Consult it only when creating, updating, or reviewing harness agents/skills, or when the user asks for harness rationale.
 
 Key constraints:
 - Start with Tier 1 components only unless asked otherwise.
