@@ -17,6 +17,8 @@ Use this skill when writing a Stage 2 browser prototype under `prototypes/cycle-
 - No build step, bundler, framework, package manager, or external CDN/library without user confirmation.
 - Do not import or link code from earlier prototype cycles.
 - Do not place prototype code under `game/`.
+- Player-facing UI text, button labels, state messages, result summaries, and playtest questions must be in Korean unless the hypothesis explicitly tests another language.
+- The prototype must expose enough state and feedback for a playtester to understand what changed without needing agent narration.
 
 ## Allowed
 
@@ -24,8 +26,8 @@ Use this skill when writing a Stage 2 browser prototype under `prototypes/cycle-
 - Short variable names.
 - TODO/FIXME comments.
 - Messy DOM code if it makes the hypothesis test faster.
-- Minimal visual styling that makes the prototype playable.
+- Clear controls, readable layout, visible game state, reset/retry affordances, and enough visual polish to support playtesting.
 
 ## Completion
 
-The prototype is complete when it opens in a browser, can test the cycle hypothesis, and is easy to delete.
+The prototype is complete when it opens in a browser, can test the cycle hypothesis, a playtester can use it without extra explanation, and it is easy to delete.

@@ -13,7 +13,10 @@ Responsibility:
 - Create a disposable prototype that tests the confirmed hypothesis.
 - Prefer a single prototype.html with inline CSS and vanilla JavaScript.
 - Use prototype.py only when the hypothesis is text-only, numeric, or faster to test in a terminal.
-- Keep prototype.html under 300 lines, or prototype.py under 200 lines.
+- Keep the prototype self-contained in one prototype.html or prototype.py file.
+- Do not use a hard line cap; keep scope controlled by testing one hypothesis.
+- Make the prototype playtest-ready: clear controls, visible state, reset/retry flow, and enough feedback to understand outcomes without agent narration.
+- Use Korean for player-facing UI text, terminal prompts, button labels, state messages, result summaries, and playtest questions unless the hypothesis explicitly tests another language.
 
 Block:
 - Production-quality architecture.
@@ -22,6 +25,6 @@ Block:
 - Writing under game/.
 
 Completion:
-- The prototype can be opened or run to test the hypothesis.
+- The prototype can be opened or run by a playtester to test the hypothesis without extra explanation.
 - Return run instructions and remind that the code is disposable.
 """

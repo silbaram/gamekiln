@@ -137,7 +137,7 @@ Cerny가 명시적으로 부정하는 신화들:
 - prototype spec: 1페이지/사이클
 - detail doc: 2페이지/시스템
 
-스킬에 line count 검사를 박아 초과 시 작성 거부.
+문서에는 페이지 캡을 강제한다. 프로토타입 코드는 라인 수가 아니라 *한 가설, 한 파일, 의존성 없음, 프로덕션 구조 금지*로 스코프를 제한한다.
 
 ### 원칙 5: 수치/공식은 *관측됨* 또는 *레퍼런스 인용*만
 
@@ -340,7 +340,7 @@ AI가 코드를 빨리 만들수록 매몰비용 함정도 빨리 옵니다.
 | 함정 | 어떻게 막나 |
 |---|---|
 | ① 기능 다 넣고 싶은 충동 | 한 사이클 = 1 가설 = 1 기능 추가 강제 |
-| ② AI가 production-quality 코드 생성 | 스킬에 "HTML 300줄 이하 / Python 200줄 이하, 프레임워크/빌드 없음" 박기 |
+| ② AI가 production-quality 코드 생성 | 스킬에 "한 가설, 한 파일, 프레임워크/빌드 없음, 프로덕션 구조 금지" 박기 |
 | ③ 사이클 사이 코드 누적 | 각 사이클 별도 디렉터리, 이전 사이클 import 금지 |
 | ④ AI가 룰 모호함을 조용히 채움 | "룰에 명시 안 된 동작은 에러로 처리" 강제 |
 | ⑤ 본인만 플레이 | Cycle 2 이후 외부 플레이어 최소 1명 |
@@ -678,8 +678,8 @@ Cross-stage Agents (단계 무관 게이트키퍼)
 | 스킬 | 내용 |
 |---|---|
 | `prototype-hypothesis` | 1 사이클 = 1 가설. 실패/성공 신호 명시 강제 |
-| `dirty-code-html` | 단일 HTML, vanilla JS, 300줄 캡, 빌드/프레임워크 금지 |
-| `dirty-code-python` | Python 단일 파일, 200줄 캡, 타입힌트/docstring 금지 |
+| `dirty-code-html` | 단일 자기완결 HTML, vanilla JS, 한국어 UI, 빌드/프레임워크 금지 |
+| `dirty-code-python` | Python 단일 자기완결 파일, 한국어 터미널 문구, 타입힌트/docstring 금지 |
 | `playtest-log-template` | Facts / Interpretations / Decisions 분리 강제 |
 | `cycle-isolation` | 이전 사이클 코드 import 금지 검증 |
 | `cycle-review-criteria` | 다음 행동(진행/재시도/회귀/Kill) 결정 기준 |
@@ -792,8 +792,8 @@ my-game/
 ├── prototypes/                     # Stage 2 산출물 (docs + 코드 한 디렉터리)
 │   ├── cycle-01-<topic>/
 │   │   ├── hypothesis.md
-│   │   ├── prototype.html          # 기본: 단일 파일, 300줄 캡
-│   │   ├── prototype.py            # 선택: 텍스트/수치 중심일 때, 200줄 캡
+│   │   ├── prototype.html          # 기본: 단일 자기완결 파일
+│   │   ├── prototype.py            # 선택: 텍스트/수치 중심일 때
 │   │   └── playtest.md
 │   ├── cycle-02-<topic>/
 │   ├── ...
@@ -835,7 +835,7 @@ my-game/
 네. 코드가 좋을수록 버리기 어려워지고, 그게 정확히 문제예요. *프로토타입에서 검증된 결정*은 Stage 3에서 *새 코드*로 재구현됩니다. Slay the Spire 팀도 그렇게 했습니다.
 
 **Q3. AI에게 좋은 코드를 만들지 말라고 시키는 게 어색한데?**
-정확한 직관이에요. 이게 v2 하네스의 미묘한 핵심입니다. AI가 코드를 *너무 잘* 만들면 throwaway가 깨집니다. 그래서 스킬에 명시적으로 "200줄 캡, 타입 힌트 없음, docstring 없음" 같은 제약을 박아둡니다.
+정확한 직관이에요. 이게 v2 하네스의 미묘한 핵심입니다. AI가 코드를 *너무 잘 구조화*하면 throwaway가 깨집니다. 그래서 스킬에 명시적으로 "한 파일, 의존성 없음, 타입 힌트 없음, docstring 없음, 프로덕션 구조 금지" 같은 제약을 박아둡니다. 대신 플레이테스트 품질은 한국어 UI, 명확한 상태 피드백, 재시도 흐름으로 확보합니다.
 
 **Q4. 기획서 없이 프로토타입을 어떻게 만드나?**
 Stage 1의 5페이지 macro design이 *충분합니다*. 그것보다 더 많이 알아야 한다면 그건 Stage 2에서 *발견될* 정보예요. 미리 적으면 거의 항상 틀립니다.
