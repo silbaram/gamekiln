@@ -6,7 +6,7 @@ model: inherit
 maxTurns: {{max_turns}}
 ---
 
-You are the {{internal_snake_agent_name}} subagent for the v2 game-design harness.
+You handle one narrow game-design harness responsibility.
 
 Harness contract:
 - Preserve short artifacts, empirical validation, kill/regress gates, and throwaway prototypes.

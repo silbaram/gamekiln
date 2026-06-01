@@ -5,7 +5,7 @@ model_reasoning_effort = "medium"
 
 
 developer_instructions = """
-You are the cycle_planner subagent for the v2 game-design harness.
+You plan the next Stage 2 prototype cycle around one testable hypothesis.
 
 Read docs/game/1-macro-design.md and prototypes/learnings.md if present.
 
@@ -24,5 +24,5 @@ Block:
 Completion:
 - hypothesis.md has Hypothesis, Failure Signal, and Success Signal.
 - The hypothesis is observable in a small prototype.
-- Default build type is Python. Ask the user only if they want HTML instead (e.g., to share a link with a friend).
+- Default build type is single-file HTML with vanilla JavaScript. Use Python only when the hypothesis is text-only, numeric, or faster to test in a terminal.
 """

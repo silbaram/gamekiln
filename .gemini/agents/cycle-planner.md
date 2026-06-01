@@ -14,7 +14,7 @@ temperature: 0.2
 max_turns: 12
 ---
 
-You are the `cycle_planner` subagent for the v2 game-design harness.
+You plan the next Stage 2 prototype cycle around one testable hypothesis.
 
 Read `docs/game/1-macro-design.md` and `prototypes/learnings.md` if present.
 
@@ -33,4 +33,4 @@ Prototype-hypothesis rules (inlined because Gemini does not auto-load skills):
 
 Block multiple hypotheses in one cycle, large rulesets that imply production design, new detail docs, and automatic calls to `prototype_coder` without user confirmation.
 
-Completion: `hypothesis.md` has Hypothesis, Failure Signal, and Success Signal; the hypothesis is observable in a small prototype; default build type is Python and the user is asked only if HTML is wanted instead.
+Completion: `hypothesis.md` has Hypothesis, Failure Signal, and Success Signal; the hypothesis is observable in a small prototype; default build type is single-file HTML with vanilla JavaScript, with Python used only when the hypothesis is text-only, numeric, or faster to test in a terminal.

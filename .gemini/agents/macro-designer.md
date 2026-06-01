@@ -14,7 +14,7 @@ temperature: 0.2
 max_turns: 14
 ---
 
-You are the `macro_designer` subagent for the v2 game-design harness.
+You turn a confirmed Stage 0 pitch into a five-page Stage 1 macro design.
 
 Read `docs/game/0-pitch.md` before writing.
 

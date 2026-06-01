@@ -329,7 +329,7 @@ Decision for next cycle:
 
 #### 프로토타입 = AI 코드 (1인 개발 기준)
 
-1인 개발에서는 종이 프로토타입의 외부 플레이어 마찰이 코드 프로토타입보다 큽니다. 이 하네스는 모든 사이클을 **단일 파일 Python(또는 HTML) 코드**로 진행합니다.
+1인 개발에서는 종이 프로토타입의 외부 플레이어 마찰이 코드 프로토타입보다 큽니다. 이 하네스는 모든 사이클을 기본적으로 **단일 파일 HTML + vanilla JavaScript** 코드로 진행합니다. 텍스트/수치/터미널 중심 가설은 Python으로 더 빠를 때만 예외로 둡니다.
 
 종이가 더 빠른 좁은 케이스(카드 텍스트 밸런스, 보드 공간감)는 스프레드시트나 핀터레스트 모드보드 같은 *별도 도구*로 처리하고, 하네스의 1급 경로로는 두지 않습니다.
 
@@ -340,15 +340,15 @@ AI가 코드를 빨리 만들수록 매몰비용 함정도 빨리 옵니다.
 | 함정 | 어떻게 막나 |
 |---|---|
 | ① 기능 다 넣고 싶은 충동 | 한 사이클 = 1 가설 = 1 기능 추가 강제 |
-| ② AI가 production-quality 코드 생성 | 스킬에 "200줄 이하, 타입 힌트/docstring 없음, 클래스 5개 이하" 박기 |
+| ② AI가 production-quality 코드 생성 | 스킬에 "HTML 300줄 이하 / Python 200줄 이하, 프레임워크/빌드 없음" 박기 |
 | ③ 사이클 사이 코드 누적 | 각 사이클 별도 디렉터리, 이전 사이클 import 금지 |
 | ④ AI가 룰 모호함을 조용히 채움 | "룰에 명시 안 된 동작은 에러로 처리" 강제 |
 | ⑤ 본인만 플레이 | Cycle 2 이후 외부 플레이어 최소 1명 |
 
 #### 기술 스택 추천 (프로토타입 전용)
 
-- **Python + `input()`** — 터미널 인터랙션, 가장 빠름
-- **단일 HTML + 인라인 JS** — 브라우저 즉시 플레이, 친구에게 링크
+- **단일 HTML + 인라인 JS** — 브라우저 즉시 플레이, 조작/피드백/루프 체감 검증에 적합
+- **Python + `input()`** — 텍스트/수치/터미널 중심 가설이면 가장 빠름
 - ❌ TypeScript/Node — 빌드 셋업 비용 때문에 부적합
 
 본 게임이 어떤 스택이어도 **프로토타입은 다른 언어**로. 이게 throwaway를 강제하는 효과.
@@ -357,12 +357,12 @@ AI가 코드를 빨리 만들수록 매몰비용 함정도 빨리 옵니다.
 
 ```
 prototypes/
-  cycle-01-<topic>/        ← Python, 자기완결
-  cycle-02-<topic>/        ← Python, cycle-01 코드 참조 금지
-  cycle-03-<topic>/        ← Python
-  cycle-04-<topic>/        ← Python
-  cycle-05-<topic>/        ← Python
-  cycle-06-<topic>/        ← Python
+  cycle-01-<topic>/        ← HTML 기본, 자기완결
+  cycle-02-<topic>/        ← HTML 기본, cycle-01 코드 참조 금지
+  cycle-03-<topic>/        ← HTML 또는 Python
+  cycle-04-<topic>/        ← HTML 또는 Python
+  cycle-05-<topic>/        ← HTML 또는 Python
+  cycle-06-<topic>/        ← HTML 또는 Python
   learnings.md             ← 모든 사이클의 결론 누적
   killed-hypotheses.md     ← 검증 실패한 가정 ⭐ 비싼 자산
 ```
@@ -678,8 +678,8 @@ Cross-stage Agents (단계 무관 게이트키퍼)
 | 스킬 | 내용 |
 |---|---|
 | `prototype-hypothesis` | 1 사이클 = 1 가설. 실패/성공 신호 명시 강제 |
+| `dirty-code-html` | 단일 HTML, vanilla JS, 300줄 캡, 빌드/프레임워크 금지 |
 | `dirty-code-python` | Python 단일 파일, 200줄 캡, 타입힌트/docstring 금지 |
-| `dirty-code-html` | 단일 HTML, 인라인 JS, 200줄 캡 |
 | `playtest-log-template` | Facts / Interpretations / Decisions 분리 강제 |
 | `cycle-isolation` | 이전 사이클 코드 import 금지 검증 |
 | `cycle-review-criteria` | 다음 행동(진행/재시도/회귀/Kill) 결정 기준 |
@@ -730,7 +730,7 @@ Cross-stage Agents (단계 무관 게이트키퍼)
 | `concept_interviewer` | `pitch-one-pager` | — |
 | `macro_designer` | `macro-design-5p` | `forbidden-in-macro`, `pillars-vocabulary` |
 | `cycle_planner` | `prototype-hypothesis` | `risk-to-hypothesis` |
-| `prototype_coder` | `dirty-code-python` / `dirty-code-html` | `cycle-isolation` |
+| `prototype_coder` | `dirty-code-html` / `dirty-code-python` | `cycle-isolation` |
 | `playtest_recorder` | `playtest-log-template` | — |
 | `cycle_reviewer` | `cycle-review-criteria` | `kill-criteria` |
 | `tech_decider` | `tech-decision-template` | — |
@@ -775,6 +775,7 @@ my-game/
 │       ├── macro-design-5p/
 │       ├── forbidden-in-macro/
 │       ├── prototype-hypothesis/
+│       ├── dirty-code-html/
 │       └── dirty-code-python/
 │
 ├── .claude/
@@ -791,7 +792,8 @@ my-game/
 ├── prototypes/                     # Stage 2 산출물 (docs + 코드 한 디렉터리)
 │   ├── cycle-01-<topic>/
 │   │   ├── hypothesis.md
-│   │   ├── prototype.py            # 또는 .html (단일 파일, 200줄 캡)
+│   │   ├── prototype.html          # 기본: 단일 파일, 300줄 캡
+│   │   ├── prototype.py            # 선택: 텍스트/수치 중심일 때, 200줄 캡
 │   │   └── playtest.md
 │   ├── cycle-02-<topic>/
 │   ├── ...

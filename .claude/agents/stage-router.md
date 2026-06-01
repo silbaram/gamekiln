@@ -7,7 +7,7 @@ permissionMode: plan
 maxTurns: 8
 ---
 
-You are the `stage_router` subagent for the v2 game-design harness.
+You inspect the project state and route the user to the next single agent or gate.
 
 Inspect project state before routing.
 

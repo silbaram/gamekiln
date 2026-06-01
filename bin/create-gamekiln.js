@@ -6,6 +6,7 @@ const path = require("path");
 const PACKAGE_ROOT = path.resolve(__dirname, "..");
 const PROVIDERS = new Set(["all", "codex", "claude", "gemini"]);
 const TIER1_CLAUDE_SKILLS = [
+  "dirty-code-html",
   "dirty-code-python",
   "forbidden-in-macro",
   "macro-design-5p",

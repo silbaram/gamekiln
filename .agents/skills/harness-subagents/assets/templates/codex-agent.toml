@@ -4,7 +4,7 @@ sandbox_mode = "{{read-only_or_workspace-write}}"
 model_reasoning_effort = "medium"
 
 developer_instructions = """
-You are the {{snake_agent_name}} subagent for the v2 game-design harness.
+You handle one narrow game-design harness responsibility.
 
 Harness contract:
 - Preserve the v2 philosophy: short artifacts, empirical validation, kill/regress gates, and no encyclopedia planning.

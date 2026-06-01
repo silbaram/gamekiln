@@ -5,7 +5,7 @@
 
 ---
 
-## Tier 1: 필수 (11개) — 첫 프로젝트 최소셋
+## Tier 1: 필수 (12개) — 첫 프로젝트 최소셋
 
 ### 에이전트 6개
 
@@ -41,9 +41,9 @@
 - **목적**: 가설 검증 목적의 *더러운* 프로토타입 코드 생성
 - **입력**: `hypothesis.md` + 룰셋
 - **산출**: 단일 파일 코드 (`prototype.py` 또는 `prototype.html`)
-- **사용 스킬**: `dirty-code-python` (또는 `dirty-code-html`)
+- **사용 스킬**: `dirty-code-html`, `dirty-code-python`
 - **호출 시점**: `cycle_planner` 완료 후 (코드 사이클일 때만)
-- **종료 조건**: 200줄 이하, 단일 파일, 외부 의존성 최소
+- **종료 조건**: `prototype.html` 300줄 이하 또는 `prototype.py` 200줄 이하, 단일 파일, 외부 의존성은 사용자 확인 없으면 금지
 
 #### `cycle_reviewer`
 - **단계**: Stage 2
@@ -63,7 +63,7 @@
 - **호출 시점**: 사용자가 의도 불명확하게 요청할 때
 - **종료 조건**: 다음 행동 1개 명시
 
-### 스킬 5개
+### 스킬 6개
 
 #### `pitch-one-pager`
 - **단계**: Stage 0
@@ -109,7 +109,7 @@
 
 #### `dirty-code-python`
 - **단계**: Stage 2
-- **목적**: AI가 production-quality 코드 만드는 충동 차단
+- **목적**: 텍스트/수치/터미널 중심 가설에서 AI가 production-quality 코드 만드는 충동 차단
 - **강제 제약**:
   - 200줄 이하 (초과 시 작성 거부)
   - 단일 파일 (모듈 분리 금지)
@@ -119,6 +119,18 @@
   - 외부 패키지 import는 사용자 확인 요구
 - **권장 (반대 권장)**: TODO/FIXME 주석 OK, 짧은 변수명 OK, 하드코딩 OK
 - **출력 형식**: 단일 `.py` 파일
+
+#### `dirty-code-html`
+- **단계**: Stage 2
+- **목적**: 브라우저에서 즉시 플레이 가능한 disposable 프로토타입 강제
+- **강제 제약**:
+  - 300줄 이하 (초과 시 작성 거부)
+  - 단일 `prototype.html`
+  - vanilla HTML/CSS/JavaScript만 사용
+  - 빌드 도구, 번들러, 프레임워크, 외부 CDN/라이브러리 금지
+  - 이전 사이클 코드 링크/import 금지
+- **권장 (반대 권장)**: 인라인 CSS/JS OK, 하드코딩 OK, 짧은 변수명 OK, 최소 시각 스타일 OK
+- **출력 형식**: 단일 `.html` 파일
 
 ---
 
@@ -306,7 +318,6 @@
 **스킬**:
 - `concept-gate`, `pillars-vocabulary` (사람이 채우면 됨)
 - `risk-to-hypothesis` (`prototype-hypothesis`로 통합 가능)
-- `dirty-code-html` (Python으로 충분한 경우 다수)
 - `paper-prototype` (1인 개발에서 종이 경로 제거에 따라 사용 안 함)
 - `cycle-review-criteria`, `learnings-format` (자유 형식 허용)
 - `architecture-vs-scope`, `vs-spec-template`, `vs-only-validator`, `scope-estimate-method` (Stage 3 진입 시 결정)
@@ -320,11 +331,11 @@
 
 | Tier | 에이전트 | 스킬 | 누계 |
 |---|---|---|---|
-| **Tier 1 (필수)** | 6 | 5 | **11** |
-| **Tier 2 (1차 확장)** | 5 | 3 | **19** |
-| **Tier 3 (필요시)** | 6 | 5 | **30** |
+| **Tier 1 (필수)** | 6 | 6 | **12** |
+| **Tier 2 (1차 확장)** | 5 | 3 | **20** |
+| **Tier 3 (필요시)** | 6 | 5 | **31** |
 
-**시작은 11개.** Tier 3 항목들은 *실제로 막힐 때만* 추가하세요. 만들어 놓고 안 쓰는 컴포넌트가 생기면 그건 명세가 틀린 신호이고, 명세를 수정합니다.
+**시작은 12개.** Tier 3 항목들은 *실제로 막힐 때만* 추가하세요. 만들어 놓고 안 쓰는 컴포넌트가 생기면 그건 명세가 틀린 신호이고, 명세를 수정합니다.
 
 ---
 
