@@ -5,6 +5,11 @@ const path = require("path");
 
 const PACKAGE_ROOT = path.resolve(__dirname, "..");
 const PROVIDERS = new Set(["all", "codex", "claude", "gemini"]);
+const GENERATED_GITIGNORE_ENTRIES = [
+  ".antigravitycli/",
+  "node_modules/",
+  "*.tgz",
+];
 const TIER1_CLAUDE_SKILLS = [
   "dirty-code-html",
   "dirty-code-python",
@@ -21,6 +26,9 @@ function usage() {
 Examples:
   create-gamekiln my-game
   create-gamekiln my-game --provider codex
+
+Existing harness files in <project-dir> are updated in place. Project notes
+such as prototype learnings are created only when missing.
 `);
 }
 
@@ -63,54 +71,67 @@ function parseArgs(argv) {
   return { target, provider, help: false };
 }
 
-function ensureEmptyTarget(targetDir) {
+function ensureTargetDir(targetDir) {
   if (!fs.existsSync(targetDir)) {
     fs.mkdirSync(targetDir, { recursive: true });
     return;
   }
-  const entries = fs.readdirSync(targetDir);
-  if (entries.length > 0) {
-    throw new Error(`Target directory is not empty: ${targetDir}`);
+  if (!fs.statSync(targetDir).isDirectory()) {
+    throw new Error(`Target path is not a directory: ${targetDir}`);
   }
 }
 
-function copyPath(relativePath, targetRoot) {
+function copyPath(relativePath, targetRoot, options = {}) {
+  const overwrite = options.overwrite ?? true;
   const src = path.join(PACKAGE_ROOT, relativePath);
   const dest = path.join(targetRoot, relativePath);
   if (!fs.existsSync(src)) {
     throw new Error(`Scaffold source is missing: ${relativePath}`);
   }
+  if (!overwrite && fs.existsSync(dest)) {
+    return;
+  }
   fs.mkdirSync(path.dirname(dest), { recursive: true });
   fs.cpSync(src, dest, {
     recursive: true,
-    errorOnExist: true,
-    force: false,
+    errorOnExist: false,
+    force: overwrite,
     dereference: false,
   });
 }
 
-function copySourceToTarget(srcRelativePath, destAbsolutePath) {
+function copySourceToTarget(srcRelativePath, destAbsolutePath, options = {}) {
+  const overwrite = options.overwrite ?? true;
   const src = path.join(PACKAGE_ROOT, srcRelativePath);
   if (!fs.existsSync(src)) {
     throw new Error(`Scaffold source is missing: ${srcRelativePath}`);
   }
+  if (!overwrite && fs.existsSync(destAbsolutePath)) {
+    return;
+  }
   fs.mkdirSync(path.dirname(destAbsolutePath), { recursive: true });
   fs.cpSync(src, destAbsolutePath, {
     recursive: true,
-    errorOnExist: true,
-    force: false,
+    errorOnExist: false,
+    force: overwrite,
     dereference: false,
   });
 }
 
 function writeGeneratedGitignore(targetRoot) {
-  const content = [
-    ".antigravitycli/",
-    "node_modules/",
-    "*.tgz",
-    "",
-  ].join("\n");
-  fs.writeFileSync(path.join(targetRoot, ".gitignore"), content, { flag: "wx" });
+  const gitignorePath = path.join(targetRoot, ".gitignore");
+  const existing = fs.existsSync(gitignorePath)
+    ? fs.readFileSync(gitignorePath, "utf8")
+    : "";
+  const existingLines = new Set(existing.split(/\r?\n/));
+  const missing = GENERATED_GITIGNORE_ENTRIES.filter((entry) => !existingLines.has(entry));
+  if (missing.length === 0) {
+    return;
+  }
+
+  const prefix = existing.length > 0 && !existing.endsWith("\n") ? "\n" : "";
+  const suffix = existing.length > 0 && !existing.endsWith("\n\n") ? "\n" : "";
+  fs.writeFileSync(gitignorePath, `${existing}${prefix}${suffix}${missing.join("\n")}\n`);
 }
 
 function createClaudeSkillLinks(targetRoot) {
@@ -120,6 +141,7 @@ function createClaudeSkillLinks(targetRoot) {
   for (const skill of TIER1_CLAUDE_SKILLS) {
     const linkPath = path.join(claudeSkillsDir, skill);
     const linkTarget = path.join("..", "..", ".agents", "skills", skill);
+    fs.rmSync(linkPath, { recursive: true, force: true });
     try {
       fs.symlinkSync(linkTarget, linkPath, "dir");
     } catch (error) {
@@ -140,7 +162,7 @@ function providerEnabled(selected, provider) {
 
 function scaffold({ target, provider }) {
   const targetRoot = path.resolve(process.cwd(), target);
-  ensureEmptyTarget(targetRoot);
+  ensureTargetDir(targetRoot);
 
   copyPath("AGENTS.md", targetRoot);
   writeGeneratedGitignore(targetRoot);
@@ -154,11 +176,11 @@ function scaffold({ target, provider }) {
 
   copyPath(path.join(".agents", "skills"), targetRoot);
   copyPath(path.join("docs", "harness"), targetRoot);
-  copyPath(path.join("docs", "decisions", ".gitkeep"), targetRoot);
-  copyPath(path.join("docs", "game", "details", ".gitkeep"), targetRoot);
-  copyPath(path.join("game", ".gitkeep"), targetRoot);
-  copyPath(path.join("prototypes", "learnings.md"), targetRoot);
-  copyPath(path.join("prototypes", "killed-hypotheses.md"), targetRoot);
+  copyPath(path.join("docs", "decisions", ".gitkeep"), targetRoot, { overwrite: false });
+  copyPath(path.join("docs", "game", "details", ".gitkeep"), targetRoot, { overwrite: false });
+  copyPath(path.join("game", ".gitkeep"), targetRoot, { overwrite: false });
+  copyPath(path.join("prototypes", "learnings.md"), targetRoot, { overwrite: false });
+  copyPath(path.join("prototypes", "killed-hypotheses.md"), targetRoot, { overwrite: false });
 
   if (providerEnabled(provider, "codex")) {
     copyPath(".codex", targetRoot);
@@ -171,7 +193,7 @@ function scaffold({ target, provider }) {
     copyPath(".gemini", targetRoot);
   }
 
-  console.log(`Created Game Design Harness v2 project at ${targetRoot}`);
+  console.log(`Created or updated Game Design Harness v2 project at ${targetRoot}`);
   console.log(`Provider files: ${provider}`);
   console.log("Next: start Stage 0 with concept_interviewer.");
 }

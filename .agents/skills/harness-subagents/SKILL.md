@@ -24,7 +24,7 @@ Every harness agent, skill, or generated prompt must preserve these rules:
 - Documents record decisions; they do not predict a complete game up front.
 - Every stage decides proceed, retry, regress, or kill. Never auto-advance without user confirmation.
 - Stage 2 prototype code is intentionally disposable. Keep it small, single-purpose, and separate from production code.
-- Enforce the caps from the harness reference docs: pitch 1 page, macro design 5 pages, prototype hypothesis 1 hypothesis per cycle, prototype code HTML 300 lines or Python 200 lines, detail docs 1-2 pages per system.
+- Enforce the caps from the harness reference docs: pitch 1 page, macro design 5 pages, prototype hypothesis 1 hypothesis per cycle, prototype code as one self-contained HTML page or Python 200 lines, detail docs 1-2 pages per system.
 - Numeric values, formulas, tables, and balance claims need either observed playtest/prototype evidence or an explicitly named reference game/source.
 - Stage 4 detail docs are only written after a vertical slice proves the relevant decision.
 - Prefer Tier 1 only unless the user explicitly asks for a Tier 2/3 component or the project is already blocked at that point.

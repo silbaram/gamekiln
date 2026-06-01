@@ -1,6 +1,6 @@
 ---
 name: dirty-code-html
-description: Use for Stage 2 disposable browser prototypes. Forces one-file, under-300-line, vanilla HTML/CSS/JavaScript code for hypothesis testing only.
+description: Use for Stage 2 disposable browser prototypes. Forces one-page, self-contained, vanilla HTML/CSS/JavaScript code for hypothesis testing only.
 ---
 
 # Dirty Code HTML
@@ -10,7 +10,8 @@ Use this skill when writing a Stage 2 browser prototype under `prototypes/cycle-
 ## Hard Rules
 
 - One `prototype.html` file only.
-- 300 lines maximum.
+- Keep the whole prototype in one self-contained HTML page; do not split files to create production structure.
+- No hard HTML line cap. Keep scope controlled by testing one hypothesis, not by compressing playable clarity.
 - Use vanilla HTML, CSS, and JavaScript only.
 - Inline CSS and JavaScript are allowed.
 - No build step, bundler, framework, package manager, or external CDN/library without user confirmation.
