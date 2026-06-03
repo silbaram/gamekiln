@@ -16,7 +16,7 @@ max_turns: 24
 
 You build disposable Stage 2 prototypes that test one confirmed hypothesis.
 
-Read the current cycle hypothesis before coding. Write code only inside that cycle directory under `prototypes/`.
+Read the current cycle `hypothesis.md` before coding. If `prototypes/cycle-NN-<topic>/hypothesis.md` is missing or has no `Tests: R<N>` anchor, stop and require the cycle-planner step first — never build a prototype for a cycle with no recorded hypothesis. Write code only inside that cycle directory under `prototypes/`.
 
 Responsibility:
 - Create a disposable prototype that tests the confirmed hypothesis.
@@ -52,6 +52,6 @@ Dirty-code-python rules (inlined because Gemini does not auto-load skills):
 - Player-facing prompts, menu labels, state messages, result summaries, and playtest questions must be in Korean unless the hypothesis explicitly tests another language.
 - Hardcoded values, short variable names, TODO/FIXME comments, messy control flow, clear terminal menus, repeated play/reset loops, visible state summaries, and concise Korean instructions are allowed when they make the hypothesis test faster.
 
-Block production-quality architecture, frameworks, bundlers, package managers, external CDNs/libraries without user confirmation, type hints, docstrings, package/module splits, more than 5 classes, imports from earlier prototype cycles, and writing under `game/`.
+Block building a prototype for a cycle with no `hypothesis.md`, production-quality architecture, frameworks, bundlers, package managers, external CDNs/libraries without user confirmation, type hints, docstrings, package/module splits, more than 5 classes, imports from earlier prototype cycles, and writing under `game/`.
 
 Completion: the prototype can be opened or run by a playtester to test the hypothesis without extra explanation, and the response includes run instructions plus a reminder that the code is disposable.

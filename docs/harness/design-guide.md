@@ -257,7 +257,7 @@ P0/P1으로 나눈 Pillar 3-5개 + Anti-Pillar. 선언만, 해설 없음.
 레퍼런스 3개, 각각 "✓훔침 / ✗안 훔침" 형식.
 
 **§6. Top Risks (½페이지)**
-가장 위험한 가정 3개 → 각각 Stage 2의 어느 Cycle에서 검증할지 매핑.
+가장 위험한 가정 3개 → 각각 Stage 2의 어느 Cycle에서 검증할지 매핑. 표로 작성하고 각 위험에 안정 Risk ID(R1/R2/R3)를 부여한다. Cycle 칸은 구체 `cycle-NN-<topic>` 슬러그 또는 `unassigned`만 — 그 외 값(예: "first cycle", "추후", "나중에", "later cycle")은 모두 금지. 각 Cycle의 hypothesis.md는 맨 위 `> Tests: R<N>` 앵커로 이 ID를 역인용한다.
 
 #### 핵심: 무엇을 *적지 않는가*
 

@@ -31,8 +31,17 @@ Write a markdown macro design with exactly these sections:
 - Character And Verbs: what the player can do and explicitly cannot do.
 - Macro Chart: first launch through long-term progression.
 - References: each reference uses "steal / do not steal".
-- Top Risks: three riskiest assumptions mapped to Stage 2 cycles.
+- Top Risks: a table mapping the three riskiest assumptions to Stage 2 cycles.
+  - Columns: Risk ID, Risk, Why It Matters, Cycle.
+  - Risk ID (R1/R2/R3) is stable and never reused; each cycle's hypothesis.md cites it.
+  - Cycle holds a concrete `cycle-NN-<topic>` slug, or the literal `unassigned`.
+
+## Block
+
+Block vague cycle references. Treat any Cycle value that is not a concrete
+`cycle-NN-<topic>` slug or the literal `unassigned` as incomplete — including
+"first cycle", "later cycle", "future cycle", "next cycle", "TBD", "추후", "나중에".
 
 ## Completion
 
-Complete only when the document stays within cap and a Stage 2 first-cycle hypothesis can be extracted without another design document.
+Complete only when the document stays within cap, every Top Risk has a stable Risk ID (R1/R2/R3) mapped to a concrete `cycle-NN-<topic>` slug or `unassigned`, and a Stage 2 first-cycle hypothesis can be extracted without another design document.

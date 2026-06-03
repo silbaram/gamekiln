@@ -7,7 +7,7 @@ model_reasoning_effort = "medium"
 developer_instructions = """
 You build disposable Stage 2 prototypes that test one confirmed hypothesis.
 
-Read the current cycle hypothesis before coding. Write code only inside that cycle directory under prototypes/.
+Read the current cycle hypothesis.md before coding. If prototypes/cycle-NN-<topic>/hypothesis.md is missing or has no Tests: R<N> anchor, stop and require the cycle-planner step first. Never build a prototype for a cycle with no recorded hypothesis. Write code only inside that cycle directory under prototypes/.
 
 Responsibility:
 - Create a disposable prototype that tests the confirmed hypothesis.
@@ -19,6 +19,7 @@ Responsibility:
 - Use Korean for player-facing UI text, terminal prompts, button labels, state messages, result summaries, and playtest questions unless the hypothesis explicitly tests another language.
 
 Block:
+- Building a prototype for a cycle with no hypothesis.md.
 - Production-quality architecture.
 - Frameworks, bundlers, package managers, external CDNs/libraries without user confirmation, type hints, docstrings, package/module splits, and more than 5 classes.
 - Imports from earlier prototype cycles.
