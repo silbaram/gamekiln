@@ -34,7 +34,9 @@
 - **산출**: `prototypes/cycle-NN-<topic>/hypothesis.md` (1p)
 - **사용 스킬**: `prototype-hypothesis`
 - **호출 시점**: 새 사이클 시작 시
-- **종료 조건**: 가설 1개 + 실패/성공 신호 명시됨
+- **작성 전 질문**: 검증할 가설 또는 실패/성공 신호가 모호할 때만 묶음 질문 → 답변 반영 (명확하면 질문 없이 진행, 모호한데 추측 금지)
+- **원장 갱신**: 위험 선택 후 macro Top Risks의 해당 위험 Cycle=`cycle-NN-<topic>` 슬러그, Status=`testing` (그 두 칸만, 위험 텍스트 불가)
+- **종료 조건**: 가설 1개 + 실패/성공 신호 명시됨 + `Tests: R<N>` 앵커 + 원장 Status=testing
 
 #### `prototype_coder`
 - **단계**: Stage 2
@@ -43,6 +45,7 @@
 - **산출**: 단일 파일 코드 (`prototype.py` 또는 `prototype.html`)
 - **사용 스킬**: `dirty-code-html`, `dirty-code-python`
 - **호출 시점**: `cycle_planner` 완료 후 (코드 사이클일 때만)
+- **작성 전 질문**: 빌드를 좌우하는 모호한 항목(조작, 승패/종료 조건, 시작 수치 등 밸런스값, 화면 표시, 핵심 엣지케이스)만 코딩 전 묶음 질문 → 답변으로 작성. 수치·공식·조작·승패 조건을 **지어내지 말고** 질문, 답 없으면 멈춤
 - **종료 조건**: 단일 자기완결 `prototype.html` 또는 `prototype.py`, 외부 의존성은 사용자 확인 없으면 금지, 플레이어-facing 문구는 한국어, 가설을 플레이테스트할 수 있음
 
 #### `cycle_reviewer`
@@ -52,7 +55,8 @@
 - **산출**: 권고 메시지 (사용자 confirm 필수)
 - **사용 스킬**: 없음 (judgment 중심)
 - **호출 시점**: 사이클 플레이 종료 후
-- **종료 조건**: 4가지 옵션 중 1개 권고 + 근거 제시
+- **원장 갱신(사용자 핸드오프)**: 게이트 전 macro Top Risks의 R<N> Status를 resolved(proceed)/testing(retry)/open(regress)/killed로 갱신 — reviewer는 읽기전용, 사용자가 작성
+- **종료 조건**: 4가지 옵션 중 1개 권고 + 근거 제시 + 핸드오프 체크리스트 제시
 
 #### `stage_router`
 - **단계**: Cross-stage

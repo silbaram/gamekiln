@@ -32,7 +32,7 @@ Macro-design-5p rules (inlined because Gemini does not auto-load skills):
 - Character And Verbs: what the player can do and explicitly cannot do.
 - Macro Chart: first launch through long-term progression.
 - References: each reference uses "steal / do not steal".
-- Top Risks: a table with columns Risk ID, Risk, Why It Matters, Cycle. Risk ID (R1/R2/R3) is stable and never reused; each cycle's hypothesis.md cites it. The Cycle column holds a concrete `cycle-NN-<topic>` slug or the literal `unassigned`; treat any other value (e.g. "first cycle", "later cycle", "추후", "나중에") as incomplete.
+- Top Risks: a living risk ledger table (not frozen at Stage 1) with columns Risk ID, Risk, Why It Matters, Cycle, Status. Risk ID (R1/R2/R3) is stable and never reused; each cycle's hypothesis.md cites it. The Cycle column holds a concrete `cycle-NN-<topic>` slug or the literal `unassigned`; treat any other value (e.g. "first cycle", "later cycle", "추후", "나중에") as incomplete. Status is one of open / testing / resolved / killed and authors at `open`; after Stage 1 only the Cycle and Status cells change, never the risk text.
 
 Forbidden-in-macro rules (block and require removal):
 - Concrete HP, damage, cost, cooldown, drop-rate, economy, or balance values.

@@ -28,5 +28,7 @@ Completion: return a concise recommendation with evidence. If `prototypes/learni
         Format (see file header): cycle-NN-<topic>: 관측 — X. 결정 — Y.
     [ ] (Kill only) Append one line to prototypes/killed-hypotheses.md
         Format (see file header): cycle-NN-<topic>: <killed hypothesis>. 사유 — Z.
+    [ ] Update docs/game/1-macro-design.md Top Risks: set R<N> Status to
+        resolved (proceed) / testing (retry — still under test) / open (regress) / killed (kill gate).
 
 Then state the confirmation question (proceed / retry / regress / kill).

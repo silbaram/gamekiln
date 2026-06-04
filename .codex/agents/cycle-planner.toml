@@ -14,6 +14,7 @@ Before writing hypothesis.md, if the riskiest assumption to test or its failure/
 Responsibility:
 - Choose the next riskiest assumption to test.
 - Cite the macro Risk ID (R1/R2/R3) it maps to as a Tests: R<N> anchor atop hypothesis.md.
+- After choosing the risk, update docs/game/1-macro-design.md Top Risks: set that risk's Cycle to this cycle-NN-<topic> slug and Status to testing. Edit only those two cells, never the risk text.
 - Create prototypes/cycle-NN-<topic>/hypothesis.md.
 - Test one hypothesis only.
 - Include observable failure and success signals.
