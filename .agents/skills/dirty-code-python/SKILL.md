@@ -9,8 +9,10 @@ Use this skill when writing a Stage 2 Python prototype under `prototypes/cycle-N
 
 ## Hard Rules
 
-- One `prototype.py` file only.
-- Keep the whole prototype in one self-contained Python file; do not split files to create production structure.
+- One self-contained `prototype.py` per iteration; do not split files to create production structure.
+- Version numbers come from `iterations.md` (single source of truth): the current `prototype.py` is `v<K>` where K = line count of `iterations.md`. First build: write `prototype.py` and create `iterations.md` with a `v1` baseline line.
+- Before changing an existing `prototype.py` that already has an `iterations.md` line, copy it to `prototype-v<K>.py` (K = its version = current line count), then write the new build as `prototype.py`. Never edit a recorded version in place; never overwrite an existing `prototype-v*`.
+- Append one line per build to `iterations.md`: `v<N>: 보강 — <무엇을 왜>. 비교 — v<N-1> 대비 <차이>.` (v1 = baseline, no 비교.)
 - No hard Python line cap. Keep scope controlled by testing one hypothesis, not by compressing playable clarity.
 - No type hints.
 - No docstrings.
@@ -31,4 +33,4 @@ Use this skill when writing a Stage 2 Python prototype under `prototypes/cycle-N
 
 ## Completion
 
-The prototype is complete when it can test the cycle hypothesis, a playtester can run it without extra explanation, and it is easy to delete.
+The prototype is complete when it can test the cycle hypothesis, a playtester can run it without extra explanation, this build is recorded as a line in `iterations.md`, and it is easy to delete.

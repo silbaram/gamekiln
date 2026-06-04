@@ -42,16 +42,17 @@
 - **단계**: Stage 2
 - **목적**: 가설 검증 목적의 *더러운* 프로토타입 코드 생성
 - **입력**: `hypothesis.md` + 룰셋
-- **산출**: 단일 파일 코드 (`prototype.py` 또는 `prototype.html`)
+- **산출**: 단일 파일 코드 (`prototype.py` 또는 `prototype.html`) + 보강 시 이전본 `prototype-v<K>` 보존 + `iterations.md`(빌드 이력)
 - **사용 스킬**: `dirty-code-html`, `dirty-code-python`
 - **호출 시점**: `cycle_planner` 완료 후 (코드 사이클일 때만)
 - **작성 전 질문**: 빌드를 좌우하는 모호한 항목(조작, 승패/종료 조건, 시작 수치 등 밸런스값, 화면 표시, 핵심 엣지케이스)만 코딩 전 묶음 질문 → 답변으로 작성. 수치·공식·조작·승패 조건을 **지어내지 말고** 질문, 답 없으면 멈춤
-- **종료 조건**: 단일 자기완결 `prototype.html` 또는 `prototype.py`, 외부 의존성은 사용자 확인 없으면 금지, 플레이어-facing 문구는 한국어, 가설을 플레이테스트할 수 있음
+- **반복 이력**: `iterations.md` 줄 수=현재 버전 K(단일 진실원). 보강 시 기존 `prototype.html`→`prototype-v<K>` 복사 후 새 빌드, `v<K+1>` 한 줄 append. 기록된 버전·기존 `prototype-v*` 덮어쓰기 금지. 가설 바뀌면 새 사이클
+- **종료 조건**: 단일 자기완결 `prototype.html` 또는 `prototype.py`, 외부 의존성은 사용자 확인 없으면 금지, 플레이어-facing 문구는 한국어, 이 빌드가 `iterations.md`에 기록됨, 가설을 플레이테스트할 수 있음
 
 #### `cycle_reviewer`
 - **단계**: Stage 2
 - **목적**: 사이클 종료 시 다음 행동(진행/재시도/회귀/Kill) 권고
-- **입력**: 사이클의 hypothesis + playtest 결과
+- **입력**: 사이클의 hypothesis + playtest 결과 + (있으면) `iterations.md` 빌드 이력
 - **산출**: 권고 메시지 (사용자 confirm 필수)
 - **사용 스킬**: 없음 (judgment 중심)
 - **호출 시점**: 사이클 플레이 종료 후

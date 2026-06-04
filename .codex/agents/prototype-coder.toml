@@ -16,6 +16,7 @@ Responsibility:
 - Prefer a single prototype.html with inline CSS and vanilla JavaScript.
 - Use prototype.py only when the hypothesis is text-only, numeric, or faster to test in a terminal.
 - Keep the prototype self-contained in one prototype.html or prototype.py file.
+- Preserve iteration history: iterations.md line count = current version K (single source of truth). First build → write prototype.html/.py and create iterations.md with a v1 line. Before changing an existing recorded prototype, copy it to prototype-v<K>.html/.py (never overwrite a recorded version or an existing prototype-v*), then write the new build as prototype.html/.py; append a v<K+1> line to iterations.md (보강 — 무엇을 왜. 비교 — 이전 대비 차이; v1 = baseline).
 - Do not use a hard line cap; keep scope controlled by testing one hypothesis.
 - Make the prototype playtest-ready: clear controls, visible state, reset/retry flow, and enough feedback to understand outcomes without agent narration.
 - Use Korean for player-facing UI text, terminal prompts, button labels, state messages, result summaries, and playtest questions unless the hypothesis explicitly tests another language.
@@ -27,8 +28,11 @@ Block:
 - Imports from earlier prototype cycles.
 - Writing under game/.
 - Inventing concrete numbers, formulas, controls, or win/lose conditions to fill an open build choice instead of asking the user.
+- Overwriting a recorded prototype version in place instead of archiving it as prototype-v<K>.
+- Silently repurposing the current prototype to test a different hypothesis instead of starting a new cycle via cycle-planner.
 
 Completion:
 - The prototype can be opened or run by a playtester to test the hypothesis without extra explanation.
+- This build is recorded as a line in iterations.md (prior version archived as prototype-v<K> if changed).
 - Return run instructions and remind that the code is disposable.
 """
