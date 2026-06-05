@@ -10,9 +10,9 @@ Use this skill when writing a Stage 2 Python prototype under `prototypes/cycle-N
 ## Hard Rules
 
 - One self-contained `prototype.py` per iteration; do not split files to create production structure.
-- Version numbers come from `iterations.md` (single source of truth): the current `prototype.py` is `v<K>` where K = line count of `iterations.md`. First build: write `prototype.py` and create `iterations.md` with a `v1` baseline line.
-- Before changing an existing `prototype.py` that already has an `iterations.md` line, copy it to `prototype-v<K>.py` (K = its version = current line count), then write the new build as `prototype.py`. Never edit a recorded version in place; never overwrite an existing `prototype-v*`.
-- Append one line per build to `iterations.md`: `v<N>: 보강 — <무엇을 왜>. 비교 — v<N-1> 대비 <차이>.` (v1 = baseline, no 비교.)
+- Version numbers come from `iterations.md` (single source of truth): the current `prototype.py` is `v<K>` where K = the highest line-starting `v<N>:` entry recorded in `iterations.md`. First build: write `prototype.py` and create `iterations.md` with a `v1:` baseline line (no header line; one v-line per build).
+- Before changing an existing `prototype.py` that already has a recorded line-starting `v<N>:` entry, copy it to `prototype-v<K>.py` (K = its recorded version, the highest line-starting `v<N>:` entry in `iterations.md`), then write the new build as `prototype.py`. Never edit a recorded version in place; never overwrite an existing `prototype-v*`.
+- Append one v-line per build to `iterations.md`: `v<N>: 보강 — <무엇을 왜>. 비교 — v<N-1> 대비 <차이>.` (v1 = baseline, no 비교.)
 - No hard Python line cap. Keep scope controlled by testing one hypothesis, not by compressing playable clarity.
 - No type hints.
 - No docstrings.

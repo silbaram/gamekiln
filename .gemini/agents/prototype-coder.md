@@ -25,14 +25,14 @@ Responsibility:
 - Prefer a single `prototype.html` with inline CSS and vanilla JavaScript.
 - Use `prototype.py` only when the hypothesis is text-only, numeric, or faster to test in a terminal.
 - Keep the prototype self-contained in one `prototype.html` or `prototype.py` file.
-- Preserve iteration history: `iterations.md` line count = current version K (single source of truth). First build → write `prototype.html`/`.py` and create `iterations.md` with a `v1` line. Before changing an existing recorded prototype, copy it to `prototype-v<K>.html`/`.py` (never overwrite a recorded version or an existing `prototype-v*`), then write the new build as `prototype.html`/`.py`; append a `v<K+1>` line to `iterations.md` (`보강 — 무엇을 왜. 비교 — 이전 대비 차이`; v1 = baseline).
+- Preserve iteration history: line-starting `v<N>:` entries in `iterations.md` are the single source of truth; current version K is the highest line-starting `v<N>:` entry recorded there. First build → write `prototype.html`/`.py` and create `iterations.md` with a `v1:` baseline line (no header line; one v-line per build). Before changing an existing recorded prototype, copy it to `prototype-v<K>.html`/`.py` (never overwrite a recorded version or an existing `prototype-v*`), then write the new build as `prototype.html`/`.py`; append a `v<K+1>:` line to `iterations.md` (`보강 — 무엇을 왜. 비교 — 이전 대비 차이`; v1 = baseline).
 - Do not use a hard line cap; keep scope controlled by testing one hypothesis.
 - Make the prototype playtest-ready: clear controls, visible state, reset/retry flow, and enough feedback to understand outcomes without agent narration.
 - Use Korean for player-facing UI text, terminal prompts, button labels, state messages, result summaries, and playtest questions unless the hypothesis explicitly tests another language.
 
 Dirty-code-html rules (inlined because Gemini does not auto-load skills):
 - One self-contained `prototype.html` per iteration; do not split files to create production structure.
-- Keep version history: `iterations.md` line count = current version K. First build → `prototype.html` + `iterations.md` v1 line. Before changing an existing recorded `prototype.html`, copy it to `prototype-v<K>.html` (never overwrite a recorded version or an existing `prototype-v*`), then write the new build as `prototype.html`; append a `v<K+1>` line to `iterations.md` (`보강 — 무엇을 왜. 비교 — 이전 대비 차이`).
+- Keep version history: current version K is the highest line-starting `v<N>:` entry recorded in `iterations.md`. First build → `prototype.html` + `iterations.md` `v1:` baseline line (no header line; one v-line per build). Before changing an existing recorded `prototype.html`, copy it to `prototype-v<K>.html` (never overwrite a recorded version or an existing `prototype-v*`), then write the new build as `prototype.html`; append a `v<K+1>:` line to `iterations.md` (`보강 — 무엇을 왜. 비교 — 이전 대비 차이`).
 - No hard HTML line cap. Keep scope controlled by testing one hypothesis, not by compressing playable clarity.
 - Use vanilla HTML, CSS, and JavaScript only.
 - Inline CSS and JavaScript are allowed.
@@ -44,7 +44,7 @@ Dirty-code-html rules (inlined because Gemini does not auto-load skills):
 
 Dirty-code-python rules (inlined because Gemini does not auto-load skills):
 - One self-contained `prototype.py` per iteration; do not split files to create production structure.
-- Keep version history: `iterations.md` line count = current version K. First build → `prototype.py` + `iterations.md` v1 line. Before changing an existing recorded `prototype.py`, copy it to `prototype-v<K>.py` (never overwrite a recorded version or an existing `prototype-v*`), then write the new build as `prototype.py`; append a `v<K+1>` line to `iterations.md` (`보강 — 무엇을 왜. 비교 — 이전 대비 차이`).
+- Keep version history: current version K is the highest line-starting `v<N>:` entry recorded in `iterations.md`. First build → `prototype.py` + `iterations.md` `v1:` baseline line (no header line; one v-line per build). Before changing an existing recorded `prototype.py`, copy it to `prototype-v<K>.py` (never overwrite a recorded version or an existing `prototype-v*`), then write the new build as `prototype.py`; append a `v<K+1>:` line to `iterations.md` (`보강 — 무엇을 왜. 비교 — 이전 대비 차이`).
 - No hard Python line cap. Keep scope controlled by testing one hypothesis, not by compressing playable clarity.
 - No type hints.
 - No docstrings.
