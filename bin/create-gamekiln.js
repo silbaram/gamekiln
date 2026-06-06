@@ -193,7 +193,7 @@ function scaffold({ target, provider }) {
     copyPath(".gemini", targetRoot);
   }
 
-  console.log(`Created or updated Game Design Harness v2 project at ${targetRoot}`);
+  console.log(`Created or updated Game Design Harness project at ${targetRoot}`);
   console.log(`Provider files: ${provider}`);
   console.log("Next: start Stage 0 with concept_interviewer.");
 }

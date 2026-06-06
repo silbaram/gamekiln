@@ -104,5 +104,5 @@ Harness convention:
 - Keep provider-specific syntax in provider files, but keep the harness philosophy identical.
 - Do not create equivalent providers unless the user asked for that provider or all providers.
 - Prefer names and descriptions that make routing obvious: include stage, task, and artifact.
-- Avoid broad "game designer" agents. The v2 harness is made of small agents with kill gates.
+- Avoid broad "game designer" agents. The harness is made of small agents with kill gates.
 - If provider docs conflict with the plan, preserve the provider syntax but preserve the plan's behavior.

@@ -1,7 +1,7 @@
 {
   "name": "create-gamekiln",
   "version": "0.1.0",
-  "description": "Create a new project with the Game Design Harness v2 Tier 1 scaffold.",
+  "description": "Create a new project with the Game Design Harness Tier 1 scaffold.",
   "type": "commonjs",
   "bin": {
     "create-gamekiln": "bin/create-gamekiln.js"

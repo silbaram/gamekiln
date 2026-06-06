@@ -1,6 +1,6 @@
-# Game Design Harness v2
+# Game Design Harness
 
-This repository uses the v2 AI game-design harness.
+This repository uses the AI game-design harness.
 
 ## Source Of Truth
 

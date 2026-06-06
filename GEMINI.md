@@ -1,4 +1,4 @@
-# Game Design Harness v2
+# Game Design Harness
 
 Follow `AGENTS.md` for game-design harness runtime rules.
 

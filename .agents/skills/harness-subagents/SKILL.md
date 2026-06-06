@@ -1,6 +1,6 @@
 ---
 name: harness-subagents
-description: "Use when creating, updating, or reviewing v2 game-design harness subagents or supporting skills for Codex, Claude Code, or Gemini CLI. Enforces the harness reference docs' philosophy: short staged documents, kill gates, throwaway prototypes, source-backed numbers, and provider-specific agent file formats."
+description: "Use when creating, updating, or reviewing game-design harness subagents or supporting skills for Codex, Claude Code, or Gemini CLI. Enforces the harness reference docs' philosophy: short staged documents, kill gates, throwaway prototypes, source-backed numbers, and provider-specific agent file formats."
 ---
 
 # Harness Subagents
