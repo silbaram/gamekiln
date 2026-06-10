@@ -8,4 +8,4 @@
 
 2026-06-10 | 마찰 — Windows checkout에서 .claude/skills 심링크가 텍스트 파일로 깨져 스킬 강제가 무력화 | 변경 — 심링크 → 실제 복사본 + verify 스크립트 + pre-commit 훅 | 이유 — 단일 소스의 이점보다 조용한 파손 위험이 큼
 2026-06-10 | 마찰 — 대화형 역할(concept_interviewer, cycle_planner)이 서브에이전트라 실행 중 사용자 질문 불가, 왕복 마찰 | 변경 — 메인 루프 스킬 흐름으로 전환 | 이유 — 사용자 입력이 필요한 역할은 격리가 순손해
-- 2026-06-10: 마찰 — Tier 2 명세가 이후 확립된 원칙(대화형=메인 루프, 누적 파일=사용자 전용)과 충돌 | 변경 — playtest_recorder 메인루프화, learnings_accumulator·cycle-isolation 제외, vs-spec-template Tier 2 승격 | 이유 — 안 쓰일 컴포넌트는 명세 오류라는 스펙 자체 규칙 적용.
+2026-06-10 | 마찰 — Tier 2 명세가 이후 확립된 원칙(대화형=메인 루프, 누적 파일=사용자 전용)과 충돌 | 변경 — playtest_recorder 메인루프화, learnings_accumulator·cycle-isolation 제외, vs-spec-template Tier 2 승격 | 이유 — 안 쓰일 컴포넌트는 명세 오류라는 스펙 자체 규칙 적용
