@@ -10,13 +10,16 @@ const GENERATED_GITIGNORE_ENTRIES = [
   "node_modules/",
   "*.tgz",
 ];
-const TIER1_SKILLS = [
+const RUNTIME_SKILLS = [
   "dirty-code-html",
   "dirty-code-python",
   "forbidden-in-macro",
   "macro-design-5p",
   "pitch-one-pager",
+  "playtest-log-template",
   "prototype-hypothesis",
+  "tech-decision-template",
+  "vs-spec-template",
 ];
 
 function usage() {
@@ -134,8 +137,8 @@ function writeGeneratedGitignore(targetRoot) {
   fs.writeFileSync(gitignorePath, `${existing}${prefix}${suffix}${missing.join("\n")}\n`);
 }
 
-function copyTier1Skills(targetRoot) {
-  for (const skill of TIER1_SKILLS) {
+function copyRuntimeSkills(targetRoot) {
+  for (const skill of RUNTIME_SKILLS) {
     copySourceToTarget(
       path.join(".agents", "skills", skill),
       path.join(targetRoot, ".agents", "skills", skill)
@@ -147,7 +150,7 @@ function createClaudeSkillCopies(targetRoot) {
   const claudeSkillsDir = path.join(targetRoot, ".claude", "skills");
   fs.mkdirSync(claudeSkillsDir, { recursive: true });
 
-  for (const skill of TIER1_SKILLS) {
+  for (const skill of RUNTIME_SKILLS) {
     const skillPath = path.join(claudeSkillsDir, skill);
     fs.rmSync(skillPath, { recursive: true, force: true });
     copySourceToTarget(
@@ -175,7 +178,7 @@ function scaffold({ target, provider }) {
     copyPath("GEMINI.md", targetRoot);
   }
 
-  copyTier1Skills(targetRoot);
+  copyRuntimeSkills(targetRoot);
   copyPath(path.join("docs", "harness"), targetRoot);
   copyPath(path.join("docs", "decisions", ".gitkeep"), targetRoot, { overwrite: false });
   copyPath(path.join("docs", "game", "details", ".gitkeep"), targetRoot, { overwrite: false });

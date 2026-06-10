@@ -69,7 +69,7 @@
 - **산출**: 다음 에이전트 추천 또는 게이트 안내
 - **사용 스킬**: 없음
 - **호출 시점**: 사용자가 의도 불명확하게 요청할 때
-- **종료 조건**: 다음 행동 1개 명시. Stage 2 proceed 이후는 Tier 2 `tech_decider`가 설치되어 있거나 사용자가 추가를 명시 요청할 때만 Stage 3로 라우팅하고, kill/regress는 사용자 확인 후 각각 정지/필요 산출물로 회귀 안내
+- **종료 조건**: 다음 행동 1개 명시. Stage 2 proceed 이후는 `tech_decider`, confirmed tech decision 이후는 `vs_spec_writer`, VS 빌드 실측 데이터 이후는 `scope_estimator`로 라우팅하고, kill/regress는 사용자 확인 후 각각 정지/필요 산출물로 회귀 안내
 
 ### 스킬 6개
 
@@ -144,86 +144,85 @@
 
 ---
 
-## Tier 2: 1차 확장 (8개) — 첫 프로젝트 중후반
+## Tier 2: 1차 확장 (7개) — 첫 프로젝트 중후반
 
-### 에이전트 5개
+### 메인 루프 스킬 흐름 1개
 
-#### `playtest_recorder`
+#### `playtest_recorder` → `playtest-log-template` 메인 루프 흐름
 - **단계**: Stage 2
 - **목적**: 플레이 후 사실/해석/결정 분리 인터뷰
+- **실행 형태**: 서브에이전트가 아니라 메인 에이전트가 `playtest-log-template` 스킬로 직접 진행 (`concept_interviewer`와 같은 main-loop skill flow)
 - **입력**: 사용자의 플레이 메모 + 대화
-- **산출**: `prototypes/cycle-NN-<topic>/playtest.md`
-- **사용 스킬**: `playtest-log-template`
+- **산출**: 사용자 confirm 후 `prototypes/playtest.md`의 `## cycle-NN-<topic>` 아래 append
 - **호출 시점**: 사이클 플레이 종료 직후
-- **종료 조건**: Facts / Interpretations / Decisions 3섹션 모두 채워짐
+- **종료 조건**: Facts / Interpretations / Decisions 3섹션 초안이 사용자 발화만으로 작성되고, 사용자 confirm 후 기록됨
 
-#### `learnings_accumulator`
-- **단계**: Stage 2
-- **목적**: 사이클별 결론을 `learnings.md`로 누적/정리
-- **입력**: 모든 사이클의 playtest.md
-- **산출**: `prototypes/learnings.md` 갱신
-- **사용 스킬**: 없음 (요약 작업)
-- **호출 시점**: 각 사이클 종료 시 자동
-- **종료 조건**: 새 결론 1줄 형식 "관측: X / 결정: Y" 추가
+### 서브에이전트 3개
 
 #### `tech_decider`
 - **단계**: Stage 3
 - **목적**: Stage 2 발견 기반으로 엔진/스택 선택
-- **입력**: `learnings.md` + macro design
+- **입력**: `prototypes/learnings.md` + `docs/game/1-macro-design.md`
 - **산출**: `docs/game/3-tech-decision.md` (1-2p)
 - **사용 스킬**: `tech-decision-template`
 - **호출 시점**: Stage 3 진입 첫 단계
-- **종료 조건**: 결정 1개 + 근거(Stage 2 어느 발견) + 검증 방법
+- **종료 조건**: 결정 1개 + 근거(Stage 2 어느 발견) + 후보 비교 + 검증 방법 + 사용자 confirm 질문
 
 #### `vs_spec_writer`
 - **단계**: Stage 3
 - **목적**: vertical slice 범위 한정 상세 명세
-- **입력**: tech-decision + learnings + art-direction
+- **입력**: `docs/game/3-tech-decision.md` + `prototypes/learnings.md` + 있으면 art-direction
 - **산출**: `docs/game/3-vertical-slice-spec.md` (10-15p)
-- **사용 스킬**: (Tier 3의 `vs-spec-template`)
-- **호출 시점**: 아키텍처/아트 결정 후
-- **종료 조건**: 모든 수치에 출처 명시 + VS 범위 초과 없음
+- **사용 스킬**: `vs-spec-template`
+- **호출 시점**: tech decision confirm 후. 아키텍처 스파이크/아트 디렉션은 수동 작업 또는 Tier 3 안내만
+- **종료 조건**: VS 범위 내 + 모든 수치에 출처 명시 + 사용자 confirm 질문
 
 #### `scope_estimator`
 - **단계**: Stage 3
 - **목적**: VS 제작 데이터로 전체 게임 비용/시간 추정
-- **입력**: VS 제작 실시간 데이터 + 콘텐츠 수량
+- **입력**: VS 제작 실측 데이터(제작 시간, 콘텐츠 수량 등) + 전체 게임 목표 수량
 - **산출**: `docs/game/3-scope-estimate.md` (2-3p)
 - **사용 스킬**: 없음 (계산 중심)
-- **호출 시점**: VS 완성 직후
-- **종료 조건**: 시간/비용 추정치 + 신뢰 구간 명시
+- **호출 시점**: VS 완성 직후, 메인 에이전트가 실측 데이터를 사용자와 선해소한 뒤
+- **종료 조건**: 시간/비용 추정치 + 신뢰 구간 + 미측정 항목 표기 + Stage 3 게이트 질문
 
 ### 스킬 3개
 
-#### `playtest-log-template`
+#### `playtest-log-template` (구현됨)
 - **단계**: Stage 2
 - **목적**: Facts / Interpretations / Decisions 분리 강제
 - **강제 제약**:
+  - 메인 에이전트가 직접 짧게 인터뷰하고 사용자 confirm 후 append
   - 3섹션 명확히 분리
-  - Facts에 추측 단어 금지 ("아마", "느낌", "보임" 등)
+  - Facts에 추측 단어 금지 ("아마", "느낌", "보임", "같다", "듯", "probably", "seems", "feels")
   - Interpretations은 Facts와 별도 섹션
   - Decisions는 다음 사이클로 가져갈 행동 1-3개
-- **검출/차단**: Facts 섹션의 추측 표현
-- **출력 형식**: 마크다운 3섹션
+  - `prototypes/learnings.md`와 `killed-hypotheses.md`는 쓰지 않음 (사용자 전용 handoff)
+- **검출/차단**: Facts 섹션의 추측 표현, 사용자 confirm 없는 append
+- **출력 형식**: `prototypes/playtest.md` 아래 마크다운 3섹션 append
 
-#### `cycle-isolation`
-- **단계**: Stage 2
-- **목적**: 사이클 간 코드 누적 차단 (throwaway 강제)
-- **강제 제약**:
-  - 새 사이클 코드가 이전 사이클 디렉터리에서 import 시 차단
-  - `prototypes/cycle-NN/` 디렉터리 외부 참조 검출
-- **검출/차단**: import 구문 분석
-- **출력 형식**: 위반 시 차단 + 사유 보고
-
-#### `tech-decision-template`
+#### `tech-decision-template` (구현됨)
 - **단계**: Stage 3
 - **목적**: 기술 결정의 근거를 Stage 2 발견과 연결 강제
 - **강제 제약**:
+  - `docs/game/3-tech-decision.md` 1-2p / 약 120줄
+  - Decision / Rationale / Candidate Comparison / Validation Plan 4섹션
   - 결정 1개당 근거에 Stage 2 사이클 인덱스 1개 이상 인용
-  - 후보 비교 (A/B/C trade-off) 필수
+  - 후보 A/B/C trade-off 표 필수
   - 검증 방법 명시 필수
-- **검출/차단**: 근거 없는 결정 ("일반적으로 X가 좋음" 같은 단정)
-- **출력 형식**: 4섹션 (결정 / 근거 / 후보 비교 / 검증 방법)
+- **검출/차단**: 근거 없는 결정, Stage 2 proceed confirm 전 작성, VS 범위 밖 기술 결정
+- **출력 형식**: 4섹션 기술 결정 문서
+
+#### `vs-spec-template` (구현됨, Tier 3에서 Tier 2로 승격)
+- **단계**: Stage 3
+- **목적**: vertical slice 명세의 범위·출처 강제
+- **강제 제약**:
+  - `docs/game/3-vertical-slice-spec.md` 10-15p
+  - 전체 콘텐츠의 10-20%, 캐릭터/직업 1개, 핵심 시스템 한 사이클 분, 적 소수 + 보스 1
+  - 모든 수치/공식은 Stage 2 관측 또는 명시 레퍼런스 출처 필요
+  - 메타 섹션 금지
+- **검출/차단**: 모든 직업/전체 콘텐츠 매트릭스/장기 로드맵, 출처 없는 수치, Stage 4 detail docs
+- **출력 형식**: VS 범위 한정 명세
 
 ---
 
@@ -318,7 +317,8 @@
 
 **에이전트**:
 - `concept_reviewer`, `risk_extractor` (간단한 검증은 사람이)
-- `killed_recorder` (`learnings_accumulator`로 통합 가능)
+- `killed_recorder` (`cycle_reviewer`의 사용자 handoff로 충분)
+- `learnings_accumulator` (추가 권장 안 함: `cycle_reviewer` 핸드오프의 누적 파일은 사용자 전용 작성(author-only) 설계와 충돌)
 - `paper_proto_designer` (1인 개발에서 종이 프로토타입은 효용이 낮음 — 코드 프로토타입으로 일원화)
 - `tech_spike_runner`, `vs_builder`, `playtest_coordinator` (제작 활동 자체이지 자동화 대상 아님)
 - `detail_reviewer` (`decision_recorder`로 통합 가능)
@@ -330,7 +330,8 @@
 - `risk-to-hypothesis` (`prototype-hypothesis`로 통합 가능)
 - `paper-prototype` (1인 개발에서 종이 경로 제거에 따라 사용 안 함)
 - `cycle-review-criteria`, `learnings-format` (자유 형식 허용)
-- `architecture-vs-scope`, `vs-spec-template`, `vs-only-validator`, `scope-estimate-method` (Stage 3 진입 시 결정)
+- `cycle-isolation` (추가 권장 안 함: 이전 사이클 import 금지는 `dirty-code-*` 스킬과 `prototype_coder` 본문에 흡수)
+- `architecture-vs-scope`, `vs-only-validator`, `scope-estimate-method` (Stage 3 진입 시 결정)
 - `content-batch-generation`, `telemetry-analysis`, `playtest-aggregation` (Stage 5 시)
 - `stage-gate-validator`, `regression-protocol`, `verified-source-required` (다른 스킬에 흡수)
 - `cerny-method-knowledge`, `prototype-best-practices` (도메인 지식은 가이드 문서 참조로 대체)
@@ -342,8 +343,8 @@
 | Tier | 에이전트 | 스킬 | 누계 |
 |---|---|---|---|
 | **Tier 1 (필수)** | 4 (+ main-loop skill flow 2) | 6 | **12** |
-| **Tier 2 (1차 확장)** | 5 | 3 | **20** |
-| **Tier 3 (필요시)** | 6 | 5 | **31** |
+| **Tier 2 (1차 확장)** | 3 (+ main-loop skill flow 1) | 3 | **19** |
+| **Tier 3 (필요시)** | 6 | 5 | **30** |
 
 **시작은 12개.** Tier 3 항목들은 *실제로 막힐 때만* 추가하세요. 만들어 놓고 안 쓰는 컴포넌트가 생기면 그건 명세가 틀린 신호이고, 명세를 수정합니다.
 
