@@ -36,5 +36,6 @@ Completion: return a concise recommendation with evidence. If `prototypes/learni
         Format (see file header): cycle-NN-<topic>: <killed hypothesis>. 사유 — Z.
     [ ] Update docs/game/1-macro-design.md Top Risks: set R<N> Status to
         resolved (proceed) / testing (retry — still under test) / open (regress) / killed (kill gate).
+    [ ] Optional: ask once whether the harness itself caused friction this cycle. If yes, the user appends one line to `docs/harness/frictions.md` after checking for a same-type entry first; two strikes means fix the component instead.
 
 Then state the confirmation question (proceed / retry / regress / kill).
