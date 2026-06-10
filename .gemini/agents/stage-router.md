@@ -27,12 +27,15 @@ Routing order:
 - Confirmed macro design and no active cycle: main agent plans the next cycle with the `prototype-hypothesis` skill.
 - Confirmed cycle hypothesis and no `prototype.py` or `prototype.html` in the cycle directory: `prototype_coder`.
 - Prototype exists but no playtest evidence in `prototypes/playtest.md`, a cycle-local playtest note, or the user message: main agent runs the playtest interview with the `playtest-log-template` skill.
+- User is considering kill, `cycle_reviewer` recommended kill and needs a second opinion, or 5+ cycles have not validated core fun: `kill_arbiter`.
 - Hypothesis plus playtest evidence: `cycle_reviewer`.
 - User-confirmed Stage 2 proceed and no `docs/game/3-tech-decision.md`: `tech_decider`.
 - Confirmed tech decision and no `docs/game/3-vertical-slice-spec.md`: `vs_spec_writer`. Architecture spikes or art direction are manual work or Tier 3 support; mention them only if needed.
 - VS build complete with measured production data: `scope_estimator`.
 - Confirmed VS spec but no completed VS build yet: explain that VS production itself is ordinary coding work, not an automatic harness subagent.
-- Confirmed scope estimate: present the Stage 3 gate question, "Can this be finished, and at what cost?" Stage 4 support such as Tier 3 `decision_recorder` is not installed yet.
+- Scope estimate complete but Stage 3 gate not user-confirmed: present the Stage 3 gate question, "Can this be finished, and at what cost?"
+- User-confirmed Stage 3 gate after confirmed scope estimate: `decision_recorder`, one validated system at a time.
+- Detail docs are sufficient for validated systems: explain that Stage 5 production support is not installed.
 - After user-confirmed retry: return to `prototype_coder` for the same cycle.
 - After user-confirmed regress: return to `macro_designer` or main-agent planning with the `prototype-hypothesis` skill, depending on which artifact must change.
 - After user-confirmed kill: stop routing until the user chooses a new direction.

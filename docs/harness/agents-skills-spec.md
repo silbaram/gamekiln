@@ -243,19 +243,21 @@
 - **산출**: 통과/재작성 판정
 - **추가 시점**: macro_designer가 자주 5p를 넘기거나 가설이 안 뽑힐 때
 
-#### `decision_recorder`
+#### `decision_recorder` (구현됨)
 - **단계**: Stage 4
-- **목적**: VS에서 검증된 결정을 1-2p 문서로 정리
-- **입력**: VS 빌드 + vertical-slice-spec
-- **산출**: `docs/game/details/<slug>.md` (1-2p)
-- **추가 시점**: Stage 4 진입 시 (= VS 완료 후)
+- **목적**: VS에서 검증된 결정을 1-2p 문서로 정리 (호출당 시스템 1개)
+- **입력**: VS 빌드 결과물 + `docs/game/3-vertical-slice-spec.md` + `prototypes/learnings.md` + Stage 3 gate(scope estimate confirm) 통과 확인
+- **산출**: `docs/game/details/<slug>.md` (시스템당 1개, 1-2p)
+- **사용 스킬**: `decision-record-1p`, `forbidden-meta-sections`
+- **추가 시점**: Stage 4 진입 시 (= VS 완료 + scope estimate confirm 후)
 
-#### `kill_arbiter`
+#### `kill_arbiter` (구현됨)
 - **단계**: Cross-stage
-- **목적**: 각 단계 kill 조건 자동 검증, 사용자에게 kill 권고
-- **입력**: 현재 단계 상태 + 사이클 누적 결과
-- **산출**: Kill 권고 또는 진행 OK 판정
-- **추가 시점**: 첫 Kill 결정 직전 (보통 Cycle 5+)
+- **목적**: 각 단계 kill 조건 자동 검증, 사용자에게 kill/회귀/진행 OK 권고
+- **입력**: 현재 단계 산출물 + `prototypes/learnings.md` + `prototypes/killed-hypotheses.md` + `prototypes/playtest.md` + macro Top Risks 원장 + (있으면) 각 사이클 `iterations.md`
+- **산출**: 읽기 전용 권고 메시지 (kill 권고 / 회귀 권고 / 진행 OK 중 1개) + 보존/폐기 자산 목록
+- **사용 스킬**: `kill-criteria`
+- **추가 시점**: 사용자가 kill을 고민할 때, `cycle_reviewer` kill 권고 후 2차 의견이 필요할 때, 또는 5+ cycles에도 핵심 재미가 미검증일 때
 
 #### `art_director`
 - **단계**: Stage 3
@@ -280,25 +282,25 @@
 
 ### 스킬
 
-#### `forbidden-meta-sections`
+#### `forbidden-meta-sections` (구현됨)
 - **단계**: Stage 4
-- **목적**: "이 문서가 결정하는 것/안 하는 것/책임 경계" 메타 섹션 차단
-- **강제 제약**: 키워드 매칭으로 검출 즉시 차단
+- **목적**: `docs/game/details/*.md`에서 "이 문서가 결정하는 것/안 하는 것/책임 경계" 메타 섹션 차단
+- **강제 제약**: 한국어/영어 키워드 매칭으로 검출 즉시 차단, Pass/Block + 위반 줄 + 최소 수정안 출력
 - **추가 시점**: Stage 4 진입 시
 
-#### `decision-record-1p`
+#### `decision-record-1p` (구현됨)
 - **단계**: Stage 4
-- **목적**: detail doc의 1-2p 캡 + 검증 출처 강제
+- **목적**: `docs/game/details/<slug>.md`의 1-2p 캡 + 검증 출처 강제
 - **강제 제약**:
-  - 1-2페이지 캡
-  - 모든 수치/공식에 출처 (Stage 2 cycle 또는 VS 측정) 명시 필수
-  - 메타 섹션 금지
+  - 시스템당 1-2페이지 캡, 호출당 시스템 1개
+  - 모든 수치/공식에 출처 (`관측: cycle-NN-<topic>, ...`, `측정: VS, ...`, 또는 `인용: <명시 레퍼런스>, ...`) 필수
+  - 메타 섹션 금지, 미검증 가정은 `prototypes/assumptions.md`로 이동 안내만
 - **추가 시점**: Stage 4 진입 시
 
-#### `kill-criteria`
+#### `kill-criteria` (구현됨)
 - **단계**: Cross-stage
-- **목적**: 각 단계의 kill 조건 명시 + 자동 검증
-- **강제 제약**: 단계별 kill 조건 체크리스트
+- **목적**: 각 단계의 kill/회귀 조건 명시 + 보존/폐기 자산 안내
+- **강제 제약**: design-guide §6의 단계별 kill 조건 체크리스트만 사용, 증거 없는 kill 권고와 사용자 confirm 없는 kill 확정 차단
 - **추가 시점**: Kill 판단이 흐려질 때
 
 #### `art-direction-5p`
@@ -348,9 +350,9 @@
 |---|---|---|---|
 | **Tier 1 (필수)** | 4 (+ main-loop skill flow 2) | 6 | **12** |
 | **Tier 2 (1차 확장)** | 3 (+ main-loop skill flow 1) | 3 | **19** |
-| **Tier 3 (필요시)** | 6 | 5 | **30** |
+| **Tier 3 (partial)** | 2 구현 / 4 대기 | 3 구현 / 2 대기 | **24 구현 / 6 대기** |
 
-**시작은 12개.** Tier 3 항목들은 *실제로 막힐 때만* 추가하세요. 만들어 놓고 안 쓰는 컴포넌트가 생기면 그건 명세가 틀린 신호이고, 명세를 수정합니다.
+**시작은 12개.** 현재 Tier 3은 `decision_recorder`, `kill_arbiter`와 관련 스킬 3개만 구현됐고, 나머지 6개는 트리거 대기입니다. Tier 3 항목들은 *실제로 막힐 때만* 추가하세요. 만들어 놓고 안 쓰는 컴포넌트가 생기면 그건 명세가 틀린 신호이고, 명세를 수정합니다.
 
 ---
 

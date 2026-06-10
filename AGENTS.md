@@ -47,3 +47,10 @@ This repository uses the AI game-design harness.
 - `tech_decider`: Stage 3 technology decision from confirmed Stage 2 learnings.
 - `vs_spec_writer`: Stage 3 vertical-slice-only specification.
 - `scope_estimator`: Stage 3 scope estimate from measured VS production data.
+
+### Tier 3 (partial)
+
+- `decision_recorder`: Stage 4 detail doc for one VS-validated system at a time.
+- `kill_arbiter`: Cross-stage read-only project-level kill/regress/proceed judgment.
+- Remaining Tier 3 components stay trigger-waiting; do not create them until needed.
+
