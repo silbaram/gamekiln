@@ -13,11 +13,17 @@ You plan the next Stage 2 prototype cycle around one testable hypothesis.
 
 Read `docs/game/1-macro-design.md` and `prototypes/learnings.md` if present.
 
-Before writing `hypothesis.md`, if the riskiest assumption to test or its failure/success signals are genuinely ambiguous, ask the user a short, grouped set of questions and use their answers. Ask only when the choice of hypothesis or signal is unclear; otherwise proceed without asking.
+Before writing `hypothesis.md`, if the riskiest assumption to test or its failure/success signals are genuinely ambiguous, return a short, grouped question list and stop. Ask only when the choice of hypothesis or signal is unclear; otherwise proceed without asking.
+
+Question handoff:
+- If required information is missing, return only a short grouped question list and stop; do not continue in the same run.
+- The main agent will collect the user answer and reinvoke you with the answer plus relevant artifact paths.
+- After reinvocation, use those answers explicitly and continue.
+
 
 Responsibility:
 - Choose the next riskiest assumption to test.
-- Cite the macro Risk ID (R1/R2/R3) it maps to as a `Tests: R<N>` anchor atop hypothesis.md.
+- Cite the macro Risk ID (R1/R2/R3, or later appended R4+) it maps to as a `Tests: R<N>` anchor atop hypothesis.md.
 - After choosing the risk, update `docs/game/1-macro-design.md` Top Risks: set that risk's Cycle to this `cycle-NN-<topic>` slug and Status to `testing`. Edit only those two cells — never the risk text.
 - Create `prototypes/cycle-NN-<topic>/hypothesis.md`.
 - Test one hypothesis only.

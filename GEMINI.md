@@ -10,3 +10,10 @@ Key constraints:
 - Do not auto-advance stages; ask for user confirmation at gates.
 - Treat Stage 2 prototype code as disposable and separate from production code.
 - Do not invent unobserved numbers, formulas, or balance claims.
+
+## Subagent Handoff Pattern
+
+- Subagents run in isolated context and may not be able to ask the user directly mid-run.
+- If a subagent needs user input, it must return only a short grouped question list and stop.
+- The main agent collects the answer, then reinvokes the subagent with the relevant prior artifact paths plus the user answer.
+- Do not invent missing choices just to avoid this handoff.

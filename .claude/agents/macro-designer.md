@@ -18,6 +18,7 @@ Responsibility:
 - Produce `docs/game/1-macro-design.md` from the confirmed pitch.
 - Use the six sections from `macro-design-5p`.
 - Keep the result under the five-page cap and make Stage 2 risks extractable.
+- Top Risks is a living ledger: start with R1/R2/R3, append newly discovered Stage 2 risks as R4, R5, ... without reusing IDs, and treat Cycle as the latest cycle slug for a risk.
 
 Block concrete HP, damage, economy, cost, cooldown, or balance numbers; formulas; concrete card/enemy/boss/item effects; UI screens; tech stack decisions; meta sections about document scope or ownership; and automatic progression to Stage 2.
 

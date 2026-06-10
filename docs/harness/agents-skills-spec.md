@@ -34,7 +34,7 @@
 - **산출**: `prototypes/cycle-NN-<topic>/hypothesis.md` (1p)
 - **사용 스킬**: `prototype-hypothesis`
 - **호출 시점**: 새 사이클 시작 시
-- **작성 전 질문**: 검증할 가설 또는 실패/성공 신호가 모호할 때만 묶음 질문 → 답변 반영 (명확하면 질문 없이 진행, 모호한데 추측 금지)
+- **작성 전 질문**: 검증할 가설 또는 실패/성공 신호가 모호할 때만 묶음 질문 목록만 반환하고 종료 → 메인 스레드가 답변을 받아 재호출 (명확하면 질문 없이 진행, 모호한데 추측 금지)
 - **원장 갱신**: 위험 선택 후 macro Top Risks의 해당 위험 Cycle=`cycle-NN-<topic>` 슬러그, Status=`testing` (그 두 칸만, 위험 텍스트 불가)
 - **종료 조건**: 가설 1개 + 실패/성공 신호 명시됨 + `Tests: R<N>` 앵커 + 원장 Status=testing
 
@@ -45,18 +45,18 @@
 - **산출**: 단일 파일 코드 (`prototype.py` 또는 `prototype.html`) + 보강 시 이전본 `prototype-v<K>` 보존 + `iterations.md`(빌드 이력)
 - **사용 스킬**: `dirty-code-html`, `dirty-code-python`
 - **호출 시점**: `cycle_planner` 완료 후 (코드 사이클일 때만)
-- **작성 전 질문**: 빌드를 좌우하는 모호한 항목(조작, 승패/종료 조건, 시작 수치 등 밸런스값, 화면 표시, 핵심 엣지케이스)만 코딩 전 묶음 질문 → 답변으로 작성. 수치·공식·조작·승패 조건을 **지어내지 말고** 질문, 답 없으면 멈춤
+- **작성 전 질문**: 빌드를 좌우하는 모호한 항목(조작, 승패/종료 조건, 시작 수치 등 밸런스값, 화면 표시, 핵심 엣지케이스)만 코딩 전 묶음 질문 목록만 반환하고 종료 → 메인 스레드가 답변을 받아 재호출. 수치·공식·조작·승패 조건을 **지어내지 말고** 질문, 답 없으면 멈춤
 - **반복 이력**: `iterations.md`의 행 시작 `v<N>:` 항목 중 최대 N=현재 버전 K(단일 진실원). 첫 빌드는 헤더 없이 `v1:` 한 줄만 기록. 보강 시 기존 `prototype.html`→`prototype-v<K>` 복사 후 새 빌드, `v<K+1>:` 한 줄 append. 기록된 버전·기존 `prototype-v*` 덮어쓰기 금지. 가설 바뀌면 새 사이클
-- **종료 조건**: 단일 자기완결 `prototype.html` 또는 `prototype.py`, 외부 의존성은 사용자 확인 없으면 금지, 플레이어-facing 문구는 한국어, 이 빌드가 `iterations.md`에 기록됨, 가설을 플레이테스트할 수 있음
+- **종료 조건**: 단일 자기완결 `prototype.html` 또는 `prototype.py`, 외부 의존성은 사용자 확인 없으면 금지, 플레이어-facing 문구는 한국어, 이 빌드가 `iterations.md`에 기록됨, 가설을 플레이테스트할 수 있음, 플레이 후 `prototypes/playtest.md`에 Facts/Interpretations 분리 메모를 남기라고 안내
 
 #### `cycle_reviewer`
 - **단계**: Stage 2
 - **목적**: 사이클 종료 시 다음 행동(진행/재시도/회귀/Kill) 권고
-- **입력**: 사이클의 hypothesis + playtest 결과 + (있으면) `iterations.md` 빌드 이력
+- **입력**: 사이클의 hypothesis + `prototypes/playtest.md` 또는 사용자 메시지의 playtest 결과 + (있으면) `iterations.md` 빌드 이력
 - **산출**: 권고 메시지 (사용자 confirm 필수)
 - **사용 스킬**: 없음 (judgment 중심)
 - **호출 시점**: 사이클 플레이 종료 후
-- **원장 갱신(사용자 핸드오프)**: 게이트 전 macro Top Risks의 R<N> Status를 resolved(proceed)/testing(retry)/open(regress)/killed로 갱신 — reviewer는 읽기전용, 사용자가 작성
+- **원장/기록 갱신(사용자 핸드오프)**: 게이트 전 `prototypes/playtest.md`에 Facts/Interpretations가 없으면 작성하고, macro Top Risks의 R<N> Status를 resolved(proceed)/testing(retry)/open(regress)/killed로 갱신 — reviewer는 읽기전용, 사용자가 작성
 - **종료 조건**: 4가지 옵션 중 1개 권고 + 근거 제시 + 핸드오프 체크리스트 제시
 
 #### `stage_router`
@@ -66,7 +66,7 @@
 - **산출**: 다음 에이전트 추천 또는 게이트 안내
 - **사용 스킬**: 없음
 - **호출 시점**: 사용자가 의도 불명확하게 요청할 때
-- **종료 조건**: 다음 행동 1개 명시
+- **종료 조건**: 다음 행동 1개 명시. Stage 2 proceed 이후는 Tier 2 `tech_decider`가 설치되어 있거나 사용자가 추가를 명시 요청할 때만 Stage 3로 라우팅하고, kill/regress는 사용자 확인 후 각각 정지/필요 산출물로 회귀 안내
 
 ### 스킬 6개
 

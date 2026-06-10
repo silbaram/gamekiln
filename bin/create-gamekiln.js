@@ -10,7 +10,7 @@ const GENERATED_GITIGNORE_ENTRIES = [
   "node_modules/",
   "*.tgz",
 ];
-const TIER1_CLAUDE_SKILLS = [
+const TIER1_SKILLS = [
   "dirty-code-html",
   "dirty-code-python",
   "forbidden-in-macro",
@@ -134,25 +134,26 @@ function writeGeneratedGitignore(targetRoot) {
   fs.writeFileSync(gitignorePath, `${existing}${prefix}${suffix}${missing.join("\n")}\n`);
 }
 
-function createClaudeSkillLinks(targetRoot) {
+function copyTier1Skills(targetRoot) {
+  for (const skill of TIER1_SKILLS) {
+    copySourceToTarget(
+      path.join(".agents", "skills", skill),
+      path.join(targetRoot, ".agents", "skills", skill)
+    );
+  }
+}
+
+function createClaudeSkillCopies(targetRoot) {
   const claudeSkillsDir = path.join(targetRoot, ".claude", "skills");
   fs.mkdirSync(claudeSkillsDir, { recursive: true });
 
-  for (const skill of TIER1_CLAUDE_SKILLS) {
-    const linkPath = path.join(claudeSkillsDir, skill);
-    const linkTarget = path.join("..", "..", ".agents", "skills", skill);
-    fs.rmSync(linkPath, { recursive: true, force: true });
-    try {
-      fs.symlinkSync(linkTarget, linkPath, "dir");
-    } catch (error) {
-      if (error.code !== "EPERM" && error.code !== "EACCES") {
-        throw error;
-      }
-      copySourceToTarget(
-        path.join(".agents", "skills", skill),
-        path.join(claudeSkillsDir, skill)
-      );
-    }
+  for (const skill of TIER1_SKILLS) {
+    const skillPath = path.join(claudeSkillsDir, skill);
+    fs.rmSync(skillPath, { recursive: true, force: true });
+    copySourceToTarget(
+      path.join(".agents", "skills", skill),
+      skillPath
+    );
   }
 }
 
@@ -174,12 +175,13 @@ function scaffold({ target, provider }) {
     copyPath("GEMINI.md", targetRoot);
   }
 
-  copyPath(path.join(".agents", "skills"), targetRoot);
+  copyTier1Skills(targetRoot);
   copyPath(path.join("docs", "harness"), targetRoot);
   copyPath(path.join("docs", "decisions", ".gitkeep"), targetRoot, { overwrite: false });
   copyPath(path.join("docs", "game", "details", ".gitkeep"), targetRoot, { overwrite: false });
   copyPath(path.join("game", ".gitkeep"), targetRoot, { overwrite: false });
   copyPath(path.join("prototypes", "learnings.md"), targetRoot, { overwrite: false });
+  copyPath(path.join("prototypes", "playtest.md"), targetRoot, { overwrite: false });
   copyPath(path.join("prototypes", "killed-hypotheses.md"), targetRoot, { overwrite: false });
 
   if (providerEnabled(provider, "codex")) {
@@ -187,7 +189,7 @@ function scaffold({ target, provider }) {
   }
   if (providerEnabled(provider, "claude")) {
     copyPath(path.join(".claude", "agents"), targetRoot);
-    createClaudeSkillLinks(targetRoot);
+    createClaudeSkillCopies(targetRoot);
   }
   if (providerEnabled(provider, "gemini")) {
     copyPath(".gemini", targetRoot);

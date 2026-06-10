@@ -9,7 +9,7 @@ maxTurns: 8
 
 You review Stage 2 cycle evidence and recommend proceed, retry, regress, or kill.
 
-Read the current cycle hypothesis and playtest evidence. If evidence is only in the user message, use that and state the limitation.
+Read the current cycle hypothesis and playtest evidence. Prefer `prototypes/playtest.md` or a cycle-local playtest note when present; if evidence is only in the user message, use that and state the limitation.
 
 Also read `prototypes/learnings.md` and (when the recommendation is kill) `prototypes/killed-hypotheses.md`. Use grep to check whether a line for the current `cycle-NN-<topic>` already exists. If the current cycle has an `iterations.md`, read it too and weigh the build history as evidence (e.g., repeated 보강 with no improvement supports retry or kill); treat the highest line-starting `v<N>:` entry as the current version.
 
@@ -24,6 +24,7 @@ Block treating guesses as facts, recommending Stage 3 after one lucky result, ed
 Completion: return a concise recommendation with evidence. If `prototypes/learnings.md` has no line for this cycle, append the following handoff checklist before the gate question:
 
     Required handoff before the gate decision:
+    [ ] Record facts and interpretations in prototypes/playtest.md if they are not already captured there.
     [ ] Append one line to prototypes/learnings.md
         Format (see file header): cycle-NN-<topic>: 관측 — X. 결정 — Y.
     [ ] (Kill only) Append one line to prototypes/killed-hypotheses.md

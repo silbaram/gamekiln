@@ -58,14 +58,16 @@ Skills are an open standard but each provider discovers them in different paths 
 
 1. **Author once under `.agents/skills/<name>/SKILL.md`** as the canonical source.
 2. **Codex**: nothing more to do. Codex scans `.agents/skills/` automatically.
-3. **Claude Code**: create `.claude/skills/<name>` as a symlink to `../../.agents/skills/<name>` so both providers share one source. Then add the skill to the relevant subagent's `skills:` frontmatter so its content preloads at startup.
+3. **Claude Code**: copy `.agents/skills/<name>` to `.claude/skills/<name>` as a real directory, then add the skill to the relevant subagent's `skills:` frontmatter so its content preloads at startup. Do not use symlinks in this repository; Windows checkouts can silently degrade them into text files.
 4. **Gemini CLI**: Gemini has no skill auto-loading mechanism. Inline the skill's hard rules into each Gemini agent body under a `<skill-name> rules (inlined because Gemini does not auto-load skills):` block. Keep it tight — the harness anti-encyclopedia principle still applies.
 
 Verification after adding a new skill:
 
-- `ls .claude/skills/<name>/SKILL.md` resolves through the symlink.
+- `test -f .claude/skills/<name>/SKILL.md` succeeds and `.claude/skills/<name>` is not a symlink.
+- `npm run verify:claude-skills` passes, proving the Claude copies match the canonical `.agents/skills/` files.
 - The Claude subagent frontmatter lists the skill under `skills:`.
 - The corresponding Gemini agent body contains the inlined rules.
+- Keep `harness-subagents` out of `.claude/skills/` in scaffolded game projects; it is for authoring this harness, not ordinary Tier 1 game work.
 
 ## Authoring Contract
 
