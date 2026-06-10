@@ -22,6 +22,7 @@
     "docs/game/details/.gitkeep",
     "game/.gitkeep",
     "prototypes/learnings.md",
+    "prototypes/assumptions.md",
     "prototypes/playtest.md",
     "prototypes/killed-hypotheses.md"
   ],

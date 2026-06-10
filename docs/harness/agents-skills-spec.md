@@ -178,7 +178,7 @@
 - **입력**: `docs/game/3-tech-decision.md` + `prototypes/learnings.md` + 있으면 art-direction
 - **산출**: `docs/game/3-vertical-slice-spec.md` (10-15p)
 - **사용 스킬**: `vs-spec-template`
-- **호출 시점**: tech decision confirm 후. 아키텍처 스파이크/아트 디렉션은 수동 작업 또는 Tier 3 안내만
+- **호출 시점**: tech decision confirm 후 art direction이 confirm됐거나 텍스트/터미널 중심 게임이라 명시적으로 skip된 뒤. 아키텍처 스파이크는 수동 작업 또는 Tier 3 안내만
 - **종료 조건**: VS 범위 내 + 모든 수치에 출처 명시 + 사용자 confirm 질문
 
 #### `scope_estimator`
@@ -259,12 +259,14 @@
 - **사용 스킬**: `kill-criteria`
 - **추가 시점**: 사용자가 kill을 고민할 때, `cycle_reviewer` kill 권고 후 2차 의견이 필요할 때, 또는 5+ cycles에도 핵심 재미가 미검증일 때
 
-#### `art_director`
+#### `art_director` (구현됨)
 - **단계**: Stage 3
-- **목적**: 시각 방향 5페이지 작성
-- **입력**: macro design + learnings
+- **목적**: 검증된 재미와 macro Pillar에 연결된 시각 방향 5페이지 작성
+- **입력**: `docs/game/1-macro-design.md` + `prototypes/learnings.md` + (있으면) `docs/game/3-tech-decision.md` + 메인 에이전트가 선해소한 시각 선호(무드, 레퍼런스, 제작 제약)
 - **산출**: `docs/game/3-art-direction.md` (5p)
-- **추가 시점**: VS 제작 시 시각 일관성이 문제될 때
+- **사용 스킬**: `art-direction-5p`
+- **추가 시점**: tech decision confirm 후, 시각 표현이 있는 게임에서 VS 명세 작성 전
+- **종료 조건**: 6섹션 + Stage 2/macro 연결 + 완성 품질 샘플 1개 계획 + 사용자 confirm 질문
 
 #### `architecture_designer`
 - **단계**: Stage 3
@@ -303,11 +305,11 @@
 - **강제 제약**: design-guide §6의 단계별 kill 조건 체크리스트만 사용, 증거 없는 kill 권고와 사용자 confirm 없는 kill 확정 차단
 - **추가 시점**: Kill 판단이 흐려질 때
 
-#### `art-direction-5p`
+#### `art-direction-5p` (구현됨)
 - **단계**: Stage 3
-- **목적**: 아트 디렉션 5페이지 캡
-- **강제 제약**: 5페이지 캡, 컬러 팔레트/타이포/스타일 가이드 필수
-- **추가 시점**: art_director 만들 때 같이
+- **목적**: `docs/game/3-art-direction.md`의 5페이지 캡 + 검증된 재미 기반 시각 방향 강제
+- **강제 제약**: 5페이지 캡, Visual Pillars / Color Palette / Typography And UI Tone / References / Style Rules / Sample Plan 6섹션, Visual Pillars는 Stage 2 학습과 macro Pillar 연결 필수, VS 전 완성 품질 샘플 1개 계획 필수
+- **추가 시점**: 시각 표현이 있는 게임에서 tech decision confirm 후 VS 명세 작성 전
 
 #### `assumption-tracker`
 - **단계**: 모든 단계
@@ -350,9 +352,9 @@
 |---|---|---|---|
 | **Tier 1 (필수)** | 4 (+ main-loop skill flow 2) | 6 | **12** |
 | **Tier 2 (1차 확장)** | 3 (+ main-loop skill flow 1) | 3 | **19** |
-| **Tier 3 (partial)** | 2 구현 / 4 대기 | 3 구현 / 2 대기 | **24 구현 / 6 대기** |
+| **Tier 3 (partial)** | 3 구현 / 3 대기 | 4 구현 / 1 대기 | **26 구현 / 4 대기** |
 
-**시작은 12개.** 현재 Tier 3은 `decision_recorder`, `kill_arbiter`와 관련 스킬 3개만 구현됐고, 나머지 6개는 트리거 대기입니다. Tier 3 항목들은 *실제로 막힐 때만* 추가하세요. 만들어 놓고 안 쓰는 컴포넌트가 생기면 그건 명세가 틀린 신호이고, 명세를 수정합니다.
+**시작은 12개.** 현재 Tier 3은 `decision_recorder`, `kill_arbiter`, `art_director`와 관련 스킬 4개가 구현됐고, 나머지 4개는 트리거 대기입니다. Tier 3 항목들은 *실제로 막힐 때만* 추가하세요. 만들어 놓고 안 쓰는 컴포넌트가 생기면 그건 명세가 틀린 신호이고, 명세를 수정합니다.
 
 ---
 

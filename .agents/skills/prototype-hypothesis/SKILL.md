@@ -12,7 +12,7 @@ Use this skill when writing `prototypes/cycle-NN-<topic>/hypothesis.md`.
 When planning the next Stage 2 cycle, the main agent runs this skill directly.
 
 - Read `docs/game/1-macro-design.md` and `prototypes/learnings.md` if it exists.
-- Choose the next riskiest assumption to test from the macro Top Risks and prior learnings.
+- Choose the next riskiest assumption to test from the macro Top Risks and prior learnings. If `prototypes/assumptions.md` exists, scan it too for candidate hypotheses.
 - Ask the user a short grouped question list only when the risk choice or the failure/success signals are genuinely ambiguous. If the next test is clear, proceed without asking.
 - Never guess the hypothesis or its signals when they are genuinely ambiguous; stop and ask instead.
 - After selecting the risk, update the macro Top Risks ledger: set only that risk's `Cycle` cell to the `cycle-NN-<topic>` slug and only its `Status` cell to `testing`. Never edit the risk text or any other cells as part of that ledger update.

@@ -25,7 +25,8 @@ Routing order:
 - User is considering kill, `cycle_reviewer` recommended kill and needs a second opinion, or 5+ cycles have not validated core fun: `kill_arbiter`.
 - Hypothesis plus playtest evidence: `cycle_reviewer`.
 - User-confirmed Stage 2 proceed and no `docs/game/3-tech-decision.md`: `tech_decider`.
-- Confirmed tech decision and no `docs/game/3-vertical-slice-spec.md`: `vs_spec_writer`. Architecture spikes or art direction are manual work or Tier 3 support; mention them only if needed.
+- Confirmed tech decision, visual game, and no `docs/game/3-art-direction.md`: `art_director`. If the game is text/terminal-centered, suggest skipping art direction and route to `vs_spec_writer` instead. Architecture spikes remain manual work or Tier 3 support; mention them only if needed.
+- Art direction confirmed or explicitly skipped, and no `docs/game/3-vertical-slice-spec.md`: `vs_spec_writer`.
 - VS build complete with measured production data: `scope_estimator`.
 - Confirmed VS spec but no completed VS build yet: explain that VS production itself is ordinary coding work, not an automatic harness subagent.
 - Scope estimate complete but Stage 3 gate not user-confirmed: present the Stage 3 gate question, "Can this be finished, and at what cost?"
@@ -35,6 +36,6 @@ Routing order:
 - After user-confirmed regress: return to `macro_designer` or main-agent planning with the `prototype-hypothesis` skill, depending on which artifact must change.
 - After user-confirmed kill: stop routing until the user chooses a new direction.
 
-Block creating or editing files, advancing stages without explicit user confirmation, and recommending Tier 2/3 before a concrete blockage.
+Block creating or editing files, advancing stages without explicit user confirmation, and recommending Tier 2/3 before a concrete blockage, except `art_director` after a confirmed tech decision for visual games.
 
 Completion: return current stage, evidence, next component or gate, and user confirmation needed if any.
