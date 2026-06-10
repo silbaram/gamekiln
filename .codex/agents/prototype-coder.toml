@@ -38,6 +38,7 @@ Block:
 - Silently repurposing the current prototype to test a different hypothesis instead of starting a new cycle via the main-agent prototype-hypothesis planning flow.
 
 Completion:
+- Begin the response with a short Korean read-back (1-3 lines): the hypothesis as understood plus key build choices applied (controls, win/lose condition, starting values); the user verifies it before playtesting, and if wrong the prototype is fixed before any play session.
 - The prototype can be opened or run by a playtester to test the hypothesis without extra explanation.
 - This build is recorded as a line in iterations.md (prior version archived as prototype-v<K> if changed).
 - Return run instructions, remind that the code is disposable, and remind the user to record playtest evidence in prototypes/playtest.md using Facts and Interpretations.

@@ -49,7 +49,7 @@
 - **호출 시점**: 메인 에이전트의 `prototype-hypothesis` 스킬 흐름 완료 후 (코드 사이클일 때만)
 - **작성 전 질문**: 메인 에이전트가 스폰 전에 빌드를 좌우하는 모호한 항목(조작, 승패/종료 조건, 시작 수치 등 밸런스값, 화면 표시, 핵심 엣지케이스)을 사용자와 해소해 스폰 프롬프트에 포함. 그래도 막히면 코더는 묶음 질문 목록을 최종 출력으로 반환하고 종료 → 메인 스레드가 답변을 받아 재호출. 수치·공식·조작·승패 조건을 **지어내지 말고** 질문, 답 없으면 멈춤
 - **반복 이력**: `iterations.md`의 행 시작 `v<N>:` 항목 중 최대 N=현재 버전 K(단일 진실원). 첫 빌드는 헤더 없이 `v1:` 한 줄만 기록. 보강 시 기존 `prototype.html`→`prototype-v<K>` 복사 후 새 빌드, `v<K+1>:` 한 줄 append. 기록된 버전·기존 `prototype-v*` 덮어쓰기 금지. 가설 바뀌면 새 사이클
-- **종료 조건**: 단일 자기완결 `prototype.html` 또는 `prototype.py`, 외부 의존성은 사용자 확인 없으면 금지, 플레이어-facing 문구는 한국어, 이 빌드가 `iterations.md`에 기록됨, 가설을 플레이테스트할 수 있음, 플레이 후 `prototypes/playtest.md`에 Facts/Interpretations 분리 메모를 남기라고 안내
+- **종료 조건**: 단일 자기완결 `prototype.html` 또는 `prototype.py`, 외부 의존성은 사용자 확인 없으면 금지, 플레이어-facing 문구는 한국어, 이 빌드가 `iterations.md`에 기록됨, 완료 응답 첫머리에 가설 이해와 핵심 빌드 선택(조작/승패/시작값) read-back 1-3줄을 한국어로 제시해 플레이 전 사용자 검증을 받음, 플레이 후 `prototypes/playtest.md`에 Facts/Interpretations 분리 메모를 남기라고 안내
 
 #### `cycle_reviewer`
 - **단계**: Stage 2
@@ -59,6 +59,7 @@
 - **사용 스킬**: 없음 (judgment 중심)
 - **호출 시점**: 사이클 플레이 종료 후
 - **원장/기록 갱신(사용자 핸드오프)**: 게이트 전 `prototypes/playtest.md`에 Facts/Interpretations가 없으면 작성하고, macro Top Risks의 R<N> Status를 resolved(proceed)/testing(retry)/open(regress)/killed로 갱신 — reviewer는 읽기전용, 사용자가 작성
+- **판단 기준**: 같은 실패 신호가 2개 이상 사이클(`learnings.md`/`killed-hypotheses.md`) 또는 같은 사이클의 2개 이상 `v<N>:` 보강(`iterations.md`)에 반복되면 구조 신호로 보고 retry보다 regress/kill 쪽에 무게를 둔다; 같은 실패에 두 번째 retry는 명시 근거 필요
 - **종료 조건**: 4가지 옵션 중 1개 권고 + 근거 제시 + 핸드오프 체크리스트 제시
 
 #### `stage_router`
@@ -358,5 +359,7 @@
 3. **차단 규칙**: 무엇을 차단하는가 (메타 텍스트, 미검증 수치 등)
 4. **다음 단계 미명시**: 자동 다음 단계 진행 금지, 사용자 confirm 필수
 5. **종료 조건**: 언제 작업이 완료되는가
+
+하네스 운영 중 반복 마찰은 `docs/harness/retrospective.md`에 기록하고, 같은 유형 2회 발생 시 담당 스킬/에이전트를 수정합니다.
 
 이 5가지가 빠진 명세는 백과사전 함정으로 다시 빠질 가능성이 높습니다.
