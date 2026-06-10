@@ -7,16 +7,29 @@
 
 ## Tier 1: 필수 (12개) — 첫 프로젝트 최소셋
 
-### 에이전트 6개
+### 메인 루프 스킬 흐름 2개
 
-#### `concept_interviewer`
+#### `concept_interviewer` (main-loop skill flow)
 - **단계**: Stage 0
-- **목적**: 사용자와 인터뷰하여 1페이지 게임 컨셉 도출
+- **목적**: 메인 에이전트가 `pitch-one-pager` 스킬로 사용자와 인터뷰하여 1페이지 게임 컨셉 도출
 - **입력**: 사용자 답변 (대화형)
 - **산출**: `docs/game/0-pitch.md` (1p)
 - **사용 스킬**: `pitch-one-pager`
 - **호출 시점**: 새 프로젝트 시작 시
 - **종료 조건**: 6개 섹션 모두 채워지고 사용자가 confirm
+
+#### `cycle_planner` (main-loop skill flow)
+- **단계**: Stage 2
+- **목적**: 메인 에이전트가 `prototype-hypothesis` 스킬로 다음 사이클의 가설 1개와 최소 룰셋 설계
+- **입력**: macro design + 이전 `learnings.md`
+- **산출**: `prototypes/cycle-NN-<topic>/hypothesis.md` (1p)
+- **사용 스킬**: `prototype-hypothesis`
+- **호출 시점**: 새 사이클 시작 시
+- **작성 전 질문**: 검증할 가설 또는 실패/성공 신호가 모호할 때만 메인 에이전트가 묶음 질문 (명확하면 질문 없이 진행, 모호한데 추측 금지)
+- **원장 갱신**: 위험 선택 후 macro Top Risks의 해당 위험 Cycle=`cycle-NN-<topic>` 슬러그, Status=`testing` (그 두 칸만, 위험 텍스트 불가)
+- **종료 조건**: 가설 1개 + 실패/성공 신호 명시됨 + `Tests: R<N>` 앵커 + 원장 Status=testing
+
+### 에이전트 4개
 
 #### `macro_designer`
 - **단계**: Stage 1
@@ -27,25 +40,14 @@
 - **호출 시점**: Stage 0 완료 후
 - **종료 조건**: 5p 캡 통과 + Stage 2 가설 추출 가능 검증
 
-#### `cycle_planner`
-- **단계**: Stage 2
-- **목적**: 다음 사이클의 가설 1개와 최소 룰셋 설계
-- **입력**: macro design + 이전 `learnings.md`
-- **산출**: `prototypes/cycle-NN-<topic>/hypothesis.md` (1p)
-- **사용 스킬**: `prototype-hypothesis`
-- **호출 시점**: 새 사이클 시작 시
-- **작성 전 질문**: 검증할 가설 또는 실패/성공 신호가 모호할 때만 묶음 질문 목록만 반환하고 종료 → 메인 스레드가 답변을 받아 재호출 (명확하면 질문 없이 진행, 모호한데 추측 금지)
-- **원장 갱신**: 위험 선택 후 macro Top Risks의 해당 위험 Cycle=`cycle-NN-<topic>` 슬러그, Status=`testing` (그 두 칸만, 위험 텍스트 불가)
-- **종료 조건**: 가설 1개 + 실패/성공 신호 명시됨 + `Tests: R<N>` 앵커 + 원장 Status=testing
-
 #### `prototype_coder`
 - **단계**: Stage 2
 - **목적**: 가설 검증 목적의 *더러운* 프로토타입 코드 생성
 - **입력**: `hypothesis.md` + 룰셋
 - **산출**: 단일 파일 코드 (`prototype.py` 또는 `prototype.html`) + 보강 시 이전본 `prototype-v<K>` 보존 + `iterations.md`(빌드 이력)
 - **사용 스킬**: `dirty-code-html`, `dirty-code-python`
-- **호출 시점**: `cycle_planner` 완료 후 (코드 사이클일 때만)
-- **작성 전 질문**: 빌드를 좌우하는 모호한 항목(조작, 승패/종료 조건, 시작 수치 등 밸런스값, 화면 표시, 핵심 엣지케이스)만 코딩 전 묶음 질문 목록만 반환하고 종료 → 메인 스레드가 답변을 받아 재호출. 수치·공식·조작·승패 조건을 **지어내지 말고** 질문, 답 없으면 멈춤
+- **호출 시점**: 메인 에이전트의 `prototype-hypothesis` 스킬 흐름 완료 후 (코드 사이클일 때만)
+- **작성 전 질문**: 메인 에이전트가 스폰 전에 빌드를 좌우하는 모호한 항목(조작, 승패/종료 조건, 시작 수치 등 밸런스값, 화면 표시, 핵심 엣지케이스)을 사용자와 해소해 스폰 프롬프트에 포함. 그래도 막히면 코더는 묶음 질문 목록을 최종 출력으로 반환하고 종료 → 메인 스레드가 답변을 받아 재호출. 수치·공식·조작·승패 조건을 **지어내지 말고** 질문, 답 없으면 멈춤
 - **반복 이력**: `iterations.md`의 행 시작 `v<N>:` 항목 중 최대 N=현재 버전 K(단일 진실원). 첫 빌드는 헤더 없이 `v1:` 한 줄만 기록. 보강 시 기존 `prototype.html`→`prototype-v<K>` 복사 후 새 빌드, `v<K+1>:` 한 줄 append. 기록된 버전·기존 `prototype-v*` 덮어쓰기 금지. 가설 바뀌면 새 사이클
 - **종료 조건**: 단일 자기완결 `prototype.html` 또는 `prototype.py`, 외부 의존성은 사용자 확인 없으면 금지, 플레이어-facing 문구는 한국어, 이 빌드가 `iterations.md`에 기록됨, 가설을 플레이테스트할 수 있음, 플레이 후 `prototypes/playtest.md`에 Facts/Interpretations 분리 메모를 남기라고 안내
 
@@ -338,7 +340,7 @@
 
 | Tier | 에이전트 | 스킬 | 누계 |
 |---|---|---|---|
-| **Tier 1 (필수)** | 6 | 6 | **12** |
+| **Tier 1 (필수)** | 4 (+ main-loop skill flow 2) | 6 | **12** |
 | **Tier 2 (1차 확장)** | 5 | 3 | **20** |
 | **Tier 3 (필요시)** | 6 | 5 | **31** |
 
@@ -351,6 +353,7 @@
 각 에이전트/스킬 정의 파일(`.agents/skills/<name>/SKILL.md` 또는 `.agents/definitions/<name>.toml`)에 다음을 *반드시* 포함:
 
 1. **단일 책임**: 한 에이전트/스킬은 한 가지 일만
+   - 실행 중 사용자 입력이 필요한 역할은 서브에이전트가 아니라 메인 루프 스킬 흐름으로 구현한다.
 2. **분량 캡 명시**: 출력의 절대 상한 (페이지/줄/문자 수)
 3. **차단 규칙**: 무엇을 차단하는가 (메타 텍스트, 미검증 수치 등)
 4. **다음 단계 미명시**: 자동 다음 단계 진행 금지, 사용자 confirm 필수

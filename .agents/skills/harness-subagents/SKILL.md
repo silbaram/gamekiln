@@ -29,12 +29,13 @@ Every harness agent, skill, or generated prompt must preserve these rules:
 - Stage 4 detail docs are only written after a vertical slice proves the relevant decision.
 - Prefer Tier 1 only unless the user explicitly asks for a Tier 2/3 component or the project is already blocked at that point.
 - Ordinary runtime agents should not require reading `docs/harness/`. Put the necessary behavior in AGENTS.md, the relevant SKILL.md files, or the agent body.
+- Roles that need user input during execution must be implemented as main-loop skill flows, not subagents.
 
 ## Workflow
 
 1. Identify target provider(s): `codex`, `claude`, `gemini`, or all three. If unspecified, create provider-neutral guidance and ask before writing provider files.
-2. Identify the smallest useful tier. Default to Tier 1: `concept_interviewer`, `macro_designer`, `cycle_planner`, `prototype_coder`, `cycle_reviewer`, and `stage_router`.
-3. For each agent, write one responsibility only: stage, purpose, inputs, outputs, blocking rules, and completion condition.
+2. Identify the smallest useful tier. Default to Tier 1: main-loop skill flows for `concept_interviewer` and `cycle_planner`, plus subagents `macro_designer`, `prototype_coder`, `cycle_reviewer`, and `stage_router`.
+3. For each component, choose the execution shape first: use a main-loop skill flow when the role needs user input during execution; use a subagent for autonomous drafting, coding, review, or routing. Do not create provider subagent files for main-loop skill flows. Then write one responsibility only: stage, purpose, inputs, outputs, blocking rules, and completion condition.
 4. Convert names by provider:
    - Internal harness id: keep harness ids such as `concept_interviewer`.
    - Codex agent `name`: keep snake_case.

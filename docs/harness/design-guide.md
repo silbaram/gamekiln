@@ -562,7 +562,7 @@ Cross-stage Agents (단계 무관 게이트키퍼)
 
 | 에이전트 | 역할 | 입력 | 산출 |
 |---|---|---|---|
-| `concept_interviewer` | 1페이지 pitch 인터뷰 진행 | 사용자 답변 | `pitch.md` (1p) |
+| `concept_interviewer` | 1페이지 pitch 인터뷰 진행 (메인 루프 스킬 흐름) | 사용자 답변 | `pitch.md` (1p) |
 | `concept_reviewer` | 1p 캡 검증, 진행 가능 여부 판정 | `pitch.md` | 진행/회귀/Kill 결정 |
 
 ### 7.3 Stage 1: Macro Design
@@ -577,7 +577,7 @@ Cross-stage Agents (단계 무관 게이트키퍼)
 
 | 에이전트 | 역할 | 입력 | 산출 |
 |---|---|---|---|
-| `cycle_planner` | 다음 사이클의 가설/룰셋 설계 | `cycle-plan.md` + 이전 `learnings.md` | `cycle-NN-hypothesis.md` |
+| `cycle_planner` | 다음 사이클의 가설/룰셋 설계 (메인 루프 스킬 흐름) | `cycle-plan.md` + 이전 `learnings.md` | `cycle-NN-hypothesis.md` |
 | `prototype_coder` | 더러운 코드로 프로토타입 생성 | hypothesis + 룰셋 | 단일 파일 코드 (Python/HTML) |
 | `playtest_recorder` | 플레이 후 사실/해석 분리 인터뷰 | 사용자 플레이 메모 | `cycle-NN-playtest.md` |
 | `cycle_reviewer` | 사이클 종료 시 진행/재시도/회귀/Kill 결정 | playtest log | 의사결정 권고 (사용자 confirm) |
@@ -728,9 +728,9 @@ Cross-stage Agents (단계 무관 게이트키퍼)
 
 | 에이전트 | 주 스킬 | 보조 스킬 |
 |---|---|---|
-| `concept_interviewer` | `pitch-one-pager` | — |
+| `concept_interviewer` (메인 루프 스킬 흐름) | `pitch-one-pager` | — |
 | `macro_designer` | `macro-design-5p` | `forbidden-in-macro`, `pillars-vocabulary` |
-| `cycle_planner` | `prototype-hypothesis` | `risk-to-hypothesis` |
+| `cycle_planner` (메인 루프 스킬 흐름) | `prototype-hypothesis` | `risk-to-hypothesis` |
 | `prototype_coder` | `dirty-code-html` / `dirty-code-python` | `cycle-isolation` |
 | `playtest_recorder` | `playtest-log-template` | — |
 | `cycle_reviewer` | `cycle-review-criteria` | `kill-criteria` |

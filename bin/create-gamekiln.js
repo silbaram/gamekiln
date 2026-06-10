@@ -197,7 +197,7 @@ function scaffold({ target, provider }) {
 
   console.log(`Created or updated Game Design Harness project at ${targetRoot}`);
   console.log(`Provider files: ${provider}`);
-  console.log("Next: start Stage 0 with concept_interviewer.");
+  console.log("Next: start Stage 0 in the main agent with the pitch-one-pager skill.");
 }
 
 function main() {

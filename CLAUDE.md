@@ -17,3 +17,8 @@ Key constraints:
 - If a subagent needs user input, it must return only a short grouped question list and stop.
 - The main agent collects the answer, then reinvokes the subagent with the relevant prior artifact paths plus the user answer.
 - Do not invent missing choices just to avoid this handoff.
+
+## Main-Loop Skill Flows
+
+- Stage 0 interviews are handled directly by the main agent using `.agents/skills/pitch-one-pager/SKILL.md`.
+- Stage 2 cycle planning is handled directly by the main agent using `.agents/skills/prototype-hypothesis/SKILL.md`.
