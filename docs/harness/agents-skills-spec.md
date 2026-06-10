@@ -3,6 +3,10 @@
 > 하네스의 30+ 컴포넌트 명세. Tier 1(필수) → Tier 2(1차 확장) → Tier 3(필요시) 순.
 > 하네스 참고 문서이며 게임 기획 산출물이나 런타임 규칙이 아닙니다. 새 에이전트/스킬을 만들거나 수정할 때만 참고합니다.
 
+주의: 1회차 하네스 마찰은 `docs/harness/frictions.md`에 기록하고, two-strikes 수정 완료 이력은 `docs/harness/retrospective.md`에 기록한다.
+
+주의: `stage_router` 분기를 변경할 때만 `docs/harness/routing-scenarios.md` 전체를 대조한다.
+
 ---
 
 ## Tier 1: 필수 (12개) — 첫 프로젝트 최소셋

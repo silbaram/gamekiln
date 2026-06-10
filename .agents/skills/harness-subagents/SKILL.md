@@ -30,6 +30,7 @@ Every harness agent, skill, or generated prompt must preserve these rules:
 - Prefer Tier 1 only unless the user explicitly asks for a Tier 2/3 component or the project is already blocked at that point.
 - Ordinary runtime agents should not require reading `docs/harness/`. Put the necessary behavior in AGENTS.md, the relevant SKILL.md files, or the agent body.
 - Roles that need user input during execution must be implemented as main-loop skill flows, not subagents.
+- First-time harness friction is recorded in `docs/harness/frictions.md`; check it before appending, because a same-type second entry triggers two-strikes repair plus `docs/harness/retrospective.md`.
 - Recurring friction (same type observed twice) while operating the harness is a structural defect: fix the responsible skill/agent and append one line to `docs/harness/retrospective.md`. Never fix the same friction silently twice.
 
 ## Workflow
@@ -43,6 +44,27 @@ Every harness agent, skill, or generated prompt must preserve these rules:
    - Claude/Gemini agent `name`: use lowercase kebab-case, such as `concept-interviewer`.
 5. Use the provider templates in `assets/templates/` when creating files. Adjust tool access narrowly instead of inheriting broad write permissions by default.
 6. After writing, validate frontmatter/TOML shape and scan for forbidden expansion: broad future specs, unverified numbers, automatic stage advancement, and Stage 4 details before Stage 3 evidence.
+
+## Friction To Fix Target
+
+| 마찰 유형 | 수정 대상 |
+|---|---|
+| 산출물 품질/형식 위반 | 해당 SKILL.md의 Output Contract/Block |
+| 에이전트 행동·역할 이탈 | 해당 에이전트 본문 (3개 프로바이더 동시) |
+| 단계 순서·라우팅 오류 | stage_router (+ routing-scenarios.md 대조) |
+| 위임·트리거 오작동 | 에이전트/스킬 description |
+| Codex 프롬프트발 오류 (리터럴이 형식을 이김 등) | harness-subagents의 작성 규칙 |
+
+## Guard Change Spot Test
+
+When adding or changing a blocking rule/guard in a skill or agent, run one spot check with 1-3 realistic prompts: with-skill vs without-skill, or before vs after. Report whether the guard changed behavior. Do not create a standing test suite.
+
+## Maintenance Workflow
+
+1. 감사 — Compare AGENTS.md and spec component lists against actual files; list mismatches.
+2. 사이클당 변경 1개 — Change one structural issue per maintenance cycle.
+3. 이력 동기화 — Update `docs/harness/retrospective.md` and the relevant spec.
+4. 검증 — Run verify scripts; when `stage_router` changed, compare all of `docs/harness/routing-scenarios.md`; when guard rules changed, run the spot test.
 
 ## Provider Targets
 
@@ -99,3 +121,4 @@ When this skill is used, report:
 - Provider docs consulted.
 - Tier coverage.
 - Any skipped agents or skills and why.
+- If harness friction was observed during this work, whether it was recorded in `docs/harness/frictions.md` or triggered two-strikes repair.

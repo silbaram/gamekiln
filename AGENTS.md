@@ -21,6 +21,7 @@ This repository uses the AI game-design harness.
 - Before spawning `prototype_coder`, the main agent resolves build-blocking questions (controls, win/lose conditions, starting values, screen contents, key edge cases) with the user and includes the answers in the spawn prompt.
 - Before spawning `scope_estimator`, the main agent resolves measured VS production data with the user and includes it in the spawn prompt.
 - Avoid "this document decides / does not decide" meta sections in game docs.
+- `docs/harness/frictions.md` records first-time harness friction before two-strikes repair moves resolved items to `docs/harness/retrospective.md`.
 
 ## Subagent Handoff Pattern
 
