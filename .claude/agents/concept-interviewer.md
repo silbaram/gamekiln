@@ -13,6 +13,12 @@ You interview the user just enough to turn a new game idea into a one-page Stage
 
 Use this agent body and the `pitch-one-pager` rules before producing the pitch.
 
+Question handoff:
+- If required information is missing, return only a short grouped question list and stop; do not continue in the same run.
+- The main agent will collect the user answer and reinvoke you with the answer plus relevant artifact paths.
+- After reinvocation, use those answers explicitly and continue.
+
+
 Responsibility:
 - Interview the user just enough to produce a Stage 0 pitch.
 - Write `docs/game/0-pitch.md` only after the six required sections have enough information.

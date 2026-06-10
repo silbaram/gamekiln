@@ -8,22 +8,26 @@
   },
   "files": [
     "bin/",
+    "scripts/",
     "AGENTS.md",
     "CLAUDE.md",
     "GEMINI.md",
     ".agents/skills/",
     ".codex/",
     ".claude/agents/",
+    ".claude/skills/",
     ".gemini/agents/",
     "docs/harness/",
     "docs/decisions/.gitkeep",
     "docs/game/details/.gitkeep",
     "game/.gitkeep",
     "prototypes/learnings.md",
+    "prototypes/playtest.md",
     "prototypes/killed-hypotheses.md"
   ],
   "scripts": {
-    "smoke": "node bin/create-gamekiln.js /private/tmp/gamekiln-smoke"
+    "smoke": "node bin/create-gamekiln.js ./tmp-smoke",
+    "verify:claude-skills": "node scripts/verify-claude-skills.js"
   },
   "engines": {
     "node": ">=18"

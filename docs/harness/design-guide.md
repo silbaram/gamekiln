@@ -257,7 +257,7 @@ P0/P1으로 나눈 Pillar 3-5개 + Anti-Pillar. 선언만, 해설 없음.
 레퍼런스 3개, 각각 "✓훔침 / ✗안 훔침" 형식.
 
 **§6. Top Risks (½페이지)**
-가장 위험한 가정 3개 → 각각 Stage 2의 어느 Cycle에서 검증할지 매핑. 표는 Stage 1에서 얼지 않는 **살아있는 원장**이다 — 컬럼은 Risk ID, Risk, Why It Matters, Cycle, Status. 각 위험에 안정 Risk ID(R1/R2/R3)를 부여한다. Cycle 칸은 구체 `cycle-NN-<topic>` 슬러그 또는 `unassigned`만 — 그 외 값(예: "first cycle", "추후", "나중에", "later cycle")은 모두 금지. Status는 open / testing / resolved / killed 중 하나이며 작성 시 `open`; Stage 1 이후에는 Cycle·Status 칸만 갱신하고 위험 텍스트는 바꾸지 않는다. 각 Cycle의 hypothesis.md는 맨 위 `> Tests: R<N>` 앵커로 이 ID를 역인용한다. planner는 사이클 시작 시 해당 위험의 Cycle·Status(→`testing`)를, reviewer는 게이트에서 Status(proceed→`resolved`, retry→`testing` 유지, regress→`open`, kill→`killed`)를 사용자 핸드오프로 갱신한다.
+가장 위험한 가정 3개 → 각각 Stage 2의 어느 Cycle에서 검증할지 매핑. 표는 Stage 1에서 얼지 않는 **살아있는 원장**이다 — 컬럼은 Risk ID, Risk, Why It Matters, Cycle, Status. 작성 시 각 위험에 안정 Risk ID(R1/R2/R3)를 부여하고, Stage 2 중 새 위험을 발견하면 다음 번호(R4, R5...)로 append하며 기존 ID는 재사용하지 않는다. Cycle 칸은 구체 `cycle-NN-<topic>` 슬러그 또는 `unassigned`만 — 그 외 값(예: "first cycle", "추후", "나중에", "later cycle")은 모두 금지. Status는 open / testing / resolved / killed 중 하나이며 작성 시 `open`; Stage 1 이후 기존 행은 Cycle·Status 칸만 갱신하고 위험 텍스트는 바꾸지 않는다. 같은 위험을 여러 사이클이 재시험하면 Cycle 칸은 최신 사이클 slug를 뜻한다. 각 Cycle의 hypothesis.md는 맨 위 `> Tests: R<N>` 앵커로 이 ID를 역인용한다. planner는 사이클 시작 시 해당 위험의 Cycle·Status(→`testing`)를, reviewer는 게이트에서 Status(proceed→`resolved`, retry→`testing` 유지, regress→`open`, kill→`killed`)를 사용자 핸드오프로 갱신한다.
 
 #### 핵심: 무엇을 *적지 않는가*
 
@@ -781,10 +781,10 @@ my-game/
 │
 ├── .claude/
 │   ├── agents/                     # Claude Code 서브에이전트 (kebab-case)
-│   └── skills/                     # .agents/skills/로 심볼릭 링크
+│   └── skills/                     # .agents/skills/의 실제 복사본 (Windows 안전)
 │
 ├── .codex/
-│   ├── agents/                     # Codex 서브에이전트 (snake_case .toml)
+│   ├── agents/                     # Codex 서브에이전트 (파일명 kebab-case, name 필드 snake_case)
 │   └── config.toml
 │
 ├── .gemini/
@@ -799,6 +799,7 @@ my-game/
 │   ├── cycle-02-<topic>/
 │   ├── ...
 │   ├── learnings.md                # 모든 사이클 학습 누적
+│   ├── playtest.md                 # Facts / Interpretations 분리 메모
 │   ├── killed-hypotheses.md        # 죽은 가설들
 │   └── assumptions.md              # 미검증 가정 격리
 │

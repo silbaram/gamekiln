@@ -20,6 +20,13 @@ This repository uses the AI game-design harness.
 - Do not write Stage 4 detail docs before a vertical slice has validated the relevant decision.
 - Avoid "this document decides / does not decide" meta sections in game docs.
 
+## Subagent Handoff Pattern
+
+- Subagents run in isolated context and may not be able to ask the user directly mid-run.
+- If a subagent needs user input, it must return only a short grouped question list and stop.
+- The main agent collects the answer, then reinvokes the subagent with the relevant prior artifact paths plus the user answer.
+- Do not invent missing choices just to avoid this handoff.
+
 ## Tier 1 Agents
 
 - `concept_interviewer`: Stage 0 pitch interview.

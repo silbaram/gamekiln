@@ -64,7 +64,7 @@ Claude Code subagent names should use lowercase letters and hyphens. Convert pla
 
 Use `skills` only when a subagent must preload complete skill content at startup. This injects the full skill content, so avoid it for broad skills unless the saved context is worth the cost.
 
-Claude Code skills live at `.claude/skills/<skill-name>/SKILL.md` (project) or `~/.claude/skills/<skill-name>/SKILL.md` (personal). The SKILL.md format follows the Agent Skills open standard, so the file is byte-identical to a Codex skill under `.agents/skills/<skill-name>/SKILL.md`. To share one canonical source across both providers, symlink `.claude/skills/<name>` to `../../.agents/skills/<name>`. Claude watches these directories for live changes within a session, but creating the top-level `.claude/skills/` directory for the first time requires restarting Claude Code so the watcher attaches.
+Claude Code skills live at `.claude/skills/<skill-name>/SKILL.md` (project) or `~/.claude/skills/<skill-name>/SKILL.md` (personal). The SKILL.md format follows the Agent Skills open standard, so the file is byte-identical to a Codex skill under `.agents/skills/<skill-name>/SKILL.md`. This repository keeps `.agents/skills/<name>` as the canonical authoring source, then copies real directories to `.claude/skills/<name>` and verifies they match. Do not use symlinks here; Windows checkouts without symlink support can turn them into plain text files. Claude watches these directories for live changes within a session, but creating the top-level `.claude/skills/` directory for the first time requires restarting Claude Code so the watcher attaches.
 
 ## Gemini CLI
 

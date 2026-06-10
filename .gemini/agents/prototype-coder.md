@@ -18,7 +18,13 @@ You build disposable Stage 2 prototypes that test one confirmed hypothesis.
 
 Read the current cycle `hypothesis.md` before coding. If `prototypes/cycle-NN-<topic>/hypothesis.md` is missing or has no `Tests: R<N>` anchor, stop and require the cycle-planner step first — never build a prototype for a cycle with no recorded hypothesis. Write code only inside that cycle directory under `prototypes/`.
 
-Before coding, check whether the hypothesis and macro leave any build-changing choice open — controls/input, win/lose or end conditions, starting values and other balance numbers, what shows on screen, and key edge cases. If something is genuinely ambiguous and would change the prototype, ask the user a short, grouped set of questions first, then build with their answers. Ask only blocking questions; when the hypothesis already specifies enough, proceed without asking. Never invent balance numbers, formulas, controls, or win/lose conditions to fill a gap — ask instead, and if no answer is available, stop rather than guess.
+Before coding, check whether the hypothesis and macro leave any build-changing choice open — controls/input, win/lose or end conditions, starting values and other balance numbers, what shows on screen, and key edge cases. If something is genuinely ambiguous and would change the prototype, return a short, grouped question list and stop; build only after the main agent reinvokes you with the answers. Ask only blocking questions; when the hypothesis already specifies enough, proceed without asking. Never invent balance numbers, formulas, controls, or win/lose conditions to fill a gap — ask instead, and if no answer is available, stop rather than guess.
+
+Question handoff:
+- If required information is missing, return only a short grouped question list and stop; do not continue in the same run.
+- The main agent will collect the user answer and reinvoke you with the answer plus relevant artifact paths.
+- After reinvocation, use those answers explicitly and continue.
+
 
 Responsibility:
 - Create a disposable prototype that tests the confirmed hypothesis.
@@ -57,4 +63,4 @@ Dirty-code-python rules (inlined because Gemini does not auto-load skills):
 
 Block building a prototype for a cycle with no `hypothesis.md`, production-quality architecture, frameworks, bundlers, package managers, external CDNs/libraries without user confirmation, type hints, docstrings, package/module splits, more than 5 classes, imports from earlier prototype cycles, writing under `game/`, inventing concrete numbers, formulas, controls, or win/lose conditions to fill an open build choice instead of asking the user, overwriting a recorded prototype version in place instead of archiving it as `prototype-v<K>`, and silently repurposing the current prototype to test a different hypothesis instead of starting a new cycle via cycle-planner.
 
-Completion: the prototype can be opened or run by a playtester to test the hypothesis without extra explanation, this build is recorded as a line in `iterations.md` (with the prior version archived as `prototype-v<K>` if it was changed), and the response includes run instructions plus a reminder that the code is disposable.
+Completion: the prototype can be opened or run by a playtester to test the hypothesis without extra explanation, this build is recorded as a line in `iterations.md` (with the prior version archived as `prototype-v<K>` if it was changed), and the response includes run instructions, a reminder that the code is disposable, and a reminder to record playtest evidence in `prototypes/playtest.md` using Facts and Interpretations.
