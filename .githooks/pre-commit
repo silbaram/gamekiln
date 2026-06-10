@@ -1,0 +1,11 @@
+#!/bin/sh
+
+node scripts/verify-claude-skills.js
+status=$?
+
+if [ "$status" -ne 0 ]; then
+  echo ""
+  echo "Claude skill copies are out of sync."
+  echo "fix: copy .agents/skills/<name> to .claude/skills/<name>, then run npm run verify:claude-skills"
+  exit "$status"
+fi

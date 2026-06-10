@@ -27,7 +27,8 @@
   ],
   "scripts": {
     "smoke": "node bin/create-gamekiln.js ./tmp-smoke",
-    "verify:claude-skills": "node scripts/verify-claude-skills.js"
+    "verify:claude-skills": "node scripts/verify-claude-skills.js",
+    "prepare": "git config core.hooksPath .githooks"
   },
   "engines": {
     "node": ">=18"
