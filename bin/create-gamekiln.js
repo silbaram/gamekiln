@@ -12,12 +12,15 @@ const GENERATED_GITIGNORE_ENTRIES = [
 ];
 const RUNTIME_SKILLS = [
   "dirty-code-html",
+  "decision-record-1p",
   "dirty-code-python",
   "forbidden-in-macro",
+  "forbidden-meta-sections",
   "macro-design-5p",
   "pitch-one-pager",
   "playtest-log-template",
   "prototype-hypothesis",
+  "kill-criteria",
   "tech-decision-template",
   "vs-spec-template",
 ];
