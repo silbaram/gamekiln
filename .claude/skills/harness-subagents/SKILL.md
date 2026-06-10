@@ -63,7 +63,7 @@ Skills are an open standard but each provider discovers them in different paths 
 3. **Claude Code**: copy `.agents/skills/<name>` to `.claude/skills/<name>` as a real directory, then add the skill to the relevant subagent's `skills:` frontmatter so its content preloads at startup. Do not use symlinks in this repository; Windows checkouts can silently degrade them into text files.
 4. **Gemini CLI**: Gemini has no skill auto-loading mechanism. Inline the skill's hard rules into each Gemini agent body under a `<skill-name> rules (inlined because Gemini does not auto-load skills):` block. Keep it tight — the harness anti-encyclopedia principle still applies.
 
-`harness-subagents` is special: it is for authoring this harness, not ordinary game-project work. In this authoring repository, install it as a real copied directory at `.claude/skills/harness-subagents/` so Claude Code can load it while editing the harness. The scaffolder still distributes only the six Tier 1 runtime skills listed in `TIER1_SKILLS`, so `harness-subagents` is not copied into newly scaffolded game projects.
+`harness-subagents` is special: it is for authoring this harness, not ordinary game-project work. In this authoring repository, install it as a real copied directory at `.claude/skills/harness-subagents/` so Claude Code can load it while editing the harness. The scaffolder distributes the runtime skills listed in `RUNTIME_SKILLS`, so `harness-subagents` is not copied into newly scaffolded game projects.
 
 Verification after adding or changing a skill:
 

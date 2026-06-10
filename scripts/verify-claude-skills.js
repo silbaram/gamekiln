@@ -4,16 +4,19 @@ const fs = require("fs");
 const path = require("path");
 
 const ROOT = path.resolve(__dirname, "..");
-const TIER1_SKILLS = [
+const RUNTIME_SKILLS = [
   "dirty-code-html",
   "dirty-code-python",
   "forbidden-in-macro",
   "macro-design-5p",
   "pitch-one-pager",
+  "playtest-log-template",
   "prototype-hypothesis",
+  "tech-decision-template",
+  "vs-spec-template",
 ];
 const AUTHORING_ONLY_SKILLS = ["harness-subagents"];
-const CLAUDE_SKILL_COPIES = [...TIER1_SKILLS, ...AUTHORING_ONLY_SKILLS].sort();
+const CLAUDE_SKILL_COPIES = [...RUNTIME_SKILLS, ...AUTHORING_ONLY_SKILLS].sort();
 
 let failed = false;
 
