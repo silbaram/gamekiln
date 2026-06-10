@@ -591,7 +591,7 @@ Cross-stage Agents (단계 무관 게이트키퍼)
 | `tech_decider` | Stage 2 발견 기반 엔진/스택 선택 | `learnings.md` | `tech-decision.md` (1-2p) |
 | `architecture_designer` | VS 범위 아키텍처 설계 | tech-decision | `architecture.md` (3-5p) |
 | `tech_spike_runner` | 가장 위험한 기술 가정 검증 | architecture | 스파이크 코드 + 검증 보고 |
-| `art_director` | 5p 아트 디렉션 작성 | macro design + learnings | `art-direction.md` (5p) |
+| `art_director` | 5p 아트 디렉션 작성 | macro design + learnings | `3-art-direction.md` (5p) |
 | `vs_spec_writer` | VS 범위 상세 명세 (검증된 수치만) | learnings + art-direction | `vertical-slice-spec.md` (10-15p) |
 | `vs_builder` | 실제 VS 빌드 진행 관리 | spec | 실제 게임 빌드 |
 | `playtest_coordinator` | 외부 플레이테스트 5-10명 조직/수집 | VS 빌드 | 테스트 보고서 |

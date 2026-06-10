@@ -5,6 +5,7 @@ const path = require("path");
 
 const ROOT = path.resolve(__dirname, "..");
 const RUNTIME_SKILLS = [
+  "art-direction-5p",
   "dirty-code-html",
   "decision-record-1p",
   "dirty-code-python",

@@ -20,6 +20,7 @@ This repository uses the AI game-design harness.
 - Do not write Stage 4 detail docs before a vertical slice has validated the relevant decision.
 - Before spawning `prototype_coder`, the main agent resolves build-blocking questions (controls, win/lose conditions, starting values, screen contents, key edge cases) with the user and includes the answers in the spawn prompt.
 - Before spawning `scope_estimator`, the main agent resolves measured VS production data with the user and includes it in the spawn prompt.
+- Before spawning `art_director`, the main agent resolves visual preference questions (mood, visual references, production constraints) with the user and includes the answers in the spawn prompt.
 - Avoid "this document decides / does not decide" meta sections in game docs.
 - `docs/harness/frictions.md` records first-time harness friction before two-strikes repair moves resolved items to `docs/harness/retrospective.md`.
 
@@ -52,5 +53,6 @@ This repository uses the AI game-design harness.
 
 - `decision_recorder`: Stage 4 detail doc for one VS-validated system at a time.
 - `kill_arbiter`: Cross-stage read-only project-level kill/regress/proceed judgment.
-- Remaining Tier 3 components stay trigger-waiting; do not create them until needed.
+- `art_director`: Stage 3 art direction from macro pillars and Stage 2 learnings.
+- Remaining Tier 3 components stay trigger-waiting; do not create the other four until needed.
 

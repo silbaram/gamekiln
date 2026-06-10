@@ -16,7 +16,8 @@
 | 사용자가 kill을 고민함 / `cycle_reviewer`가 kill 권고 후 2차 의견 필요 / 5+ cycles에도 core fun 미검증 | `kill_arbiter` |
 | hypothesis + playtest evidence 있음 | `cycle_reviewer` |
 | 사용자-confirmed Stage 2 proceed + `docs/game/3-tech-decision.md` 없음 | `tech_decider` |
-| tech decision confirm 있음 + `docs/game/3-vertical-slice-spec.md` 없음 | `vs_spec_writer`; architecture spike/art direction은 필요할 때만 수동/Tier 3 언급 |
+| tech decision confirm 있음 + 시각 표현이 있는 게임 + `docs/game/3-art-direction.md` 없음 | `art_director`; architecture spike는 필요할 때만 수동/Tier 3 언급 |
+| art direction confirm 또는 명시적 skip 있음 + `docs/game/3-vertical-slice-spec.md` 없음 | `vs_spec_writer` |
 | VS build complete + measured production data 있음 | `scope_estimator` |
 | VS spec confirm 있음 + completed VS build 없음 | VS production은 자동 harness subagent가 아니라 ordinary coding work라고 설명 |
 | scope estimate 완료 + Stage 3 gate 사용자 confirm 없음 | Stage 3 gate 질문 제시: "Can this be finished, and at what cost?" |
@@ -34,3 +35,4 @@
 | playtest evidence가 사용자 메시지에만 있음 | `cycle_reviewer` 허용 + evidence source 한계 명시 |
 | Stage 2 proceed처럼 보이나 사용자 confirm이 없음 | Stage 3 컴포넌트로 보내지 말고 proceed confirm 요청 |
 | reviewer가 retry를 권고했는데 사용자가 kill을 물어봄 | `kill_arbiter`로 2차 의견을 받되, 최종 결정은 사용자 confirm |
+| 텍스트/터미널 중심 게임에서 `art_director` 라우팅 조건처럼 보임 | art direction skip을 제안하고 `vs_spec_writer`로 라우팅 |

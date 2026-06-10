@@ -11,6 +11,7 @@ const GENERATED_GITIGNORE_ENTRIES = [
   "*.tgz",
 ];
 const RUNTIME_SKILLS = [
+  "art-direction-5p",
   "dirty-code-html",
   "decision-record-1p",
   "dirty-code-python",
@@ -187,6 +188,7 @@ function scaffold({ target, provider }) {
   copyPath(path.join("docs", "game", "details", ".gitkeep"), targetRoot, { overwrite: false });
   copyPath(path.join("game", ".gitkeep"), targetRoot, { overwrite: false });
   copyPath(path.join("prototypes", "learnings.md"), targetRoot, { overwrite: false });
+  copyPath(path.join("prototypes", "assumptions.md"), targetRoot, { overwrite: false });
   copyPath(path.join("prototypes", "playtest.md"), targetRoot, { overwrite: false });
   copyPath(path.join("prototypes", "killed-hypotheses.md"), targetRoot, { overwrite: false });
 
