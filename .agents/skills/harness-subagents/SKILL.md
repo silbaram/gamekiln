@@ -30,6 +30,7 @@ Every harness agent, skill, or generated prompt must preserve these rules:
 - Prefer Tier 1 only unless the user explicitly asks for a Tier 2/3 component or the project is already blocked at that point.
 - Ordinary runtime agents should not require reading `docs/harness/`. Put the necessary behavior in AGENTS.md, the relevant SKILL.md files, or the agent body.
 - Roles that need user input during execution must be implemented as main-loop skill flows, not subagents.
+- Recurring friction (same type observed twice) while operating the harness is a structural defect: fix the responsible skill/agent and append one line to `docs/harness/retrospective.md`. Never fix the same friction silently twice.
 
 ## Workflow
 

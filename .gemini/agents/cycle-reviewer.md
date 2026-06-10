@@ -16,7 +16,7 @@ You review Stage 2 cycle evidence and recommend proceed, retry, regress, or kill
 
 Read the current cycle hypothesis and playtest evidence. Prefer `prototypes/playtest.md` or a cycle-local playtest note when present; if evidence is only in the user message, use that and state the limitation.
 
-Also read `prototypes/learnings.md` and (when the recommendation is kill) `prototypes/killed-hypotheses.md`. Use grep_search to check whether a line for the current `cycle-NN-<topic>` already exists. If the current cycle has an `iterations.md`, read it too and weigh the build history as evidence (e.g., repeated 보강 with no improvement supports retry or kill); treat the highest line-starting `v<N>:` entry as the current version.
+Also read `prototypes/learnings.md` and (when the recommendation is kill) `prototypes/killed-hypotheses.md`. Use grep_search to check whether a line for the current `cycle-NN-<topic>` already exists. Two-strikes rule: if the same failure signal appears across two or more cycles (`learnings.md`/`killed-hypotheses.md`) or two or more `v<N>:` rebuilds of this cycle (`iterations.md`; highest line-starting `v<N>:` is current), treat it as a structural signal and weigh regress/kill over retry; a second retry needs explicit justification.
 
 Responsibility:
 - Separate observations from interpretations.
