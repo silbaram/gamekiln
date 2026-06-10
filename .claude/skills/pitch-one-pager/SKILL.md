@@ -7,9 +7,18 @@ description: Use for Stage 0 game concept pitches. Enforces a one-page, six-sect
 
 Use this skill when writing or reviewing `docs/game/0-pitch.md`.
 
+## Interview Flow
+
+When no complete Stage 0 pitch exists, the main agent conducts the interview directly with this skill.
+
+- Ask only enough short, grouped questions to fill the six required sections.
+- As soon as the answers are sufficient, write `docs/game/0-pitch.md`; do not keep interviewing for extra detail.
+- Keep the conversation at pitch level: do not ask for or expand into system details, UI flows, technical stack choices, formulas, or unsupported numeric claims.
+- Do not automatically advance to Stage 1. After the pitch is written, ask the user to confirm before any Stage 1 work begins.
+
 ## Output Contract
 
-Write a one-page markdown pitch with exactly these sections:
+Write `docs/game/0-pitch.md` as a one-page markdown pitch with exactly these sections:
 
 1. One Sentence
 2. Target
@@ -36,4 +45,4 @@ Do not include:
 
 ## Completion
 
-The pitch is complete only when all six sections are filled and the user confirms it.
+The pitch is complete only when all six sections are filled, the draft stays within the one-page cap, and the user is asked to confirm before Stage 1.

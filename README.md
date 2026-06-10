@@ -1,8 +1,8 @@
 # GameKiln — AI Game Design Harness
 
-GameKiln is a small, staged game-design harness for AI coding assistants. It keeps planning artifacts short, forces prototype evidence before detailed design, and ships provider-specific agents for Codex, Claude Code, and Gemini CLI.
+GameKiln is a small, staged game-design harness for AI coding assistants. It keeps planning artifacts short, forces prototype evidence before detailed design, and ships provider-specific Tier 1 support for Codex, Claude Code, and Gemini CLI.
 
-The package scaffolds a project with **Tier 1** only by default: pitch, macro design, one-hypothesis prototype cycles, disposable prototype code, evidence review, and cross-stage routing.
+The package scaffolds a project with **Tier 1** only by default: main-loop skill flows for interactive pitch/cycle planning, plus autonomous subagents for macro design, disposable prototype code, evidence review, and cross-stage routing.
 
 ## Quick Start
 
@@ -24,25 +24,40 @@ Generated projects are updated in place. Existing project notes such as prototyp
 | --- | --- |
 | `AGENTS.md` | Runtime harness rules shared by providers. |
 | `CLAUDE.md`, `GEMINI.md` | Provider entry notes when those providers are enabled. |
-| `.codex/agents/` | Codex custom agents; filenames are kebab-case and `name` fields are snake_case. |
-| `.claude/agents/` | Claude Code subagents with Tier 1 skill frontmatter. |
+| `.codex/agents/` | Codex custom agents for autonomous Tier 1 roles: `macro_designer`, `prototype_coder`, `cycle_reviewer`, and `stage_router`. |
+| `.claude/agents/` | Claude Code subagents for the same four autonomous Tier 1 roles. |
 | `.claude/skills/` | Real copied Tier 1 skill directories; no symlinks, for Windows-safe checkouts. |
-| `.gemini/agents/` | Gemini CLI agents with hard skill rules inlined. |
-| `.agents/skills/` | Canonical Tier 1 Codex skill sources copied into scaffolded projects. |
+| `.gemini/agents/` | Gemini CLI agents for the same four autonomous Tier 1 roles, with hard rules inlined where Gemini cannot auto-load skills. |
+| `.agents/skills/` | Canonical Tier 1 skill sources, including the main-loop `pitch-one-pager` and `prototype-hypothesis` flows. |
 | `docs/harness/` | Reference docs for harness authors; not required runtime reading. |
 | `docs/game/` | Stage 0/1/3+ game-design artifacts. |
 | `prototypes/` | Stage 2 cycle folders plus cumulative `learnings.md`, `playtest.md`, and `killed-hypotheses.md`. |
 | `game/` | Production game code, used after prototype evidence justifies it. |
 
+## Main-Loop Skills vs Subagents
+
+Tier 1 deliberately splits execution by whether the role needs user input while running:
+
+| Component | Execution shape | Why |
+| --- | --- | --- |
+| Stage 0 pitch interview | Main agent + `pitch-one-pager` skill | Interviews need direct back-and-forth with the user. |
+| Stage 1 macro design | `macro_designer` subagent | Drafts from existing pitch artifact without mid-run user input. |
+| Stage 2 cycle planning | Main agent + `prototype-hypothesis` skill | Hypothesis/signals may need direct user clarification. |
+| Stage 2 prototype coding | `prototype_coder` subagent | Builds from confirmed hypothesis after the main agent resolves build-blocking questions. |
+| Stage 2 review gate | `cycle_reviewer` subagent | Reviews recorded evidence and recommends proceed/retry/regress/kill. |
+| Cross-stage routing | `stage_router` subagent | Reads project state and recommends the next component or gate. |
+
+There are no `concept-interviewer` or `cycle-planner` provider subagent files in the scaffold. Those roles are represented by the two main-loop skills above.
+
 ## Tier 1 Flow
 
-1. **Stage 0 — Pitch**: `concept_interviewer` creates `docs/game/0-pitch.md` in the one-page, six-section pitch format.
+1. **Stage 0 — Pitch**: the main agent runs the Stage 0 interview with the `pitch-one-pager` skill and creates `docs/game/0-pitch.md` in the one-page, six-section pitch format.
 2. **Stage 1 — Macro Design**: `macro_designer` creates `docs/game/1-macro-design.md` under the five-page cap and extracts Top Risks.
-3. **Stage 2 — Cycle Planning**: `cycle_planner` creates one `prototypes/cycle-NN-<topic>/hypothesis.md` with a `Tests: R<N>` risk anchor.
+3. **Stage 2 — Cycle Planning**: the main agent plans the next cycle with the `prototype-hypothesis` skill and creates one `prototypes/cycle-NN-<topic>/hypothesis.md` with a `Tests: R<N>` risk anchor.
 4. **Stage 2 — Disposable Prototype**: `prototype_coder` creates one self-contained `prototype.html` or `prototype.py` inside that cycle folder only.
 5. **Stage 2 — Playtest Evidence**: after playing, record observations in `prototypes/playtest.md` using separate Facts and Interpretations.
 6. **Stage 2 — Review Gate**: `cycle_reviewer` recommends exactly one of proceed, retry, regress, or kill. The user confirms the gate.
-7. **Routing**: `stage_router` inspects files and recommends the next single agent or gate without auto-advancing stages.
+7. **Routing**: `stage_router` inspects files and recommends the next single component or gate without auto-advancing stages.
 
 Do not advance stages, kill a project, or expand scope without explicit user confirmation.
 
@@ -71,7 +86,7 @@ The verifier fails if a Claude skill is missing, is a symlink, differs from the 
 
 ## Subagent Question Handoff
 
-Provider subagents may run in isolated contexts and may not be able to ask the user follow-up questions mid-run. GameKiln agents use this handoff pattern:
+Provider subagents may run in isolated contexts and may not be able to ask the user follow-up questions mid-run. Interactive roles stay in the main loop for that reason; remaining subagents use this fallback handoff pattern:
 
 1. If required input is missing, the subagent returns only a short grouped question list and stops.
 2. The main agent asks the user and collects answers.
