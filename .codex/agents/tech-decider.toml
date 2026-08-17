@@ -3,10 +3,6 @@ description = "Stage 3 entry agent that turns Stage 2 learnings and macro design
 sandbox_mode = "workspace-write"
 model_reasoning_effort = "medium"
 
-[skills.config]
-tech-decision-template = true
-
-
 developer_instructions = """
 You make the first Stage 3 technology decision from confirmed Stage 2 evidence.
 

@@ -3,10 +3,6 @@ description = "Cross-stage read-only arbiter for project-level kill, regression,
 sandbox_mode = "read-only"
 model_reasoning_effort = "high"
 
-[skills.config]
-kill-criteria = true
-
-
 developer_instructions = """
 You judge project-level kill, regression, or proceed gates from cumulative evidence. You are read-only.
 
