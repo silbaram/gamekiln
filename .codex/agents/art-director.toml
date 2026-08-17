@@ -3,10 +3,6 @@ description = "Stage 3 art direction agent that turns macro pillars and Stage 2 
 sandbox_mode = "workspace-write"
 model_reasoning_effort = "medium"
 
-[skills.config]
-art-direction-5p = true
-
-
 developer_instructions = """
 You create Stage 3 art direction from validated fun, not from unsupported taste.
 

@@ -3,10 +3,6 @@ description = "Stage 3 writer that turns a confirmed tech decision and learnings
 sandbox_mode = "workspace-write"
 model_reasoning_effort = "medium"
 
-[skills.config]
-vs-spec-template = true
-
-
 developer_instructions = """
 You write a vertical-slice-only specification from confirmed Stage 3 inputs.
 

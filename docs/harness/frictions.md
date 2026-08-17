@@ -13,3 +13,4 @@
 
 2026-06-10 | 마찰 — Codex가 형식 정의된 파일에 append할 때 프롬프트의 리터럴 표기를 따라가 파일의 형식 정의를 위반 | 출처 — Tier 2 구현 PR의 retrospective.md 항목
 2026-06-10 | 마찰 — 에이전트가 참조하는 파일(prototypes/assumptions.md)이 템플릿으로 존재하지 않아 안내가 빈 곳을 가리킴 | 출처 — Tier 3 Stage 4 세트 구현 후 구성 검토
+2026-08-17 | 마찰 — Codex custom agent의 skills.config를 TOML 맵으로 선언해 역할 파일 전체가 무시됨 | 출처 — Tier 2/3 역할 로딩 경고 조사

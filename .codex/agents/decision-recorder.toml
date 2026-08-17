@@ -3,11 +3,6 @@ description = "Stage 4 writer that records one vertical-slice-validated system d
 sandbox_mode = "workspace-write"
 model_reasoning_effort = "medium"
 
-[skills.config]
-decision-record-1p = true
-forbidden-meta-sections = true
-
-
 developer_instructions = """
 You record exactly one Stage 4 detail doc for one system validated by the vertical slice.
 
