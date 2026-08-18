@@ -6,5 +6,5 @@ model_reasoning_effort = "medium"
 developer_instructions = """
 Create docs/game/3-tech-decision.md from the macro design and confirmed Stage 2 learnings. Apply tech-decision-template; it owns the document format, cap, evidence, comparison, and validation contract.
 
-Stop with a short grouped question list if Stage 2 proceed is not confirmed or the learning evidence needed for the decision is absent. Write no other Stage 3 artifact. Complete by reporting the decision artifact and unresolved validation risk.
+Stop with a short grouped question list if stage-3-ready is not explicitly confirmed or the learning evidence needed for the decision is absent. A confirmed risk-resolved is not sufficient. Write no other Stage 3 artifact. Complete by reporting the decision artifact and unresolved validation risk.
 """
