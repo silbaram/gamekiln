@@ -15,8 +15,10 @@
 | artifact/setup 기록 있음 + `prototypes/playtest.md`, cycle-local note, 사용자 메시지에 playtest evidence 없음 | 메인 에이전트가 Facts/Interpretations를 수집; `playtest-log-template`이 설치됐으면 사용 |
 | 사용자가 kill을 고민함 / `cycle_reviewer`가 project-level 2차 의견을 권고 | 설치된 경우 `kill_arbiter`, 아니면 Tier 3 설치 또는 수동 검토 안내 |
 | hypothesis + playtest evidence 있음 | `cycle_reviewer` |
-| 사용자-confirmed Stage 2 proceed + Tier 2 agent 미설치 | 누적 `--tier 2` 설치 또는 수동 Stage 3 경로 중 하나 안내 |
-| 사용자-confirmed Stage 2 proceed + Tier 2 agent 설치 + `docs/game/3-tech-decision.md` 없음 | `tech_decider` |
+| 사용자-confirmed `risk-resolved` + Stage 2 근거가 더 필요한 core/high-impact Risk 있음 | 메인 에이전트가 `prototype-hypothesis` 스킬로 다음 Risk 계획 |
+| 사용자-confirmed `risk-resolved` + 누적 근거가 Stage 3 투자를 정당화할 수 있음 + Stage 2 exit review 결과 없음 | 메인 에이전트가 Top Risks, learnings, playtest evidence, killed hypotheses를 종합하는 Stage 2 exit review |
+| 사용자-confirmed `stage-3-ready` + Tier 2 agent 미설치 | 누적 `--tier 2` 설치 또는 수동 Stage 3 경로 중 하나 안내 |
+| 사용자-confirmed `stage-3-ready` + Tier 2 agent 설치 + `docs/game/3-tech-decision.md` 없음 | `tech_decider` |
 | tech decision confirm + 시각 표현 게임 + art agent 설치 + art direction 없음 | `art_director` |
 | art direction confirm/skip + VS spec agent 설치 + VS spec 없음 | `vs_spec_writer` |
 | VS build complete + measured production data + scope agent 설치 | `scope_estimator` |
@@ -36,6 +38,10 @@
 | pitch 파일은 있지만 사용자 confirm 기록이 대화에 없음 | `macro_designer`로 보내기 전에 confirm 여부를 먼저 물음 |
 | playtest evidence가 사용자 메시지에만 있음 | `cycle_reviewer` 허용 + evidence source 한계 명시 |
 | `Prototype: engine graybox`인데 HTML/Python 파일 없음 | `iterations.md`와 선택 artifact/setup을 기준으로 판단; 코드 파일명만으로 미완료 취급하지 않음 |
-| Stage 2 proceed처럼 보이나 사용자 confirm이 없음 | Stage 3 컴포넌트로 보내지 말고 proceed confirm 요청 |
+| `risk-resolved`만 확인됐는데 사용자가 Stage 3 진입을 요청 | Stage 3 컴포넌트로 보내지 말고 Stage 2 exit review를 먼저 안내 |
+| 모든 Top Risk가 resolved지만 반대 신호/evidence gap 검토가 없음 | 자동 진입하지 말고 Stage 2 exit review를 안내 |
+| 열린 Risk가 있지만 Vertical Slice로 미뤄도 된다는 근거가 있음 | 열린 Risk만으로 차단하지 말고 exit review에서 처리 시점의 타당성을 판단 |
+| 성공 사이클이 여러 번이라는 이유만으로 Stage 3 진입을 요청 | 고정 횟수를 readiness로 취급하지 말고 누적 근거의 대표성·일관성을 검토 |
+| `stage-3-ready` 권고처럼 보이나 사용자 confirm이 없음 | Stage 3 컴포넌트로 보내지 말고 사용자 confirm 요청 |
 | reviewer가 retry를 권고했는데 사용자가 kill을 물어봄 | `kill_arbiter`로 2차 의견을 받되, 최종 결정은 사용자 confirm |
 | 텍스트/터미널 중심 게임에서 `art_director` 라우팅 조건처럼 보임 | art direction skip을 제안하고 `vs_spec_writer`로 라우팅 |

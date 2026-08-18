@@ -58,23 +58,24 @@
 
 #### `cycle_reviewer`
 - **단계**: Stage 2
-- **목적**: 사이클 종료 시 다음 행동(진행/재시도/회귀/Kill) 권고
+- **목적**: 현재 가설과 연결된 Risk의 사이클 결과(`risk-resolved`/retry/regress/kill) 권고
 - **입력**: 사이클의 hypothesis + `prototypes/playtest.md` 또는 사용자 메시지의 playtest 결과 + (있으면) `iterations.md` 빌드 이력
-- **산출**: 권고 메시지 (사용자 confirm 필수)
+- **산출**: `risk-resolved`/retry/regress/kill 중 1개 권고 메시지 (사용자 confirm 필수)
 - **사용 스킬**: 없음 (judgment 중심)
 - **호출 시점**: 사이클 플레이 종료 후
-- **원장/기록 갱신(사용자 핸드오프)**: 게이트 전 `prototypes/playtest.md`에 Facts/Interpretations가 없으면 작성하고, macro Top Risks의 R<N> Status를 resolved(proceed)/testing(retry)/open(regress)/killed로 갱신 — reviewer는 읽기전용, 사용자가 작성
-- **판단 기준**: 반복되고 관련성 높은 근거는 한 번의 결과보다 강하게 보되, 고정 횟수만으로 retry/regress/kill을 자동 결정하지 않음
-- **종료 조건**: 4가지 옵션 중 1개 권고 + 근거 제시 + 핸드오프 체크리스트 제시
+- **원장/기록 갱신(사용자 핸드오프)**: 게이트 전 `prototypes/playtest.md`에 Facts/Interpretations가 없으면 작성하고, macro Top Risks의 R<N> Status를 resolved(`risk-resolved`)/testing(retry)/open(regress)/killed로 갱신 — reviewer는 읽기전용, 사용자가 작성
+- **판단 기준**: 연결된 Risk를 주 판정 대상으로 삼고 누적 learnings는 근거의 일관성과 retry/regress/kill 문맥에 사용. 반복되고 관련성 높은 근거는 한 번의 결과보다 강하지만 고정 횟수로 자동 결정하지 않음
+- **종료 조건**: 4가지 옵션 중 1개 권고 + 근거 제시 + 핸드오프 체크리스트. `risk-resolved`는 해당 Risk만 해결하며 Stage 3 진입을 권고하지 않음
 
 #### `stage_router`
 - **단계**: Cross-stage
 - **목적**: 현재 어느 단계 어느 사이클인지 추적, 다음 호출할 에이전트 결정
-- **입력**: 프로젝트 파일 상태 + 사용자 의도
+- **입력**: 프로젝트 파일 상태 + 사용자 의도 + Stage 2에서는 Top Risks, learnings, playtest evidence, killed hypotheses
 - **산출**: 다음 에이전트 추천 또는 게이트 안내
 - **사용 스킬**: 없음
 - **호출 시점**: 사용자가 의도 불명확하게 요청할 때
-- **종료 조건**: 다음 행동 1개 명시. Optional Tier agent는 현재 provider 파일이 설치됐을 때만 이름으로 라우팅하고, 없으면 누적 Tier 설치 또는 수동 경로를 안내
+- **Stage 2 출구**: 확인된 `risk-resolved` 뒤에는 다음 Risk 계획 또는 메인 루프 exit review 중 하나만 안내. exit review는 고영향 Risk의 대표성·일관성, 반대 신호/evidence gap, 열린 Risk의 처리 시점, killed hypotheses 충돌을 종합하되 모든 Risk 해결이나 고정 횟수를 요구하지 않음
+- **종료 조건**: 다음 행동 1개 명시. Stage 3는 exit review의 `stage-3-ready` 권고와 사용자 confirm 뒤에만 라우팅. Optional Tier agent는 현재 provider 파일이 설치됐을 때만 이름으로 라우팅하고, 없으면 누적 Tier 설치 또는 수동 경로를 안내
 
 ### 스킬 5개
 
@@ -201,7 +202,7 @@
   - 결정 1개당 근거에 Stage 2 사이클 인덱스 1개 이상 인용
   - 후보 A/B/C trade-off 표 필수
   - 검증 방법 명시 필수
-- **검출/차단**: 근거 없는 결정, Stage 2 proceed confirm 전 작성, VS 범위 밖 기술 결정
+- **검출/차단**: 근거 없는 결정, `stage-3-ready` 사용자 confirm 전 작성(`risk-resolved`만으로는 불충분), VS 범위 밖 기술 결정
 - **출력 형식**: 4섹션 기술 결정 문서
 
 #### `vs-spec-template` (구현됨, Tier 3에서 Tier 2로 승격)

@@ -18,4 +18,4 @@ Create `docs/game/3-tech-decision.md` from the macro design and confirmed Stage 
 
 Tech-decision contract (inlined): write one decision in Decision, Rationale, Candidate Comparison, and Validation Plan within 1-2 pages. Cite observed Stage 2 cycles, compare three viable candidates as trade-offs, and state how the selected option will be validated. Do not write another Stage 3 artifact.
 
-Stop with a short grouped question list if Stage 2 proceed is not confirmed or the required learning evidence is absent. Complete by reporting the decision artifact and unresolved validation risk.
+Stop with a short grouped question list if `stage-3-ready` is not explicitly confirmed or the required learning evidence is absent. A confirmed `risk-resolved` is not sufficient. Complete by reporting the decision artifact and unresolved validation risk.

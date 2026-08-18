@@ -60,8 +60,8 @@ Tier 1은 실행 중 사용자 입력이 필요한지에 따라 역할을 의도
 | Stage 1 매크로 디자인 | `macro_designer` 서브에이전트 | 이미 존재하는 피치 산출물을 바탕으로, 중간 사용자 입력 없이 초안을 작성합니다. |
 | Stage 2 사이클 계획 | 메인 에이전트 + `prototype-hypothesis` 스킬 | 가설과 성공/실패 신호는 사용자 확인이 필요할 수 있습니다. |
 | Stage 2 프로토타입 제작 | `prototype_coder` 서브에이전트 | 확정된 가설의 신호를 관측할 수 있는 가장 싼 형태로 테스트를 만듭니다. |
-| Stage 2 리뷰 게이트 | `cycle_reviewer` 서브에이전트 | 기록된 근거를 검토하고 proceed/retry/regress/kill 중 하나를 추천합니다. |
-| 단계 라우팅 | `stage_router` 서브에이전트 | 프로젝트 상태를 읽고 다음 구성 요소나 게이트 하나를 추천합니다. |
+| Stage 2 사이클 리뷰 | `cycle_reviewer` 서브에이전트 | 현재 Risk와 누적 근거를 검토하고 `risk-resolved`/retry/regress/kill 중 하나를 추천합니다. |
+| 단계 라우팅 | `stage_router` 서브에이전트 | 프로젝트 상태를 읽고 다음 Risk, Stage 2 exit review, 또는 다음 구성 요소 하나를 추천합니다. |
 
 스캐폴드에는 `concept-interviewer`나 `cycle-planner` 제공자 서브에이전트 파일이 없습니다. 이 역할들은 위의 두 메인 루프 스킬로 표현됩니다.
 
@@ -72,8 +72,9 @@ Tier 1은 실행 중 사용자 입력이 필요한지에 따라 역할을 의도
 3. **Stage 2 — 사이클 계획**: 메인 에이전트가 `prototype-hypothesis` 스킬로 다음 사이클을 계획하고, `Tests: R<N>`과 `Prototype: <modality> — <reason>`이 있는 `prototypes/cycle-NN-<topic>/hypothesis.md` 하나를 만듭니다.
 4. **Stage 2 — 일회용 프로토타입**: `prototype_coder`가 성공·실패 신호를 충실히 드러내는 가장 빠르고 싼 테스트를 해당 사이클 폴더에 만듭니다. 브라우저/터미널 코드는 기본 선택지일 뿐이며 물리·조작·사회적 상호작용 가설은 엔진 graybox, tabletop, spreadsheet 등 더 적합한 방식을 쓸 수 있습니다.
 5. **Stage 2 — 플레이테스트 근거**: 플레이 후 관찰을 `prototypes/playtest.md`에 Facts와 Interpretations로 분리해 기록합니다.
-6. **Stage 2 — 리뷰 게이트**: `cycle_reviewer`가 proceed, retry, regress, kill 중 정확히 하나를 추천합니다. 사용자가 게이트를 확정합니다.
-7. **라우팅**: `stage_router`가 파일을 확인하고 단계를 자동 진행하지 않은 채 다음 구성 요소나 게이트 하나를 추천합니다.
+6. **Stage 2 — 사이클 리뷰**: `cycle_reviewer`가 `risk-resolved`, retry, regress, kill 중 정확히 하나를 추천합니다. `risk-resolved`는 연결된 Risk만 해결하며 사용자가 사이클 결과를 확정합니다.
+7. **Stage 2 — 라우팅/출구 검토**: `stage_router`는 확인된 `risk-resolved` 뒤에 다음 Risk 계획 또는 메인 루프 exit review를 안내합니다. Exit review는 누적 근거와 열린 Risk를 검토하며, 모든 Risk 해결이나 고정 성공 횟수를 요구하지 않습니다.
+8. **Stage 3 진입**: Exit review의 `stage-3-ready` 권고를 사용자가 명시적으로 확인한 뒤에만 Stage 3 컴포넌트로 라우팅합니다.
 
 사용자 확인 없이 단계를 진행하거나, 프로젝트를 종료하거나, 범위를 확장하지 마세요.
 
@@ -123,7 +124,7 @@ Interpretations:
 - <그 사실이 다음 결정에 시사하는 점.>
 ```
 
-`cycle_reviewer`는 현재 가설과 플레이테스트 근거를 읽습니다. 근거가 사용자 메시지에만 있다면 사용할 수 있지만, 그 제한을 명시해야 합니다.
+`cycle_reviewer`는 현재 가설과 연결된 Risk를 주 판정 대상으로 삼고 누적 learnings를 근거의 일관성과 retry/regress/kill 문맥에 사용합니다. 근거가 사용자 메시지에만 있다면 사용할 수 있지만, 그 제한을 명시해야 합니다.
 
 ## Top Risks 장부
 
@@ -137,6 +138,7 @@ Interpretations:
 - Stage 1 이후 기존 리스크 문구를 다시 쓰지 않습니다. `Cycle`과 `Status`만 바꿉니다.
 - 여러 사이클이 같은 리스크를 테스트하면 `Cycle`은 가장 최근 사이클 슬러그를 뜻합니다.
 - `Status`는 `open`, `testing`, `resolved`, `killed` 중 하나입니다.
+- `risk-resolved`는 연결된 Risk의 `Status`만 `resolved`로 바꿉니다. Stage 2 전체 readiness는 별도 exit review와 사용자 confirmation으로 판단합니다.
 
 ## 개발 확인
 

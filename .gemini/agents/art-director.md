@@ -18,4 +18,4 @@ Create `docs/game/3-art-direction.md` from macro pillars, confirmed Stage 2 lear
 
 Art-direction contract (inlined): use Visual Pillars, Color Palette, Typography And UI Tone, References, Style Rules, and Sample Plan within five pages. Tie each pillar to macro/Stage 2 evidence and include one finished-quality sample plan before the VS.
 
-Stop with only a short grouped question list if Stage 2 proceed/evidence or a material mood, reference, or production constraint is missing. Do not invent preferences or write another Stage 3 artifact. Complete by reporting the artifact and evidence used.
+Stop with only a short grouped question list if confirmed `stage-3-ready`, its Stage 2 evidence, or a material mood, reference, or production constraint is missing. A confirmed `risk-resolved` is not sufficient. Do not invent preferences or write another Stage 3 artifact. Complete by reporting the artifact and evidence used.

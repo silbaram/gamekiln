@@ -261,7 +261,7 @@ P0/P1으로 나눈 Pillar 3-5개 + Anti-Pillar. 선언만, 해설 없음.
 레퍼런스 3개, 각각 "✓훔침 / ✗안 훔침" 형식.
 
 **§6. Top Risks (½페이지)**
-가장 위험한 가정 3개 → 각각 Stage 2의 어느 Cycle에서 검증할지 매핑. 표는 Stage 1에서 얼지 않는 **살아있는 원장**이다 — 컬럼은 Risk ID, Risk, Why It Matters, Cycle, Status. 작성 시 각 위험에 안정 Risk ID(R1/R2/R3)를 부여하고, Stage 2 중 새 위험을 발견하면 다음 번호(R4, R5...)로 append하며 기존 ID는 재사용하지 않는다. Cycle 칸은 구체 `cycle-NN-<topic>` 슬러그 또는 `unassigned`만 — 그 외 값(예: "first cycle", "추후", "나중에", "later cycle")은 모두 금지. Status는 open / testing / resolved / killed 중 하나이며 작성 시 `open`; Stage 1 이후 기존 행은 Cycle·Status 칸만 갱신하고 위험 텍스트는 바꾸지 않는다. 같은 위험을 여러 사이클이 재시험하면 Cycle 칸은 최신 사이클 slug를 뜻한다. 각 Cycle의 hypothesis.md는 맨 위 `> Tests: R<N>` 앵커로 이 ID를 역인용한다. planner는 사이클 시작 시 해당 위험의 Cycle·Status(→`testing`)를, reviewer는 게이트에서 Status(proceed→`resolved`, retry→`testing` 유지, regress→`open`, kill→`killed`)를 사용자 핸드오프로 갱신한다.
+가장 위험한 가정 3개 → 각각 Stage 2의 어느 Cycle에서 검증할지 매핑. 표는 Stage 1에서 얼지 않는 **살아있는 원장**이다 — 컬럼은 Risk ID, Risk, Why It Matters, Cycle, Status. 작성 시 각 위험에 안정 Risk ID(R1/R2/R3)를 부여하고, Stage 2 중 새 위험을 발견하면 다음 번호(R4, R5...)로 append하며 기존 ID는 재사용하지 않는다. Cycle 칸은 구체 `cycle-NN-<topic>` 슬러그 또는 `unassigned`만 — 그 외 값(예: "first cycle", "추후", "나중에", "later cycle")은 모두 금지. Status는 open / testing / resolved / killed 중 하나이며 작성 시 `open`; Stage 1 이후 기존 행은 Cycle·Status 칸만 갱신하고 위험 텍스트는 바꾸지 않는다. 같은 위험을 여러 사이클이 재시험하면 Cycle 칸은 최신 사이클 slug를 뜻한다. 각 Cycle의 hypothesis.md는 맨 위 `> Tests: R<N>` 앵커로 이 ID를 역인용한다. planner는 사이클 시작 시 해당 위험의 Cycle·Status(→`testing`)를, reviewer는 게이트에서 Status(`risk-resolved`→`resolved`, retry→`testing` 유지, regress→`open`, kill→`killed`)를 사용자 핸드오프로 갱신한다. 이 Status는 개별 Risk만 나타내며 Stage 2 전체 readiness를 저장하지 않는다.
 
 #### 핵심: 무엇을 *적지 않는가*
 
@@ -368,7 +368,14 @@ prototypes/
   killed-hypotheses.md     ← 검증 실패한 가정 ⭐ 비싼 자산
 ```
 
-#### 통과 게이트
+#### 사이클 결과와 Stage 2 출구
+
+- `cycle_reviewer`의 `risk-resolved`는 현재 가설과 연결된 Risk만 해결한다. 누적 learnings는 일관성과 retry/regress/kill 판단 문맥으로 계속 사용한다.
+- 사용자-confirmed `risk-resolved` 뒤에 `stage_router`는 다음 Risk 계획 또는 메인 루프 Stage 2 exit review 중 하나만 안내한다. 곧바로 Stage 3으로 보내지 않는다.
+- Exit review는 고영향 core-fun Risk의 대표성·일관성, 반대 신호/evidence gap, 열린 Risk의 처리 시점, killed hypotheses와의 충돌을 종합한다. 모든 Risk 해결이나 고정 성공 횟수를 요구하지 않는다.
+- Exit review의 `stage-3-ready` 권고와 명시적 사용자 confirmation이 함께 있어야 Stage 3으로 진행한다.
+
+#### Stage 2 통과 게이트
 - 가장 위험한 가정이 서로 다른 대표 관측에서 일관되게 지지됨
 - 반대 신호와 evidence gap을 검토해도 Stage 3 투자 근거가 남음
 - 사용자가 Stage 3 진입을 확인
@@ -507,7 +514,7 @@ Xenoblade Chronicles 사례: 한 지역, 그러나 *최종 품질로 완성된 �
 |---|---|---|---|---|
 | Stage 0 | → Stage 1 | pitch 보강 | 해당 없음 | 폐기 |
 | Stage 1 | → Stage 2 | macro/hypothesis 보강 | → Stage 0 | 폐기 |
-| Stage 2 | → Stage 3 | 같은 사이클 재시도 | → Stage 1 (피벗) | 폐기 |
+| Stage 2 | `stage-3-ready` + 사용자 confirm → Stage 3 | 같은 사이클 재시도 | → Stage 1 (피벗) | 폐기 |
 | Stage 3 | → Stage 4 | slice/scope 검증 보강 | → Stage 2 (스코프 폭발) | 폐기 |
 | Stage 4 | → Stage 5 | 현재 시스템 보강 | 해당 없음 | 해당 없음 |
 | Stage 5 | 출시 | release readiness 보강 | 해당 없음 | 해당 없음 |
@@ -523,7 +530,7 @@ Stage 2 검증 결과가 macro design에 미치는 영향 3가지:
 "성장 단계가 너무 많고 적정 수가 따로 있음." 5p 중 1-2섹션만 갱신. *가장 흔한 패턴*.
 
 **(c) Stage 1은 그대로, 다음 Risk로 진행**
-이번 사이클 가설이 깨끗하게 검증됨.
+이번 사이클 가설이 깨끗하게 검증되어 `risk-resolved`로 확인됐지만, Stage 2 exit review는 아직 통과하지 않음.
 
 ### 6.3 회귀 시 무엇을 보존하는가
 
@@ -575,7 +582,7 @@ Cross-stage Agents (단계 무관 게이트키퍼)
 | `cycle_planner` | 다음 사이클의 가설/룰셋 설계 (메인 루프 스킬 흐름) | `cycle-plan.md` + 이전 `learnings.md` | `cycle-NN-hypothesis.md` |
 | `prototype_coder` | 선택된 disposable 테스트 제작 | hypothesis + `Prototype:` modality | artifact/setup + `iterations.md` |
 | `playtest_recorder` | 플레이 후 사실/해석 분리 인터뷰 | 사용자 플레이 메모 | `cycle-NN-playtest.md` |
-| `cycle_reviewer` | 사이클 종료 시 진행/재시도/회귀/Kill 결정 | playtest log | 의사결정 권고 (사용자 confirm) |
+| `cycle_reviewer` | 연결된 Risk의 `risk-resolved`/재시도/회귀/Kill 결정 | playtest log + 누적 learnings | 의사결정 권고 (사용자 confirm) |
 | `learnings_accumulator` | 결론을 `learnings.md`로 누적 | cycle 결과 | `learnings.md` 갱신 |
 | `killed_recorder` | 죽은 가설을 `killed-hypotheses.md`로 보존 | cycle 결과 | `killed-hypotheses.md` 갱신 |
 

@@ -36,7 +36,7 @@ Block the draft and ask for missing evidence when any of these appear:
 - Unsupported claims such as "X is generally better", "X is the industry standard", or equivalent authority claims without an explicit source.
 - A Decision or Rationale entry without at least one cited Stage 2 cycle slug.
 - Technology choices outside vertical-slice scope, including server infrastructure, monetization, live operations, or full production pipeline decisions.
-- Writing this document before Stage 2 proceed has been explicitly confirmed by the user.
+- Writing this document before `stage-3-ready` has been explicitly confirmed by the user. A confirmed `risk-resolved` is not sufficient.
 - Meta sections such as "what this document decides" or "what this document does not decide".
 
 ## Completion
