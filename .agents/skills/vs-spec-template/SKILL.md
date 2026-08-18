@@ -1,6 +1,6 @@
 ---
 name: vs-spec-template
-description: Use for Stage 3 vertical slice specs. Enforces VS-only scope, classified evidence and test targets for material numeric claims, and the 10-15 page cap for docs/game/3-vertical-slice-spec.md.
+description: Use to create or incrementally update a Stage 3 vertical-slice plan. Enforces the current playable increment, classified numeric evidence and test targets, and a 15-page maximum for docs/game/3-vertical-slice-spec.md.
 ---
 
 # VS Spec Template
@@ -9,26 +9,22 @@ Use this skill when writing or reviewing `docs/game/3-vertical-slice-spec.md`.
 
 ## Output Contract
 
-Write a vertical-slice specification that is sufficient for one validated slice and no more.
+Create or update a vertical-slice specification as a living plan. Write only what is needed to make and measure the next playable increment; do not wait to specify the entire slice before production begins.
 
-Recommended sections:
+Required current-state sections:
 
 1. Slice Goal
-2. Included Content
-3. Core Loop In Slice
-4. Player Character And Verbs
-5. Systems In Slice
-6. Enemies And Boss
-7. Levels Or Encounters
-8. Art, Audio, And Feedback Needs
-9. Build And Test Plan
-10. Open Questions
+2. Current Production Risk
+3. Next Playable Increment
+4. Build And Measure Plan
+
+Add only the sections the current increment needs, such as Included Content, Core Loop In Slice, Player Character And Verbs, Systems In Slice, Enemies And Boss, Levels Or Encounters, Art/Audio/Feedback Needs, or Open Questions. Minimal visual direction belongs in Art/Audio/Feedback Needs; a separate art-direction document is optional.
 
 ## Caps
 
-- Absolute cap: 10-15 pages.
-- Choose the smallest representative end-to-end slice that can validate production quality and cost.
-- Include only content and system depth required for that validation; justify each included category from Stage 2 evidence or a named production risk.
+- Absolute cap: 15 pages. This is a maximum, not a target or minimum; an initial plan should usually be much shorter.
+- Choose the smallest next playable increment that advances toward a representative end-to-end slice and can expose the current production risk.
+- Include only content and system depth required for that increment; justify each included category from Stage 2 evidence or the named current production risk.
 
 ## Required Shape
 
@@ -42,12 +38,14 @@ Classify every material number, formula, content quantity, timing, cost, HP, dam
 
 Keep estimates in `docs/game/3-scope-estimate.md`, not in the VS specification. Structural identifiers, page caps, section numbers, Risk IDs, and version numbers do not need provenance labels. Keep all requirements tied to making and validating the vertical slice.
 
+Technology, art-direction, and architecture artifacts are conditional inputs. Reference them when they exist and affect the current increment; never block a seed or update merely because one is absent. After build or playtest evidence arrives, update Current Production Risk and Next Playable Increment instead of appending speculative later-slice detail.
+
 ## Block
 
 Block the draft when it contains:
 
 - Full-game content matrices, all character/class lists, long-term roadmaps, or production plans beyond the vertical slice.
-- Content or system depth with no role in the slice goal or production-risk validation.
+- Detail for later increments with no role in the current playable increment or production-risk validation.
 - A material numeric or formula claim with no classification.
 - A constraint or citation presented as proof that gameplay or balance works in this game.
 - A target presented as verified, or without a vertical-slice validation method.
@@ -57,4 +55,4 @@ Block the draft when it contains:
 
 ## Completion
 
-Complete only when `docs/game/3-vertical-slice-spec.md` stays inside VS scope, every material number and formula is classified, every target names its validation, the cap passes, and control returns for the `AGENTS.md` stage-transition boundary.
+Complete when `docs/game/3-vertical-slice-spec.md` names the Slice Goal, current Production Risk, a buildable and measurable Next Playable Increment, and its Build And Measure Plan; every material number and formula in that increment is classified, every target names its validation, and the document stays within cap. Report the next build action or blocker without adding an artifact-level confirmation gate.

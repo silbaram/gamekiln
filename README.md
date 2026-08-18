@@ -45,7 +45,7 @@ node bin/create-gamekiln.js ./my-game --tier 3
 | 옵션 | 추가되는 provider agents | 추가되는 runtime skills |
 | --- | --- | --- |
 | 기본 / `--tier 1` | `macro-designer`, `prototype-coder`, `cycle-reviewer`, `stage-router` | pitch, macro, macro review, hypothesis, disposable prototype |
-| `--tier 2` | `tech-decider`, `vs-spec-writer`, `scope-estimator` | playtest log, tech decision, VS spec |
+| `--tier 2` | `tech-decider`, `vs-spec-writer`, `scope-estimator` | playtest log, tech decision, VS spec, scope estimate |
 | `--tier 3` | `art-director`, `decision-recorder`, `kill-arbiter` | art direction, decision record, forbidden meta sections, kill criteria |
 
 각 행은 누적 설치입니다. `docs/harness/`의 상위 Tier 명세는 참고 자료로 복사되지만, provider agent나 runtime skill 선택 후보로 노출되지는 않습니다.
@@ -75,6 +75,8 @@ Tier 1은 실행 중 사용자 입력이 필요한지에 따라 역할을 의도
 6. **Stage 2 — 사이클 리뷰**: `cycle_reviewer`가 `risk-resolved`, retry, regress, kill 중 정확히 하나를 추천합니다. `risk-resolved`는 연결된 Risk만 해결하며 사용자가 사이클 결과를 확정합니다.
 7. **Stage 2 — 라우팅/출구 검토**: `stage_router`는 확인된 `risk-resolved` 뒤에 다음 Risk 계획 또는 메인 루프 exit review를 안내합니다. Exit review는 누적 근거와 열린 Risk를 검토하며, 모든 Risk 해결이나 고정 성공 횟수를 요구하지 않습니다.
 8. **Stage 3 진입**: Exit review의 `stage-3-ready` 권고를 사용자가 명시적으로 확인한 뒤에만 Stage 3 컴포넌트로 라우팅합니다.
+
+Stage 3는 기술 결정 → 아트 방향 → 전체 명세를 모두 끝내는 고정 순서가 아닙니다. 먼저 Slice Goal, 현재 가장 큰 Production Risk, 다음 Playable Increment를 짧게 잡고, 그 증분을 막는 기술·시각·구조 위험만 해소한 뒤 바로 제작·측정합니다. `3-vertical-slice-spec.md`는 최대 15페이지의 점진 문서이며 기술·아트·아키텍처 문서는 blocker일 때만 만듭니다.
 
 사용자 확인 없이 단계를 진행하거나, 프로젝트를 종료하거나, 범위를 확장하지 마세요.
 

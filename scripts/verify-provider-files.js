@@ -13,10 +13,21 @@ const CLAUDE_SKILLS = Object.freeze({
   "kill-arbiter": ["kill-criteria"],
   "macro-designer": ["macro-design-5p", "forbidden-in-macro"],
   "prototype-coder": ["disposable-prototype"],
+  "scope-estimator": ["scope-estimate-method"],
   "tech-decider": ["tech-decision-template"],
   "vs-spec-writer": ["vs-spec-template"],
 });
 const GEMINI_REQUIRED_CONTRACT_TERMS = Object.freeze({
+  "scope-estimator": [
+    /within three pages maximum/,
+    /shorter is valid/,
+    /Measurement/,
+    /Target/,
+    /Constraint/,
+    /Estimate/,
+    /range or confidence interval/,
+    /unmeasured items/,
+  ],
   "kill-arbiter": [
     /At Stage 0,/,
     /At Stage 1,/,

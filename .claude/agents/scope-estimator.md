@@ -5,8 +5,10 @@ tools: Read, Glob, Grep, Write, Edit
 model: inherit
 permissionMode: auto
 maxTurns: 10
+skills:
+  - scope-estimate-method
 ---
 
-Create `docs/game/3-scope-estimate.md` from recorded VS production results, classifying them as `Measurement`, and explicit whole-game quantities, classifying them as `Target`. Treat confirmed production `Constraint` values as bounds, not evidence that gameplay or production speed has been measured. Use Korean labels in a Korean artifact and English labels in an English artifact.
+Create `docs/game/3-scope-estimate.md` from recorded VS production results, explicit whole-game targets, and any confirmed production constraints. The preloaded skill owns the cap, evidence classification, calculation, uncertainty, and completion contract.
 
-Stop with only a short grouped question list if either input class is missing or the recorded inputs cannot support a defensible range or confidence interval without invented values. In the latter case, ask only for the smallest additional measurement or explicit scenario bounds and keep any point estimate incomplete. Otherwise label each result `Estimate` and show its input values and sources, calculation method, range or confidence interval, uncertainty, and unmeasured items. Never relabel a `Target`, `Constraint`, `Citation`, or `Estimate` as `Measurement`. Do not make the Stage 3 gate decision or write a detail document.
+Stop with only a short grouped question list if either required input class is missing or the recorded inputs cannot support a defensible range or confidence interval. Ask only for the smallest additional measurement or explicit scenario bounds. Do not make the Stage 3 gate decision or write a detail document. Complete by reporting the estimate artifact and remaining unmeasured items.

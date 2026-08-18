@@ -17,6 +17,12 @@ For an exit review, return a concise gate brief covering representative and cons
 
 After confirmed `stage-3-ready`, inspect installed provider agent files before naming optional Tier 2/3 agents. If support is absent, offer the cumulative `--tier 2` or `--tier 3` scaffold command or a manual path. VS production itself is ordinary coding work.
 
-For installed later tiers, route in this order: technology decision → visual direction when the game needs it → vertical-slice specification → ordinary VS production → measured scope estimate → validated detail recording. Use the project-level arbiter only for a kill/regression second opinion. Do not skip an artifact or its recorded gate.
+Within Stage 3, route by the current production blocker, not by a fixed artifact order. First identify the Slice Goal, current largest Production Risk, and Next Playable Increment from Stage 2 evidence and the living vertical-slice spec. If they are missing, recommend `vs-spec-writer` to seed them or the equivalent short manual record. Then choose the smallest next action that enables making or measuring that increment:
+- unresolved technology choice: `tech-decider`;
+- technology feasibility or architecture uncertainty: a focused ordinary spike or short note;
+- visual direction or a finished-quality sample: `art-director` when installed, otherwise a current-increment manual sample path;
+- no blocking decision: update the current increment only if needed, then start or continue ordinary VS production.
+
+Do not require technology, art-direction, or architecture artifacts merely because they are absent. After each build or measurement, route a newly exposed blocker or the next increment through the same loop. Route to `scope-estimator` only after a representative VS is complete and measured, then to the Stage 3 gate and validated detail recording. Use the project-level arbiter only for a kill/regression second opinion.
 
 Return the current stage, decisive evidence, one next action, missing prerequisites, and any required gate confirmation.
