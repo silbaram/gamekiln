@@ -27,11 +27,20 @@
 | 증분 build/measurement 뒤 새 blocker 또는 다음 증분이 드러남 | `vs_spec_writer`로 현재 Risk와 다음 Increment를 갱신하거나, blocker를 직접 해소하는 조건부 agent/spike 중 하나만 안내 |
 | 대표 VS build complete + measured production data + scope agent 설치 | `scope_estimator` |
 | scope estimate 완료 + Stage 3 gate 사용자 confirm 없음 | Stage 3 gate 질문 제시: "Can this be finished, and at what cost?" |
-| scope estimate 완료 + Stage 3 gate 사용자 confirm + decision agent 설치 | 검증된 시스템별로 `decision_recorder` |
-| Stage 3 gate confirm + Tier 3 agent 미설치 | 누적 `--tier 3` 설치 또는 수동 기록 안내 |
-| 검증된 시스템의 detail docs가 충분히 기록됨 | Stage 5 production 지원은 미설치라고 안내 |
-| 사용자-confirmed retry | 같은 cycle의 `prototype_coder`로 복귀 |
-| 사용자-confirmed regress | 바꿔야 할 artifact에 따라 `macro_designer` 또는 `prototype-hypothesis` planning으로 복귀 |
+| Stage 3 gate confirm + `3-scope-estimate.md` 또는 approved-scope basis 없음 | production plan을 seed하지 않고 `scope_estimator`로 누락된 추정 근거 생성 |
+| Stage 3 gate confirm + production-plan skill 미설치 | 누적 `--tier 3` 설치 또는 현재 batch만 담는 수동 production plan 안내 |
+| Stage 3 gate confirm + production-plan skill 설치 + `docs/game/production-plan.md` 없음 | 메인 에이전트가 `production-plan` 스킬로 현재 batch를 seed |
+| production plan의 현재 batch가 VS-validated system 기록을 필요로 함 + decision agent 설치 | 해당 시스템 하나만 `decision_recorder` |
+| 현재 batch의 build/품질/playtest 근거가 아직 없음 | 필요한 근거 하나를 만드는 ordinary production/QA/playtest 작업 |
+| 현재 batch의 새 실측 근거가 있지만 production plan에 반영되지 않음 | 메인 에이전트가 `production-plan` 스킬로 estimate-versus-actual과 gate snapshot 갱신 |
+| confirmed scope 또는 새 실측으로 기존 scope estimate가 stale | 기존 estimate를 plan에서 덮어쓰지 않고 `scope_estimator`로 재계산 |
+| material scope expansion/cut 제안 + 사용자 confirm 없음 | plan에 proposed로만 남기고 사용자 확인 요청 |
+| Stage 4–5에서 regression/kill 판단 필요 + arbiter 설치 | `kill_arbiter` |
+| Stage 4–5 gate의 사용자-confirmed proceed | `production-plan`으로 다음 batch 또는 release review 설정 |
+| Stage 4–5 gate의 사용자-confirmed retry | 같은 batch의 부족한 근거/품질/공정 작업으로 복귀 |
+| Stage 4–5 gate의 사용자-confirmed regress | 근거가 깨진 Stage 3 산출물 또는 관련 Stage 4 decision으로 복귀 |
+| Stage 2 사용자-confirmed retry | 같은 cycle의 `prototype_coder`로 복귀 |
+| Stage 0–3 사용자-confirmed regress | 바꿔야 할 artifact에 따라 이전 단계 또는 현재 cycle planning으로 복귀 |
 | 사용자-confirmed kill | 사용자가 새 방향을 선택할 때까지 routing 중지 |
 
 ## Near-miss
@@ -46,8 +55,14 @@
 | 열린 Risk가 있지만 Vertical Slice로 미뤄도 된다는 근거가 있음 | 열린 Risk만으로 차단하지 말고 exit review에서 처리 시점의 타당성을 판단 |
 | 성공 사이클이 여러 번이라는 이유만으로 Stage 3 진입을 요청 | 고정 횟수를 readiness로 취급하지 말고 누적 근거의 대표성·일관성을 검토 |
 | `stage-3-ready` 권고처럼 보이나 사용자 confirm이 없음 | Stage 3 컴포넌트로 보내지 말고 사용자 confirm 요청 |
+| scope estimate는 있지만 Stage 3 gate 사용자 confirm이 없음 | production plan이나 detail docs를 시작하지 않고 Stage 3 gate 질문 제시 |
+| Stage 3 gate는 confirm됐지만 approved-scope basis가 없음 | 승인만으로 scope를 추정하지 않고 `scope_estimator` 입력/측정 gap을 보고 |
 | reviewer가 retry를 권고했는데 사용자가 kill을 물어봄 | `kill_arbiter`로 2차 의견을 받되, 최종 결정은 사용자 confirm |
 | `3-tech-decision.md`가 없지만 선택이 사용자 제약/기존 프로젝트로 확정됐고 기술 blocker도 없음 | 문서 생성을 요구하지 않고 다음 Increment 명세 또는 production으로 라우팅 |
 | 시각 표현 게임이지만 최소 visual direction이 VS spec에 있고 시각 blocker가 없음 | `art_director`를 요구하지 않고 다음 Increment 명세 또는 production으로 라우팅 |
 | `3-architecture.md`가 없지만 현재 증분을 막는 구조 위험이 없음 | 문서나 미설치 `architecture_designer`를 요구하지 않고 production으로 라우팅 |
 | VS spec이 15페이지보다 짧음 | 현재 Increment를 제작·측정하기에 충분하면 분량을 채우게 하지 않음 |
+| 실제 처리량이 VS estimate와 다름 | 고정 퍼센트로 자동 회귀하지 않고 현재 estimate 범위·품질·release 조건이 방어 가능한지 검토 |
+| production plan이 다음 여러 batch의 상세 일정/전체 콘텐츠 매트릭스를 포함함 | 현재 batch 밖 상세를 제거하고 승인 scope 요약만 유지 |
+| material scope cut이 제안됐지만 사용자 confirm이 없음 | 승인 scope에 적용하지 않고 `Scope Change` 제안으로만 기록 |
+| approved scope 안에서 batch 순서만 바뀜 | material scope change confirm을 요구하지 않고 plan 갱신 허용 |

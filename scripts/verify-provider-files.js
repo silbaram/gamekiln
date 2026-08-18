@@ -22,6 +22,7 @@ const GEMINI_REQUIRED_CONTRACT_TERMS = Object.freeze({
     /within three pages maximum/,
     /shorter is valid/,
     /Measurement/,
+    /later production/,
     /Target/,
     /Constraint/,
     /Estimate/,
@@ -33,11 +34,29 @@ const GEMINI_REQUIRED_CONTRACT_TERMS = Object.freeze({
     /At Stage 1,/,
     /At Stage 2,/,
     /At Stage 3,/,
+    /At Stage 4,/,
+    /At Stage 5,/,
     /return exactly one of proceed, retry, regression, or kill/,
-    /At Stage 4-5, use proceed or retry; regression and kill do not apply/,
-    /preserve learnings, killed hypotheses, and verified decisions/,
-    /discard unverified assumptions, prototype code, and documents after the regression target/,
+    /universal throughput threshold or release checklist/,
+    /preserve learnings, killed hypotheses, production measurements, confirmed scope changes, and verified decisions as history/,
+    /discard unverified assumptions, prototype code, and superseded forward plans after the regression target/,
     /AGENTS\.md.*project-decision boundary/,
+  ],
+});
+const AGENT_REQUIRED_TERMS = Object.freeze({
+  "kill-arbiter": [
+    /production-plan\.md/,
+    /3-scope-estimate\.md/,
+    /recorded production, build, QA, and playtest evidence/,
+  ],
+  "scope-estimator": [
+    /later recorded production measurements/,
+  ],
+  "stage-router": [
+    /production-plan/,
+    /3-scope-estimate\.md/,
+    /material scope expansion or cut through the .*AGENTS\.md.* decision boundary/,
+    /universal throughput threshold or generic release checklist/,
   ],
 });
 
@@ -107,7 +126,21 @@ for (const agent of AGENTS) {
 
   for (const body of [codex, claude, gemini]) {
     assert.doesNotMatch(body, /dirty-code-(?:html|python)/);
+    for (const requiredTerm of AGENT_REQUIRED_TERMS[agent] || []) {
+      assert.match(body, requiredTerm, `${agent}: missing cross-provider runtime term`);
+    }
   }
 }
+
+assert.match(
+  read("CLAUDE.md"),
+  /\.claude\/skills\/production-plan\/SKILL\.md/,
+  "CLAUDE.md: missing Claude production-plan discovery path"
+);
+assert.match(
+  read("GEMINI.md"),
+  /\.agents\/skills\/production-plan\/SKILL\.md/,
+  "GEMINI.md: missing Gemini production-plan read path"
+);
 
 console.log(`Provider definitions structurally valid and contract-linked: ${AGENTS.length} agents across Codex, Claude, and Gemini.`);
