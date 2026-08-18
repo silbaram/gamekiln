@@ -27,10 +27,8 @@ Recommended sections:
 ## Caps
 
 - Absolute cap: 10-15 pages.
-- Keep the slice to 10-20% of total intended content.
-- Include one playable character/class only.
-- Include one cycle's worth of core-system depth only.
-- Include a small enemy set plus one boss.
+- Choose the smallest representative end-to-end slice that can validate production quality and cost.
+- Include only content and system depth required for that validation; justify each included category from Stage 2 evidence or a named production risk.
 
 ## Required Shape
 
@@ -44,14 +42,11 @@ Recommended sections:
 Block the draft when it contains:
 
 - Full-game content matrices, all character/class lists, long-term roadmaps, or production plans beyond the vertical slice.
-- More than one playable character/class.
-- Content beyond 10-20% of the total intended game.
-- Multiple cycles' worth of core-system depth.
-- Large enemy rosters or more than one boss.
+- Content or system depth with no role in the slice goal or production-risk validation.
 - Any number or formula without a Stage 2 observation or explicit reference source.
 - Meta sections such as "what this document decides" or "what this document does not decide".
 - Stage 4 detail docs or instructions to write them before the slice is validated.
 
 ## Completion
 
-Complete only when `docs/game/3-vertical-slice-spec.md` stays inside VS scope, every number and formula has a source, the cap passes, and the response ends by asking the user to confirm before production work or later-stage docs begin.
+Complete only when `docs/game/3-vertical-slice-spec.md` stays inside VS scope, every number and formula has a source, the cap passes, and control returns for the `AGENTS.md` stage-transition boundary.

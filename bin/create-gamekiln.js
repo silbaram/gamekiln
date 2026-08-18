@@ -2,40 +2,27 @@
 
 const fs = require("fs");
 const path = require("path");
+const { cumulativeComponents } = require("../lib/component-tiers");
 
 const PACKAGE_ROOT = path.resolve(__dirname, "..");
 const PROVIDERS = new Set(["all", "codex", "claude", "gemini"]);
+const TIERS = new Set(["1", "2", "3"]);
 const GENERATED_GITIGNORE_ENTRIES = [
   ".antigravitycli/",
   "node_modules/",
   "*.tgz",
 ];
-const RUNTIME_SKILLS = [
-  "art-direction-5p",
-  "dirty-code-html",
-  "decision-record-1p",
-  "dirty-code-python",
-  "forbidden-in-macro",
-  "forbidden-meta-sections",
-  "macro-design-5p",
-  "pitch-one-pager",
-  "playtest-log-template",
-  "prototype-hypothesis",
-  "kill-criteria",
-  "tech-decision-template",
-  "vs-spec-template",
-];
-
 function usage() {
   console.log(`Usage:
-  create-gamekiln <project-dir> [--provider all|codex|claude|gemini]
+  create-gamekiln <project-dir> [--provider all|codex|claude|gemini] [--tier 1|2|3]
 
 Examples:
   create-gamekiln my-game
-  create-gamekiln my-game --provider codex
+  create-gamekiln my-game --provider codex --tier 2
 
-Existing harness files in <project-dir> are updated in place. Project notes
-such as prototype learnings are created only when missing.
+Tier 1 is the default. Higher tiers include all lower-tier components.
+This command does not migrate projects created by older releases.
+Project notes are created only when missing.
 `);
 }
 
@@ -43,6 +30,7 @@ function parseArgs(argv) {
   const args = [...argv];
   let target = null;
   let provider = "all";
+  let tier = "1";
 
   while (args.length > 0) {
     const arg = args.shift();
@@ -60,6 +48,17 @@ function parseArgs(argv) {
       provider = arg.slice("--provider=".length);
       continue;
     }
+    if (arg === "--tier") {
+      tier = args.shift();
+      if (!tier) {
+        throw new Error("--tier requires a value.");
+      }
+      continue;
+    }
+    if (arg.startsWith("--tier=")) {
+      tier = arg.slice("--tier=".length);
+      continue;
+    }
     if (arg.startsWith("-")) {
       throw new Error(`Unknown option: ${arg}`);
     }
@@ -75,7 +74,10 @@ function parseArgs(argv) {
   if (!PROVIDERS.has(provider)) {
     throw new Error(`Invalid provider "${provider}". Use all, codex, claude, or gemini.`);
   }
-  return { target, provider, help: false };
+  if (!TIERS.has(tier)) {
+    throw new Error(`Invalid tier "${tier}". Use 1, 2, or 3.`);
+  }
+  return { target, provider, tier, help: false };
 }
 
 function ensureTargetDir(targetDir) {
@@ -141,8 +143,8 @@ function writeGeneratedGitignore(targetRoot) {
   fs.writeFileSync(gitignorePath, `${existing}${prefix}${suffix}${missing.join("\n")}\n`);
 }
 
-function copyRuntimeSkills(targetRoot) {
-  for (const skill of RUNTIME_SKILLS) {
+function copyRuntimeSkills(targetRoot, skills) {
+  for (const skill of skills) {
     copySourceToTarget(
       path.join(".agents", "skills", skill),
       path.join(targetRoot, ".agents", "skills", skill)
@@ -150,11 +152,11 @@ function copyRuntimeSkills(targetRoot) {
   }
 }
 
-function createClaudeSkillCopies(targetRoot) {
+function createClaudeSkillCopies(targetRoot, skills) {
   const claudeSkillsDir = path.join(targetRoot, ".claude", "skills");
   fs.mkdirSync(claudeSkillsDir, { recursive: true });
 
-  for (const skill of RUNTIME_SKILLS) {
+  for (const skill of skills) {
     const skillPath = path.join(claudeSkillsDir, skill);
     fs.rmSync(skillPath, { recursive: true, force: true });
     copySourceToTarget(
@@ -168,8 +170,17 @@ function providerEnabled(selected, provider) {
   return selected === "all" || selected === provider;
 }
 
-function scaffold({ target, provider }) {
+function copyProviderAgents(provider, targetRoot, agents) {
+  for (const agent of agents) {
+    const extension = provider === "codex" ? ".toml" : ".md";
+    copyPath(path.join(`.${provider}`, "agents", `${agent}${extension}`), targetRoot);
+  }
+}
+
+function scaffold({ target, provider, tier }) {
   const targetRoot = path.resolve(process.cwd(), target);
+  const agents = cumulativeComponents(tier, "agents");
+  const skills = cumulativeComponents(tier, "skills");
   ensureTargetDir(targetRoot);
 
   copyPath("AGENTS.md", targetRoot);
@@ -182,7 +193,7 @@ function scaffold({ target, provider }) {
     copyPath("GEMINI.md", targetRoot);
   }
 
-  copyRuntimeSkills(targetRoot);
+  copyRuntimeSkills(targetRoot, skills);
   copyPath(path.join("docs", "harness"), targetRoot);
   copyPath(path.join("docs", "decisions", ".gitkeep"), targetRoot, { overwrite: false });
   copyPath(path.join("docs", "game", "details", ".gitkeep"), targetRoot, { overwrite: false });
@@ -193,18 +204,20 @@ function scaffold({ target, provider }) {
   copyPath(path.join("prototypes", "killed-hypotheses.md"), targetRoot, { overwrite: false });
 
   if (providerEnabled(provider, "codex")) {
-    copyPath(".codex", targetRoot);
+    copyPath(path.join(".codex", "config.toml"), targetRoot);
+    copyProviderAgents("codex", targetRoot, agents);
   }
   if (providerEnabled(provider, "claude")) {
-    copyPath(path.join(".claude", "agents"), targetRoot);
-    createClaudeSkillCopies(targetRoot);
+    copyProviderAgents("claude", targetRoot, agents);
+    createClaudeSkillCopies(targetRoot, skills);
   }
   if (providerEnabled(provider, "gemini")) {
-    copyPath(".gemini", targetRoot);
+    copyProviderAgents("gemini", targetRoot, agents);
   }
 
   console.log(`Created or updated Game Design Harness project at ${targetRoot}`);
   console.log(`Provider files: ${provider}`);
+  console.log(`Components: cumulative Tier ${tier} (${agents.length} agents, ${skills.length} skills)`);
   console.log("Next: start Stage 0 in the main agent with the pitch-one-pager skill.");
 }
 

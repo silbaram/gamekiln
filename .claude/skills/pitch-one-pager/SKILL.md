@@ -14,7 +14,7 @@ When no complete Stage 0 pitch exists, the main agent conducts the interview dir
 - Ask only enough short, grouped questions to fill the six required sections.
 - As soon as the answers are sufficient, write `docs/game/0-pitch.md`; do not keep interviewing for extra detail.
 - Keep the conversation at pitch level: do not ask for or expand into system details, UI flows, technical stack choices, formulas, or unsupported numeric claims.
-- Do not automatically advance to Stage 1. After the pitch is written, ask the user to confirm before any Stage 1 work begins.
+- Stop after the pitch and apply the stage-transition confirmation boundary in `AGENTS.md`.
 
 ## Output Contract
 
@@ -45,4 +45,4 @@ Do not include:
 
 ## Completion
 
-The pitch is complete only when all six sections are filled, the draft stays within the one-page cap, and the user is asked to confirm before Stage 1.
+The pitch is complete only when all six sections are filled, the draft stays within the one-page cap, and the `AGENTS.md` stage-transition boundary is handed back to the main agent.

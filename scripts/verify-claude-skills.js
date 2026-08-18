@@ -2,23 +2,10 @@
 
 const fs = require("fs");
 const path = require("path");
+const { cumulativeComponents } = require("../lib/component-tiers");
 
 const ROOT = path.resolve(__dirname, "..");
-const RUNTIME_SKILLS = [
-  "art-direction-5p",
-  "dirty-code-html",
-  "decision-record-1p",
-  "dirty-code-python",
-  "forbidden-in-macro",
-  "forbidden-meta-sections",
-  "macro-design-5p",
-  "pitch-one-pager",
-  "playtest-log-template",
-  "prototype-hypothesis",
-  "kill-criteria",
-  "tech-decision-template",
-  "vs-spec-template",
-];
+const RUNTIME_SKILLS = cumulativeComponents("3", "skills");
 const AUTHORING_ONLY_SKILLS = ["harness-subagents"];
 const CLAUDE_SKILL_COPIES = [...RUNTIME_SKILLS, ...AUTHORING_ONLY_SKILLS].sort();
 

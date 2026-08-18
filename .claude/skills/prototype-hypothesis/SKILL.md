@@ -1,6 +1,6 @@
 ---
 name: prototype-hypothesis
-description: Use for Stage 2 cycle planning. Enforces one hypothesis per cycle with explicit failure and success signals in a one-page prototype hypothesis.
+description: Use for Stage 2 cycle planning. Enforces the one-page hypothesis artifact with explicit failure and success signals.
 ---
 
 # Prototype Hypothesis
@@ -15,15 +15,20 @@ When planning the next Stage 2 cycle, the main agent runs this skill directly.
 - Choose the next riskiest assumption to test from the macro Top Risks and prior learnings. If `prototypes/assumptions.md` exists, scan it too for candidate hypotheses.
 - Ask the user a short grouped question list only when the risk choice or the failure/success signals are genuinely ambiguous. If the next test is clear, proceed without asking.
 - Never guess the hypothesis or its signals when they are genuinely ambiguous; stop and ask instead.
+- Choose the cheapest prototype modality that can faithfully expose both signals. Prefer a browser page or terminal script when adequate, but use an engine graybox, tabletop setup, spreadsheet, simulation, or minimal network test when interaction, physics, social play, or timing requires it. Ask only if materially different setups remain equally plausible.
 - After selecting the risk, update the macro Top Risks ledger: set only that risk's `Cycle` cell to the `cycle-NN-<topic>` slug and only its `Status` cell to `testing`. Never edit the risk text or any other cells as part of that ledger update.
 - Create `prototypes/cycle-NN-<topic>/hypothesis.md` using the output contract below.
-- Do not automatically call `prototype_coder`; ask the user to confirm before any prototype build begins.
+- Stop after planning; do not build the prototype in the same skill invocation.
 
 ## Output Contract
 
 Begin `hypothesis.md` with one anchor line citing the macro risk this cycle tests:
 
     > Tests: R2 (이 사이클이 검증하는 위험 한 줄 요약)
+
+Then record the selected test form and why it exposes the signals:
+
+    > Prototype: <modality> — <one-line reason>
 
 Then write exactly three sections:
 
@@ -40,12 +45,11 @@ decides the gate.
 
 - Absolute cap: 1 page or roughly 80 lines.
 - Hypothesis length: 1-3 sentences.
-- One cycle tests one hypothesis only.
 
 ## Block
 
-Block multi-hypothesis drafts. Treat "and", "also", "while also", and stacked bullet hypotheses as suspicious unless they describe one testable claim.
+Apply the single-hypothesis invariant from `AGENTS.md`: block drafts with more than one independently decidable claim. Treat "and", "also", "while also", and stacked bullet hypotheses as review signals rather than automatic violations.
 
 ## Completion
 
-Complete only when the file begins with a `Tests: R<N>` anchor citing an existing macro risk (including appended R4+ risks), failure and success signals are observable during play or prototype runs, the macro Top Risks ledger marks only the tested risk's Cycle and Status cells for this cycle, and the user is asked to confirm before prototype coding.
+Complete only when the file begins with valid `Tests:` and `Prototype:` lines, the chosen modality can expose both observable signals, the macro Top Risks ledger marks only the tested risk's Cycle and Status cells for this cycle, and the artifact is ready for the `prototype_coder` handoff.

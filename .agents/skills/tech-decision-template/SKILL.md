@@ -41,4 +41,4 @@ Block the draft and ask for missing evidence when any of these appear:
 
 ## Completion
 
-Complete only when `docs/game/3-tech-decision.md` contains one decision, Stage 2 cycle-cited rationale, an A/B/C candidate comparison table, a validation plan, stays within cap, and ends by asking the user to confirm before any next Stage 3 work begins.
+Complete only when `docs/game/3-tech-decision.md` contains one decision, Stage 2 cycle-cited rationale, an A/B/C candidate comparison table, a validation plan, stays within cap, and returns control for the `AGENTS.md` stage-transition boundary.

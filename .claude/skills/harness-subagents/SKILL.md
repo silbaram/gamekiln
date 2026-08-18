@@ -9,24 +9,21 @@ Use this skill to author the AI game-design harness agents and skills described 
 
 ## Required Sources
 
-Read these before writing or changing harness agents:
+Read `docs/harness/core-contract.md` for every harness authoring task. Then load only what the target needs:
 
-- `docs/harness/design-guide.md` for the philosophy, stages, gates, output caps, and anti-encyclopedia rules.
-- `docs/harness/agents-skills-spec.md` for the Tier 1/2/3 agent and skill roster.
-- `references/provider-formats.md` before writing Codex, Claude Code, or Gemini CLI files.
+- The target component's section in `docs/harness/agents-skills-spec.md`.
+- The selected provider's section in `references/provider-formats.md` when changing provider files.
+- The relevant `docs/harness/design-guide.md` section only when stage boundaries or design rationale are at issue.
+- All of `docs/harness/routing-scenarios.md` only when changing `stage_router`.
 
-Use the harness reference docs as source of truth for authoring. Do not duplicate the whole reference docs into generated agents.
+Do not require whole reference documents for a local component edit. Do not duplicate reference prose into generated agents.
 
 ## Non-Negotiables
 
-Every harness agent, skill, or generated prompt must preserve these rules:
+Every harness component must preserve `core-contract.md` without restating it:
 
-- Documents record decisions; they do not predict a complete game up front.
-- Every stage decides proceed, retry, regress, or kill. Never auto-advance without user confirmation.
-- Stage 2 prototype code is intentionally disposable. Keep it small, single-purpose, and separate from production code.
-- Enforce the caps from the harness reference docs: pitch 1 page, macro design 5 pages, prototype hypothesis 1 hypothesis per cycle, prototype code as one self-contained HTML page or Python file without production architecture, detail docs 1-2 pages per system.
-- Numeric values, formulas, tables, and balance claims need either observed playtest/prototype evidence or an explicitly named reference game/source.
-- Stage 4 detail docs are only written after a vertical slice proves the relevant decision.
+- Change a rule only in its canonical owner; other layers reference it.
+- Enforce each artifact's cap and shape in its owning skill, not in provider entry files or unrelated agent bodies.
 - Prefer Tier 1 only unless the user explicitly asks for a Tier 2/3 component or the project is already blocked at that point.
 - Ordinary runtime agents should not require reading `docs/harness/`. Put the necessary behavior in AGENTS.md, the relevant SKILL.md files, or the agent body.
 - Roles that need user input during execution must be implemented as main-loop skill flows, not subagents.
@@ -37,13 +34,13 @@ Every harness agent, skill, or generated prompt must preserve these rules:
 
 1. Identify target provider(s): `codex`, `claude`, `gemini`, or all three. If unspecified, create provider-neutral guidance and ask before writing provider files.
 2. Identify the smallest useful tier. Default to Tier 1: main-loop skill flows for `concept_interviewer` and `cycle_planner`, plus subagents `macro_designer`, `prototype_coder`, `cycle_reviewer`, and `stage_router`.
-3. For each component, choose the execution shape first: use a main-loop skill flow when the role needs user input during execution; use a subagent for autonomous drafting, coding, review, or routing. Do not create provider subagent files for main-loop skill flows. Then write one responsibility only: stage, purpose, inputs, outputs, blocking rules, and completion condition.
+3. For each component, choose the execution shape first: use a main-loop skill flow when the role needs user input during execution; use a subagent for autonomous drafting, coding, review, or routing. Do not create provider subagent files for main-loop skill flows. Then write one responsibility only: role, inputs, exact output, and genuine stop conditions. Leave artifact format and cap rules in the skill.
 4. Convert names by provider:
    - Internal harness id: keep harness ids such as `concept_interviewer`.
    - Codex agent `name`: keep snake_case.
    - Claude/Gemini agent `name`: use lowercase kebab-case, such as `concept-interviewer`.
 5. Use the provider templates in `assets/templates/` when creating files. Adjust tool access narrowly instead of inheriting broad write permissions by default.
-6. After writing, validate frontmatter/TOML shape and scan for forbidden expansion: broad future specs, unverified numbers, automatic stage advancement, and Stage 4 details before Stage 3 evidence.
+6. After writing, validate frontmatter/TOML shape, provider parity, and ownership against `core-contract.md`. Reject duplicate rules as well as forbidden expansion.
 
 ## Friction To Fix Target
 
@@ -61,8 +58,8 @@ When adding or changing a blocking rule/guard in a skill or agent, run one spot 
 
 ## Maintenance Workflow
 
-1. 감사 — Compare AGENTS.md and spec component lists against actual files; list mismatches.
-2. 사이클당 변경 1개 — Change one structural issue per maintenance cycle.
+1. 감사 — Compare the core ownership table and spec component lists against actual files; list mismatches.
+2. 변경 — Fix the smallest canonical owner set that resolves the observed structural issue.
 3. 이력 동기화 — Update `docs/harness/retrospective.md` and the relevant spec.
 4. 검증 — Run verify scripts; when `stage_router` changed, compare all of `docs/harness/routing-scenarios.md`; when guard rules changed, run the spot test.
 
@@ -83,9 +80,9 @@ Skills are an open standard but each provider discovers them in different paths 
 1. **Author once under `.agents/skills/<name>/SKILL.md`** as the canonical source.
 2. **Codex**: nothing more to do. Codex scans `.agents/skills/` automatically.
 3. **Claude Code**: copy `.agents/skills/<name>` to `.claude/skills/<name>` as a real directory, then add the skill to the relevant subagent's `skills:` frontmatter so its content preloads at startup. Do not use symlinks in this repository; Windows checkouts can silently degrade them into text files.
-4. **Gemini CLI**: Gemini has no skill auto-loading mechanism. Inline the skill's hard rules into each Gemini agent body under a `<skill-name> rules (inlined because Gemini does not auto-load skills):` block. Keep it tight — the harness anti-encyclopedia principle still applies.
+4. **Gemini CLI**: Gemini has no skill auto-loading mechanism. Inline the skill's minimum output contract once under a `<skill-name> contract (inlined):` block. Do not add a second Block list that restates it.
 
-`harness-subagents` is special: it is for authoring this harness, not ordinary game-project work. In this authoring repository, install it as a real copied directory at `.claude/skills/harness-subagents/` so Claude Code can load it while editing the harness. The scaffolder distributes the runtime skills listed in `RUNTIME_SKILLS`, so `harness-subagents` is not copied into newly scaffolded game projects.
+`harness-subagents` is special: it is for authoring this harness, not ordinary game-project work. In this authoring repository, install it as a real copied directory at `.claude/skills/harness-subagents/` so Claude Code can load it while editing the harness. The scaffolder distributes runtime skills from the cumulative tier registry in `lib/component-tiers.js`, so `harness-subagents` is not copied into newly scaffolded game projects.
 
 Verification after adding or changing a skill:
 
@@ -103,13 +100,13 @@ Every generated subagent must include:
 - Trigger guidance in the description.
 - Required inputs and exact output path or response shape.
 - Explicit stop condition.
-- Blocking rules for the harness philosophy.
-- A user-confirm gate before stage transitions, kill decisions, or scope expansion.
+- Only component-specific blocking rules not already owned by `AGENTS.md` or a loaded skill.
 
 Avoid:
 
 - "This document decides / does not decide" meta sections in game docs.
 - Large explanatory essays inside agent prompts.
+- Repeating a loaded/inlined skill's format, cap, or block rules in the agent body.
 - Tier 3 components created in advance.
 - Provider-specific fields invented from memory. Check `references/provider-formats.md` first.
 
