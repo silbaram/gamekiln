@@ -79,7 +79,8 @@
 - **호출 시점**: 사용자가 의도 불명확하게 요청할 때
 - **Stage 2 출구**: 확인된 `risk-resolved` 뒤에는 다음 Risk 계획 또는 메인 루프 exit review 중 하나만 안내. exit review는 고영향 Risk의 대표성·일관성, 반대 신호/evidence gap, 열린 Risk의 처리 시점, killed hypotheses 충돌을 종합하되 모든 Risk 해결이나 고정 횟수를 요구하지 않음
 - **Stage 3 루프**: exit review의 `stage-3-ready` 사용자 confirm 뒤 Slice Goal, 현재 가장 큰 Production Risk, 다음 Playable Increment를 확인하고, 다음 증분의 제작·측정을 막는 선택만 `tech_decider`, `art_director`, 짧은 기술/구조 spike, 또는 `vs_spec_writer` 갱신으로 해소. 선택 문서가 없다는 이유만으로 제작을 막지 않음
-- **종료 조건**: 다음 행동 1개 명시. Optional Tier agent는 현재 provider 파일이 설치됐을 때만 이름으로 라우팅하고, 없으면 누적 Tier 설치 또는 수동 경로를 안내. 대표 VS와 제작 측정이 완성된 뒤에만 `scope_estimator`로 라우팅
+- **Stage 4–5 루프**: Stage 3 gate 사용자 confirm 뒤 `production-plan`으로 현재 batch를 seed/update하고, 부족한 production/QA/playtest evidence, batch에 필요한 validated decision record, plan 갱신, project-level regress/kill review 중 다음 행동 하나만 안내. 공통 처리량 임계값이나 generic release checklist를 요구하지 않음
+- **종료 조건**: 다음 행동 1개 명시. Optional Tier agent/skill은 설치됐을 때만 이름으로 라우팅하고, 없으면 누적 Tier 설치 또는 수동 경로를 안내. 대표 VS와 제작 측정이 완성된 뒤에만 `scope_estimator`로 라우팅하며, material scope change와 stage/kill 결과는 사용자 confirm 전 적용하지 않음
 
 ### 스킬 5개
 
@@ -176,15 +177,15 @@
 - **종료 조건**: Slice Goal + 현재 Production Risk + 제작·측정 가능한 다음 Playable Increment + 해당 증분의 중요한 수치/공식 분류와 목표별 검증 방법
 
 #### `scope_estimator`
-- **단계**: Stage 3
-- **목적**: VS 제작 데이터로 전체 게임 비용/시간 추정
-- **입력**: 기록된 VS 제작 결과(에이전트가 `Measurement`로 분류) + 명시된 전체 게임 수량(에이전트가 `Target`으로 분류) + (있으면) 사용자-confirmed production `Constraint`
+- **단계**: Stage 3 + 이후 recalibration
+- **목적**: VS 제작 데이터와 이후 production 실측으로 전체 게임 비용/시간 추정 생성·재보정
+- **입력**: 기록된 VS 제작 결과 + (있으면) 이후 production 실측(각 source/period를 보존한 `Measurement`) + 명시된 전체 게임 수량(`Target`) + 사용자-confirmed production `Constraint`
 - **산출**: `docs/game/3-scope-estimate.md` (최대 3p)
 - **사용 스킬**: `scope-estimate-method`
-- **호출 시점**: VS 완성 직후, 메인 에이전트가 실측 데이터를 사용자와 선해소한 뒤
+- **호출 시점**: VS 완성 직후 최초 추정, 또는 confirmed target/production 실측으로 현재 estimate가 stale해졌을 때
 - **추정 규칙**: 모든 결과는 `Estimate`/`추정`으로 표시하고 입력값과 출처, 계산 방법, 범위 또는 신뢰 구간, 불확실성, 미측정 항목을 노출. Target/Constraint/Citation/Estimate를 Measurement로 재라벨하지 않음
 - **중단 조건**: 기록된 입력만으로 방어 가능한 범위/신뢰 구간을 만들 수 없으면 값을 발명하지 않고 최소 추가 측정 또는 명시적 시나리오 경계만 묻고 point estimate는 미완료로 유지
-- **종료 조건**: 투명한 시간/비용 추정치 + 범위 또는 신뢰 구간 + 미측정 항목 표기 + Stage 3 게이트 질문
+- **종료 조건**: 투명한 시간/비용 추정치 + 범위 또는 신뢰 구간 + 미측정 항목 표기. 현재 gate 판단은 메인 에이전트에 반환
 
 ### 스킬 4개
 
@@ -229,11 +230,11 @@
 - **출력 형식**: VS 범위 한정 명세
 
 #### `scope-estimate-method` (구현됨)
-- **단계**: Stage 3
-- **목적**: `docs/game/3-scope-estimate.md`의 최대 3페이지 캡과 투명한 측정→추정 계산 강제
+- **단계**: Stage 3 + 이후 recalibration
+- **목적**: `docs/game/3-scope-estimate.md`의 최대 3페이지 캡과 VS/후속 production 측정→추정 계산 강제
 - **강제 제약**:
   - 최대 3페이지이며 최소/목표 분량 없음
-  - 실제 VS 제작 결과는 `Measurement`/`측정`, 전체 게임 수량은 `Target`/`목표`, 제작 경계는 `Constraint`/`제약`으로 보존
+  - 실제 VS 및 후속 production 결과는 source/period를 보존한 `Measurement`/`측정`, 전체 게임 수량은 `Target`/`목표`, 제작 경계는 `Constraint`/`제약`으로 보존
   - 모든 결과는 `Estimate`/`추정`으로 표시하고 입력·출처·계산·범위 또는 신뢰 구간·불확실성·미측정 항목 노출
   - Target/Constraint/Citation/Estimate를 Measurement로 재라벨하지 않음
 - **검출/차단**: 입력 발명, 방어 불가능한 point estimate, 출처 재라벨, 3페이지 초과, 계산 밖 전체 게임 계획
@@ -244,6 +245,18 @@
 ## Tier 3: 필요시만 (추천 추가 순서대로)
 
 > 첫 게임 프로젝트에서 *실제로 막힐 때* 하나씩 추가. 모두 한 번에 만들지 마세요.
+
+### 메인 루프 스킬 흐름 1개
+
+#### `production_planner` → `production-plan` 메인 루프 흐름
+- **단계**: Stage 4–5
+- **목적**: Stage 3에서 확인한 scope estimate와 실제 production 결과를 현재 batch 운영 계획으로 연결
+- **실행 형태**: 서브에이전트가 아니라 메인 에이전트가 `production-plan` 스킬로 직접 진행
+- **입력**: 사용자-confirmed Stage 3 gate + `docs/game/3-scope-estimate.md` + 실제 batch 제작/품질/playtest 근거 + 사용자-confirmed scope change
+- **산출**: `docs/game/production-plan.md` (최대 3p)
+- **호출 시점**: Stage 3 gate confirm 직후 seed하고, 현재 batch의 새 실측·scope 결정·gate 결과가 생길 때 갱신
+- **작성 전 질문**: material scope expansion/cut 또는 stage/kill 결정을 적용해야 할 때만 사용자 확인. 승인 scope 안의 batch 순서 변경은 질문하지 않음
+- **종료 조건**: 승인 scope + 현재 batch 하나 + 완료 근거 + estimate-vs-actual 상태 + 현재 risk/scope-change 제안 + gate snapshot
 
 ### 에이전트
 
@@ -265,7 +278,7 @@
 #### `kill_arbiter` (구현됨)
 - **단계**: Cross-stage
 - **목적**: 각 단계 kill 조건 자동 검증, 사용자에게 kill/회귀/진행 OK 권고
-- **입력**: 현재 단계 산출물 + `prototypes/learnings.md` + `prototypes/killed-hypotheses.md` + `prototypes/playtest.md` + macro Top Risks 원장 + (있으면) 각 사이클 `iterations.md`
+- **입력**: 현재 단계 산출물 + `prototypes/learnings.md` + `prototypes/killed-hypotheses.md` + `prototypes/playtest.md` + macro Top Risks 원장 + (있으면) 각 사이클 `iterations.md`; Stage 4–5에서는 `docs/game/production-plan.md` + `docs/game/3-scope-estimate.md` + 관련 detail records + 실제 production/build/QA/playtest 근거
 - **산출**: 읽기 전용 권고 메시지 (진행 / 재시도 / 회귀 / kill 중 1개) + 보존/폐기 자산 목록
 - **사용 스킬**: `kill-criteria`
 - **추가 시점**: 사용자가 kill을 고민하거나 `cycle_reviewer`의 project-level 2차 의견이 필요할 때
@@ -295,6 +308,20 @@
 
 ### 스킬
 
+#### `production-plan` (구현됨)
+- **단계**: Stage 4–5
+- **목적**: `docs/game/production-plan.md`의 최대 3페이지 캡과 current-batch-only 운영 계획 강제
+- **강제 제약**:
+  - 최대 3페이지이며 최소/목표 분량 없음
+  - Approved Scope / Current Batch / Throughput Check / Quality Checkpoints / Risks And Scope Change / Gate Snapshot
+  - Stage 3 estimate는 `Estimate`, 계획값은 `Target`, 사용자-confirmed 경계는 `Constraint`, 실제 제작·품질 결과만 `Measurement`/`Observation`으로 보존
+  - 실제 결과가 없으면 pending measurement를 기록하고 값을 발명하지 않음
+  - full-game estimate를 plan 안에서 재계산하지 않으며 confirmed scope/measurement로 stale해지면 `scope-estimate-method`에 재계산 handoff
+  - 공통 throughput 퍼센트나 generic release checklist 없이 프로젝트별 estimate 범위·품질·release evidence를 검토
+  - material scope change는 gate와 별도로 기록하고 사용자 confirm 전 승인 scope에 적용하지 않음
+- **검출/차단**: Stage 3 gate confirm 전 작성, 다음 여러 batch 상세/전체 콘텐츠 매트릭스/장기 일정, unvalidated Stage 4 detail, 자동 scope change·stage transition·kill
+- **출력 형식**: 현재 batch 하나의 living production plan
+
 #### `forbidden-meta-sections` (구현됨)
 - **단계**: Stage 4
 - **목적**: `docs/game/details/*.md`에서 "이 문서가 결정하는 것/안 하는 것/책임 경계" 메타 섹션 차단
@@ -314,7 +341,7 @@
 #### `kill-criteria` (구현됨)
 - **단계**: Cross-stage
 - **목적**: 각 단계의 kill/회귀 조건 명시 + 보존/폐기 자산 안내
-- **강제 제약**: design-guide §6의 단계별 kill 조건 체크리스트만 사용, 증거 없는 kill 권고와 사용자 confirm 없는 kill 확정 차단
+- **강제 제약**: design-guide §6의 단계별 조건만 사용. Stage 4는 production evidence가 VS/verified decision의 근거를 깨면 Stage 3 회귀를 검토하고, Stage 5는 실제 처리량·품질이 slice/scope/decision 전제를 깨면 Stage 3 또는 관련 Stage 4 회귀를 검토. 방어 가능한 cut/retry/regress 경로가 없을 때만 kill review. 고정 throughput/release 임계값, 증거 없는 kill 권고, 사용자 confirm 없는 확정 차단
 - **추가 시점**: Kill 판단이 흐려질 때
 
 #### `art-direction-5p` (구현됨)
@@ -364,9 +391,9 @@
 |---|---|---|---|
 | **Tier 1 (필수)** | 4 (+ main-loop skill flow 2) | 5 | **11** |
 | **Tier 2 (1차 확장)** | 3 (+ main-loop skill flow 1) | 4 | **19** |
-| **Tier 3 (partial)** | 3 구현 / 3 대기 | 4 구현 / 1 대기 | **26 구현 / 4 대기** |
+| **Tier 3 (partial)** | 3 구현 / 3 대기 (+ main-loop skill flow 1) | 5 구현 / 1 대기 | **28 구현 / 4 대기** |
 
-**시작은 11개.** 기본 scaffold는 이 Tier 1 agent/skill만 노출하고, `--tier 2`와 `--tier 3`이 누적 확장합니다. 현재 Tier 3은 `decision_recorder`, `kill_arbiter`, `art_director`와 관련 스킬 4개가 구현됐고, 나머지는 트리거 대기입니다.
+**시작은 11개.** 기본 scaffold는 이 Tier 1 agent/skill만 노출하고, `--tier 2`와 `--tier 3`이 누적 확장합니다. 현재 Tier 3은 `decision_recorder`, `kill_arbiter`, `art_director`, `production_planner` 메인 루프와 관련 스킬 5개가 구현됐고, 나머지는 트리거 대기입니다.
 
 ---
 

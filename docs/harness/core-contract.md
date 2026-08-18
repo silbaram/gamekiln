@@ -10,7 +10,7 @@
 | 모든 stage gate는 proceed/retry/regress/kill을 검토하고 해당 없는 결과를 명시 | `AGENTS.md` |
 | 중요한 수치·공식·밸런스 주장은 산출물 언어에 맞춰 근거/문맥/미검증 작업값으로 분류하고, 이 게임의 동작 검증은 관측·측정만 사용 | `AGENTS.md` |
 | Stage 2 구현은 `prototypes/`에 격리하고 production에서 재사용하지 않음 | `AGENTS.md` |
-| 단계 전환·project kill·중대한 범위 확대만 사용자 확인 필요 | `AGENTS.md` |
+| 단계 전환·project kill·중대한 범위 변경(확대·축소)만 사용자 확인 필요 | `AGENTS.md` |
 | VS 검증 전 Stage 4 detail doc 금지 | `AGENTS.md` |
 | 산출물 경로·섹션·분량·artifact-specific 차단 | 해당 `SKILL.md` |
 | 역할·입력·출력·실제 중단 조건 | provider agent body |

@@ -177,9 +177,14 @@ flowchart TD
     S3[Stage 3: Vertical Slice<br/>실제 빌드 일부] -->|만들 수<br/>있다 증명?| S4
     S3 -.->|비용 폭발| S2
 
-    S4[Stage 4: Detail Docs<br/>검증된 결정 기록] --> S5
+    S4[Stage 4: Detail Docs<br/>검증된 결정 기록] -->|현재 batch 준비| S5
+    S4 -.->|VS 근거가 깨짐| S3
+    S4 -.->|지속 불가| Kill4[Kill/Stop]
 
-    S5[Stage 5: Production<br/>나머지 양산]
+    S5[Stage 5: Production<br/>현재 batch 반복] -->|다음 batch| S5
+    S5 -->|출시 조건 충족| Release[Release]
+    S5 -.->|VS/결정 전제 깨짐| S3
+    S5 -.->|지속 불가| Kill5[Kill/Stop]
 
     style S0 fill:#e1f5ff
     style S1 fill:#e1f5ff
@@ -203,7 +208,7 @@ flowchart TD
 | **2** | 재미 검증 | `cycle-NN.md` × N + 프로토타입들 | 1p/사이클 | 재미가 있나? |
 | **3** | 제작 가능성 증명 | 플레이 가능한 vertical slice | 빌드 + 25-30p 문서 | 만들 수 있나? |
 | **4** | 검증된 결정 기록 | `details/*.md` (얇음) | 1-2p/시스템 | 무엇이 결정됐나? |
-| **5** | 나머지 양산 | 본 게임 | — | 출시 |
+| **5** | 현재 batch 양산·검증 | 본 게임 + `production-plan.md` | plan 3p | 다음 batch/출시가 가능한가? |
 
 ---
 
@@ -503,6 +508,10 @@ Build + Playtest + Measure
 - 내용은 *과거 결정의 정리*, *미래 스펙* 아님
 - owning artifact의 검증 계획에 연결되지 않은 가정은 별도 `assumptions.md`로 격리. Hypothesis/VS spec의 명시 목표와 scope estimate의 투명한 추정은 검증값으로만 가장하지 않으면 유지
 
+#### Production handoff
+
+사용자가 Stage 3 gate를 통과 확인하면 메인 에이전트가 `production-plan` 스킬로 `docs/game/production-plan.md`를 시작합니다. 이 문서는 최대 3페이지 안에서 승인 스코프와 **현재 production batch 하나**만 구체화하고, 필요한 VS-validated detail record를 가리킵니다. 전체 콘텐츠 매트릭스나 장기 일정을 미리 만들지 않습니다.
+
 ---
 
 ### Stage 5: Production
@@ -517,8 +526,11 @@ Build + Playtest + Measure
 - 외부 플레이테스트
 - 출시 준비
 
-#### 문서 역할
-도구가 아니라 *참조 자료*로. 이 시점에는 텔레메트리가 의사결정의 주된 입력입니다.
+#### Living production plan
+
+`production-plan.md`는 현재 batch의 완료 조건, VS estimate 대비 실제 처리량, 품질 체크포인트, 제작 위험, scope change 제안, 다음 gate를 갱신하는 운영 인덱스입니다. 실제 결과가 없으면 다음 측정만 기록하며 예측값을 발명하지 않습니다. 처리량 차이는 공통 퍼센트로 판정하지 않고 이 프로젝트의 추정 범위·품질 목표·release 조건이 여전히 방어 가능한지로 판단합니다. Confirmed scope나 새 측정으로 기존 estimate가 stale해지면 plan 안에서 다시 계산하지 않고 `scope-estimate-method`로 돌려보냅니다.
+
+범위 확대나 축소는 proceed/retry/regress/kill과 별도인 scope change로 기록합니다. 중대한 변경은 사용자 확인 뒤 적용하고, 승인 스코프 안의 batch 순서 변경에는 별도 확인을 요구하지 않습니다. 텔레메트리와 실제 제작 측정이 의사결정의 주된 입력입니다.
 
 ---
 
@@ -534,8 +546,8 @@ Build + Playtest + Measure
 | Stage 1 | → Stage 2 | macro/hypothesis 보강 | → Stage 0 | 폐기 |
 | Stage 2 | `stage-3-ready` + 사용자 confirm → Stage 3 | 같은 사이클 재시도 | → Stage 1 (피벗) | 폐기 |
 | Stage 3 | → Stage 4 | slice/scope 검증 보강 | → Stage 2 (스코프 폭발) | 폐기 |
-| Stage 4 | → Stage 5 | 현재 시스템 보강 | 해당 없음 | 해당 없음 |
-| Stage 5 | 출시 | release readiness 보강 | 해당 없음 | 해당 없음 |
+| Stage 4 | current batch 준비 → Stage 5 | 현재 decision/batch 근거 보강 | → Stage 3 또는 관련 decision (VS 근거 파손) | 방어 가능한 승인 scope 없음 |
+| Stage 5 | 다음 batch 또는 출시 | 같은 batch의 품질/공정 보강 | → Stage 3 또는 관련 Stage 4 decision (실측이 전제 파손) | cut/retry/regress로도 완주 근거 없음 |
 
 ### 6.2 Stage 2 → Stage 1 회귀 패턴
 
@@ -555,12 +567,13 @@ Stage 2 검증 결과가 macro design에 미치는 영향 3가지:
 **보존하는 것**:
 - `learnings.md` — 모든 단계의 학습 누적
 - `killed-hypotheses.md` — 검증 실패한 가정들 (재시도 방지)
-- 검증된 결정 (수치, 공식)
+- production 실측과 사용자-confirmed scope change
+- 검증된 결정 (수치, 공식). 무효화된 결정은 현재값이 아니라 이력으로 보존
 
 **폐기하는 것**:
 - 미검증 가정
 - 프로토타입 코드
-- 회귀 단계 이후의 문서
+- 회귀 대상 이후의 대체된 forward plan
 
 ---
 
@@ -629,6 +642,7 @@ Cross-stage Agents (단계 무관 게이트키퍼)
 
 | 에이전트 | 역할 | 입력 | 산출 |
 |---|---|---|---|
+| `production_planner` (메인 루프 스킬 흐름) | 승인 scope와 현재 batch의 실측·gate 갱신 | scope estimate + 실제 production evidence + 사용자 scope 결정 | `production-plan.md` (최대 3p) |
 | `content_pipeline` | 카드/적/유물 배치 양산 | detail docs + VS 패턴 | 콘텐츠 데이터 파일 |
 | `balance_tuner` | 텔레메트리 기반 밸런스 조정 | 플레이 데이터 | 수치 패치 |
 | `playtest_aggregator` | 외부 피드백 분석 | 플레이테스트 | 우선순위 이슈 목록 |
@@ -728,6 +742,7 @@ Cross-stage Agents (단계 무관 게이트키퍼)
 
 | 스킬 | 내용 |
 |---|---|
+| `production-plan` | 현재 batch 하나의 승인 scope, estimate-vs-actual, 품질 근거, scope change, gate를 최대 3p로 갱신 |
 | `content-batch-generation` | 카드/적/유물 일관성 있게 양산 |
 | `telemetry-analysis` | 플레이 데이터 → 밸런스 제안 |
 | `playtest-aggregation` | 외부 피드백 우선순위 결정 |
@@ -757,6 +772,7 @@ Cross-stage Agents (단계 무관 게이트키퍼)
 | `vs_spec_writer` | `vs-spec-template` | `vs-only-validator` |
 | `scope_estimator` | `scope-estimate-method` | — |
 | `decision_recorder` | `decision-record-1p` | `forbidden-meta-sections`, `verified-source-required` |
+| `production_planner` (메인 루프 스킬 흐름) | `production-plan` | `kill-criteria` |
 | `stage_router` | `stage-gate-validator` | — |
 | `kill_arbiter` | `kill-criteria` | — |
 | `regression_handler` | `regression-protocol` | `assumption-tracker` |
@@ -783,6 +799,7 @@ my-game/
 │   │   ├── 3-art-direction.md      # Stage 3, blocker가 있을 때
 │   │   ├── 3-vertical-slice-spec.md # Stage 3, 점진 갱신
 │   │   ├── 3-scope-estimate.md     # Stage 3, 대표 VS 측정 후
+│   │   ├── production-plan.md      # Stage 4-5, 현재 batch living plan (최대 3p)
 │   │   └── details/                # Stage 4 (얇은 detail docs)
 │   │       └── *.md                # 각 1-2p
 │   │

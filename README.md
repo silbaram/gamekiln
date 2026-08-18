@@ -46,7 +46,7 @@ node bin/create-gamekiln.js ./my-game --tier 3
 | --- | --- | --- |
 | 기본 / `--tier 1` | `macro-designer`, `prototype-coder`, `cycle-reviewer`, `stage-router` | pitch, macro, macro review, hypothesis, disposable prototype |
 | `--tier 2` | `tech-decider`, `vs-spec-writer`, `scope-estimator` | playtest log, tech decision, VS spec, scope estimate |
-| `--tier 3` | `art-director`, `decision-recorder`, `kill-arbiter` | art direction, decision record, forbidden meta sections, kill criteria |
+| `--tier 3` | `art-director`, `decision-recorder`, `kill-arbiter` | art direction, decision record, production plan, forbidden meta sections, kill criteria |
 
 각 행은 누적 설치입니다. `docs/harness/`의 상위 Tier 명세는 참고 자료로 복사되지만, provider agent나 runtime skill 선택 후보로 노출되지는 않습니다.
 
@@ -62,6 +62,7 @@ Tier 1은 실행 중 사용자 입력이 필요한지에 따라 역할을 의도
 | Stage 2 프로토타입 제작 | `prototype_coder` 서브에이전트 | 확정된 가설의 신호를 관측할 수 있는 가장 싼 형태로 테스트를 만듭니다. |
 | Stage 2 사이클 리뷰 | `cycle_reviewer` 서브에이전트 | 현재 Risk와 누적 근거를 검토하고 `risk-resolved`/retry/regress/kill 중 하나를 추천합니다. |
 | 단계 라우팅 | `stage_router` 서브에이전트 | 프로젝트 상태를 읽고 다음 Risk, Stage 2 exit review, 또는 다음 구성 요소 하나를 추천합니다. |
+| Stage 4–5 프로덕션 계획 | 메인 에이전트 + `production-plan` 스킬 | 실제 batch 근거와 중대한 scope 변경에는 사용자 판단이 필요합니다. |
 
 스캐폴드에는 `concept-interviewer`나 `cycle-planner` 제공자 서브에이전트 파일이 없습니다. 이 역할들은 위의 두 메인 루프 스킬로 표현됩니다.
 
@@ -78,7 +79,9 @@ Tier 1은 실행 중 사용자 입력이 필요한지에 따라 역할을 의도
 
 Stage 3는 기술 결정 → 아트 방향 → 전체 명세를 모두 끝내는 고정 순서가 아닙니다. 먼저 Slice Goal, 현재 가장 큰 Production Risk, 다음 Playable Increment를 짧게 잡고, 그 증분을 막는 기술·시각·구조 위험만 해소한 뒤 바로 제작·측정합니다. `3-vertical-slice-spec.md`는 최대 15페이지의 점진 문서이며 기술·아트·아키텍처 문서는 blocker일 때만 만듭니다.
 
-사용자 확인 없이 단계를 진행하거나, 프로젝트를 종료하거나, 범위를 확장하지 마세요.
+Stage 3 gate를 사용자가 확인하면 Tier 3의 `production-plan` 스킬이 최대 3페이지 안에서 승인 scope, 현재 production batch, estimate-vs-actual, 품질 근거, scope change 제안, 다음 gate를 관리합니다. 다음 여러 batch의 상세 일정이나 공통 처리량·출시 임계값은 만들지 않습니다. Stage 4–5에서도 근거에 따라 proceed/retry/regress/kill을 검토합니다.
+
+사용자 확인 없이 단계를 진행하거나, 프로젝트를 종료하거나, 중대한 범위 확대·축소를 적용하지 마세요.
 
 ## Claude 스킬은 Windows 안전 복사본입니다
 

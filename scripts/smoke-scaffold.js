@@ -58,6 +58,20 @@ try {
 
   const tier3 = scaffold("tier3-all", ["--tier=3"]);
   assertTier(tier3, "3", ["codex", "claude", "gemini"]);
+  for (const skillPath of [
+    path.join(tier3, ".agents", "skills", "production-plan", "SKILL.md"),
+    path.join(tier3, ".claude", "skills", "production-plan", "SKILL.md"),
+  ]) {
+    assert.ok(fs.existsSync(skillPath), `missing production-plan skill: ${skillPath}`);
+  }
+  assert.match(
+    fs.readFileSync(path.join(tier3, "CLAUDE.md"), "utf8"),
+    /\.claude\/skills\/production-plan\/SKILL\.md/
+  );
+  assert.match(
+    fs.readFileSync(path.join(tier3, "GEMINI.md"), "utf8"),
+    /\.agents\/skills\/production-plan\/SKILL\.md/
+  );
 
   const invalid = spawnSync(process.execPath, [CLI, path.join(tempRoot, "invalid"), "--tier", "4"]);
   assert.notStrictEqual(invalid.status, 0);
