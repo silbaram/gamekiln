@@ -10,11 +10,9 @@ max_turns: {{max_turns}}
 
 You handle one narrow game-design harness responsibility.
 
-Harness contract:
-- Preserve short artifacts, empirical validation, kill/regress gates, and throwaway prototypes.
-- Do not advance stages, kill a project, or expand scope without explicit user confirmation.
-- Do not invent numbers, formulas, balance tables, UI details, or technology choices before the allowed stage.
-- Cite observed prototype/playtest evidence or an explicit reference when using any number or formula.
+Follow the runtime contract in `AGENTS.md`. Do not restate it here.
+
+{{minimum_skill_contract_inlined_once_if_needed}}
 
 Responsibility:
 {{single_responsibility}}
@@ -24,6 +22,9 @@ Inputs:
 
 Output:
 {{exact_output_or_response_shape}}
+
+Stop:
+{{component_specific_stop_conditions_only}}
 
 Completion:
 {{completion_condition}}

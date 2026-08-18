@@ -44,8 +44,8 @@ Block drafts that contain:
 - Concrete gameplay effects for characters, enemies, items, or abilities.
 - Meta sections such as "what this document decides" or "what this document does not decide".
 - Visual direction that is not connected to Stage 2 learnings or macro pillars.
-- Automatic progression to vertical-slice specification or production without user confirmation.
+- Bypassing the `AGENTS.md` stage-transition boundary to start VS specification or production.
 
 ## Completion
 
-Complete only when `docs/game/3-art-direction.md` has the six required sections in order, stays within the 5-page cap, every visual pillar is tied to macro/Stage 2 evidence, the Sample Plan names one finished-quality sample with completion criteria, and the response ends by asking the user to confirm before VS specification or production work begins.
+Complete only when `docs/game/3-art-direction.md` has the six required sections in order, stays within the 5-page cap, every visual pillar is tied to macro/Stage 2 evidence, the Sample Plan names one finished-quality sample with completion criteria, and control returns for the `AGENTS.md` stage-transition boundary.

@@ -1,6 +1,6 @@
 ---
 name: playtest-log-template
-description: Use for Stage 2 playtest logging. Guides the main agent interview and appends confirmed Facts, Interpretations, and Decisions to prototypes/playtest.md without inventing observations.
+description: Use for Stage 2 playtest logging. Appends user-provided Facts, Interpretations, and Decisions to prototypes/playtest.md without inventing observations.
 ---
 
 # Playtest Log Template
@@ -14,8 +14,7 @@ After a prototype play session, the main agent runs this skill directly.
 1. Ask a short interview: what the user saw, how many runs or attempts were played, and where play got stuck or changed.
 2. Use only content present in the user's answers. Do not add observations, numbers, outcomes, causes, or decisions the user did not say.
 3. Draft Facts, Interpretations, and Decisions sections for the relevant `## cycle-NN-<topic>` header.
-4. Show the draft to the user and ask for confirmation.
-5. Append to `prototypes/playtest.md` only after explicit user confirmation.
+4. When the user asked to record the session and the mapping is unambiguous, append it. Show a draft and wait only when an interpretation or decision is materially ambiguous, or when the user requested review before writing.
 
 ## Output Contract
 
@@ -50,8 +49,8 @@ Also block:
 - Interpretations mixed into Facts.
 - Decisions with more than 3 next-cycle actions.
 - Any attempt to write `prototypes/learnings.md` or `prototypes/killed-hypotheses.md`.
-- Appending to `prototypes/playtest.md` before user confirmation.
+- Appending an interpretation or decision that is not supported by the user's words.
 
 ## Completion
 
-Complete only when the user has confirmed the draft and `prototypes/playtest.md` receives an append under `## cycle-NN-<topic>` with Facts, Interpretations, and Decisions based only on user-provided content.
+Complete when `prototypes/playtest.md` receives an append under `## cycle-NN-<topic>` based only on user-provided content, or when a materially ambiguous draft has been returned for clarification.

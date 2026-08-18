@@ -18,7 +18,7 @@ Use `.codex/agents/<agent>.toml` for project-scoped custom agents. Use `~/.codex
 - `description`
 - `developer_instructions`
 
-Useful optional fields include `model`, `model_reasoning_effort`, `sandbox_mode`, `mcp_servers`, and `skills.config`. Codex identifies the custom agent by the `name` field, not the filename.
+Useful optional fields include `model`, `model_reasoning_effort`, `sandbox_mode`, `mcp_servers`, and `skills.config`. When used, `skills.config` is an array of objects, each with a `path` to a skill folder containing `SKILL.md` and an optional `enabled` flag; it is not a skill-name-to-boolean TOML table. Codex identifies the custom agent by the `name` field, not the filename.
 
 Codex subagents are explicit-orchestration tools. The parent should ask Codex to spawn a subagent; do not rely on automatic use. Keep `[agents] max_depth = 1` unless recursive delegation is intentionally required.
 

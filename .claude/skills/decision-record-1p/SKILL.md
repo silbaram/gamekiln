@@ -43,7 +43,7 @@ Refuse to write or accept unsourced numbers or formulas. Remove the value or ask
 - Future predictions, roadmaps, full-game plans, or backlog promises.
 - Unverified assumptions entering the body. Tell the user to move them to `prototypes/assumptions.md`; do not create or edit that file.
 - Writing under `game/` or production code directories.
-- Automatic progression to Stage 5 without user confirmation.
+- Bypassing the `AGENTS.md` stage-transition boundary to start Stage 5.
 
 ## Completion
 
@@ -52,4 +52,4 @@ Complete only when:
 - The detail doc is within the 1-2 page cap.
 - Every number and formula has an allowed source.
 - No forbidden meta section remains.
-- The response asks the user to confirm before documenting another system or moving toward Stage 5.
+- Control returns to the main agent for the `AGENTS.md` confirmation boundary before another system or Stage 5.

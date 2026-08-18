@@ -8,6 +8,7 @@
   },
   "files": [
     "bin/",
+    "lib/",
     "scripts/",
     "AGENTS.md",
     "CLAUDE.md",
@@ -27,7 +28,9 @@
     "prototypes/killed-hypotheses.md"
   ],
   "scripts": {
-    "smoke": "node bin/create-gamekiln.js ./tmp-smoke",
+    "audit:issue17": "node scripts/audit-issue-17-prompts.js",
+    "smoke": "node scripts/smoke-scaffold.js",
+    "verify:providers": "node scripts/verify-provider-files.js",
     "verify:claude-skills": "node scripts/verify-claude-skills.js",
     "prepare": "git config core.hooksPath .githooks"
   },

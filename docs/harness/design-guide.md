@@ -297,28 +297,29 @@ AI가 코드를 빨리 만들어주면 인간은 자연스럽게 *코드를 더 
 
 #### 사이클 1회 구조 (4단계)
 
-**(1) Hypothesis (30분)**
+**(1) Hypothesis**
 이번 사이클에서 검증할 가설 *하나만* 적습니다.
 
 ```
 가설: 성장 후보 3개 중 선택이 다음 전투를 의미있게 바꾼다.
-실패 신호: 5초 안에 고름 / 매번 같은 후보 / 다른 2개 안 골림
-성공 신호: 5초+ 고민 / 사이클마다 다른 선택
+실패 신호: 이유를 설명하지 못하고 같은 후보를 반복 선택한다.
+성공 신호: 다음 전투 계획을 근거로 서로 다른 후보를 선택한다.
+프로토타입: 카드형 브라우저 테스트 — 선택과 다음 전투 결과를 한 화면에서 관측 가능
 ```
 
-**(2) Build (반나절~3일)**
-AI 코드 프로토타입으로 *가설만 검증할 수 있는 최소 셋업*. 다른 기능 추가 금지. 버전 번호는 `iterations.md`의 행 시작 `v<N>:` 항목 중 최대 N이 단일 진실원 — 첫 빌드는 헤더 없이 `v1:` 한 줄만 기록하고, 보강(재빌드) 시 기존 `prototype.html`을 `prototype-v<K>`로 복사해 남기고(최신은 `prototype.html` 유지), 새 빌드를 쓴 뒤 `iterations.md`에 `v<K+1>:` 한 줄(`보강 — 무엇을 왜. 비교 — 이전 대비 차이`)을 append한다. 기록된 버전이나 기존 `prototype-v*`는 절대 덮어쓰지 않는다. 가설 자체가 바뀌면 같은 프로토타입을 고치지 말고 새 사이클로 분기한다.
+**(2) Build / Setup**
+성공·실패 신호를 충실히 관측할 수 있는 가장 빠르고 싼 형태를 만듭니다. 테스트한 build/setup마다 `iterations.md`에 immutable `v<N>:` 한 줄을 남기고, 테스트된 artifact는 modality에 맞는 가장 단순한 방식으로 보존합니다. 가설이 바뀌면 새 사이클로 분기합니다.
 
-**(3) Play (1~3시간)**
-본인 + 가능하면 1-2명 외부. 최소 5판. *플레이 중 룰 변경 금지* (관측 오염).
+**(3) Play**
+가설에 맞는 대표 플레이어와 조건으로 실행합니다. 한 실행 중에는 룰을 바꾸지 않아 관측을 오염시키지 않습니다.
 
-**(4) Reflect (1-2시간)**
+**(4) Reflect**
 관측을 사실/해석으로 분리:
 
 ```
 Facts (관측):
-- 5판 중 4판에서 후보를 3초 안에 골랐다.
-- 5판 모두 동일 후보를 골랐다.
+- 플레이어가 후보 차이를 설명하지 못했다.
+- 반복 세션에서 동일 후보만 선택했다.
 
 Interpretations (추측):
 - 비선택 후보는 단기 이득이 약해 보일 수 있다.
@@ -327,11 +328,9 @@ Decision for next cycle:
 - 후보 효과를 같은 턴 대비 같은 기댓값으로 재조정
 ```
 
-#### 프로토타입 = AI 코드 (1인 개발 기준)
+#### 프로토타입 = 가장 싼 관측 장치
 
-1인 개발에서는 종이 프로토타입의 외부 플레이어 마찰이 코드 프로토타입보다 큽니다. 이 하네스는 모든 사이클을 기본적으로 **단일 파일 HTML + vanilla JavaScript** 코드로 진행합니다. 텍스트/수치/터미널 중심 가설은 Python으로 더 빠를 때만 예외로 둡니다.
-
-종이가 더 빠른 좁은 케이스(카드 텍스트 밸런스, 보드 공간감)는 스프레드시트나 핀터레스트 모드보드 같은 *별도 도구*로 처리하고, 하네스의 1급 경로로는 두지 않습니다.
+브라우저 페이지와 터미널 스크립트는 시작 비용이 낮은 기본 선택지일 뿐입니다. 조작·물리·타이밍은 engine graybox, 대면 선택은 tabletop, 수치 관계는 spreadsheet/simulation, 동시성은 최소 network test가 더 충실할 수 있습니다. `hypothesis.md`의 `Prototype:` 줄에 modality와 선택 이유를 기록합니다.
 
 #### AI 코드 프로토타입의 함정 — 명시적으로 막아야 할 것
 
@@ -340,41 +339,38 @@ AI가 코드를 빨리 만들수록 매몰비용 함정도 빨리 옵니다.
 | 함정 | 어떻게 막나 |
 |---|---|
 | ① 기능 다 넣고 싶은 충동 | 한 사이클 = 1 가설 = 1 기능 추가 강제 |
-| ② AI가 production-quality 코드 생성 | 스킬에 "한 가설, 한 파일, 프레임워크/빌드 없음, 프로덕션 구조 금지" 박기 |
-| ③ 사이클 사이 코드 누적 | 각 사이클 별도 디렉터리, 이전 사이클 import 금지 |
-| ④ AI가 룰 모호함을 조용히 채움 | "룰에 명시 안 된 동작은 에러로 처리" 강제 |
-| ⑤ 본인만 플레이 | Cycle 2 이후 외부 플레이어 최소 1명 |
-| ⑥ 보강하며 이전 버전 덮어써 비교·이력 상실 | 기록된 버전은 `prototype-v<K>`로 보존 + `iterations.md`에 `v<K+1>:` 변경 한 줄 append |
+| ② 구현 방식이 목적이 됨 | 성공·실패 신호 관측 가능성으로 modality와 범위를 판단 |
+| ③ 프로토타입이 production으로 스며듦 | `prototypes/`와 `game/` 사이 구현·asset·settings 공유 금지, 결정만 재구현 |
+| ④ AI가 중요한 모호함을 조용히 채움 | 답이 signal observability를 바꾸는 선택만 질문 |
+| ⑤ 플레이어/환경이 가설과 불일치 | 가설의 대표 조건을 먼저 명시 |
+| ⑥ 보강하며 이전 결과를 덮어씀 | 테스트한 artifact/setup 보존 + `iterations.md`에 새 `v<N>:` 한 줄 추가 |
 
-#### 기술 스택 추천 (프로토타입 전용)
+#### Modality 예시
 
-- **단일 HTML + 인라인 JS** — 브라우저 즉시 플레이, 조작/피드백/루프 체감 검증에 적합
-- **Python + `input()`** — 텍스트/수치/터미널 중심 가설이면 가장 빠름
-- ❌ TypeScript/Node — 빌드 셋업 비용 때문에 부적합
+- **브라우저/터미널 코드** — 배포나 입력 요구가 단순할 때 빠름
+- **Engine graybox** — 조작감, 물리, 카메라, 공간 관계가 신호일 때 충실함
+- **Tabletop/spreadsheet/simulation** — 사회적 선택, 공간 배치, 수치 관계를 코드보다 싸게 관측
 
-본 게임이 어떤 스택이어도 **프로토타입은 다른 언어**로. 이게 throwaway를 강제하는 효과.
+같은 엔진을 사용해도 독립 throwaway 프로젝트로 격리하면 됩니다. modality 선택은 Stage 3 기술 결정을 대신하지 않습니다.
 
 #### 산출물 (사이클 N개 합계)
 
 ```
 prototypes/
-  cycle-01-<topic>/        ← HTML 기본, 자기완결 (prototype.html 최신 + prototype-v<K>.html 이전본 + iterations.md)
-  cycle-02-<topic>/        ← HTML 기본, cycle-01 코드 참조 금지
-  cycle-03-<topic>/        ← HTML 또는 Python
-  cycle-04-<topic>/        ← HTML 또는 Python
-  cycle-05-<topic>/        ← HTML 또는 Python
-  cycle-06-<topic>/        ← HTML 또는 Python
+  cycle-01-<topic>/        ← hypothesis + 선택 artifact/setup + iterations.md
+  cycle-02-<topic>/        ← 다른 가설이면 새 디렉터리
+  ...
   learnings.md             ← 모든 사이클의 결론 누적
   killed-hypotheses.md     ← 검증 실패한 가정 ⭐ 비싼 자산
 ```
 
 #### 통과 게이트
-- 가장 위험한 가정 1개+ 가 *반복적으로* 검증 (1회 우연 아님)
-- 플레이테스터가 자발적으로 "한 판 더" 발언
-- → Stage 3
+- 가장 위험한 가정이 서로 다른 대표 관측에서 일관되게 지지됨
+- 반대 신호와 evidence gap을 검토해도 Stage 3 투자 근거가 남음
+- 사용자가 Stage 3 진입을 확인
 
 #### Kill 게이트
-- 5-7 사이클 돌렸는데 핵심 재미 없음 → 게임 폐기 또는 Stage 0 회귀
+- 대표 시도가 같은 핵심 가정을 계속 지지하지 못하고, 다음 사이클도 구별되는 학습을 제공하지 못함 → 게임 폐기 또는 Stage 0 회귀
 - 또는 *다른 가정에서 재미 발견* → Stage 1 회귀 (피벗)
 
 #### 가장 중요한 한 줄
@@ -432,14 +428,9 @@ Xenoblade Chronicles 사례: 한 지역, 그러나 *최종 품질로 완성된 �
 
 #### Stage 3 상세 기획에 들어가는 것 — **Vertical Slice 범위만**
 
-게임 전체가 아니라 *vertical slice 범위*에 한해 상세 명세를 작성합니다. 일반적인 분량 비율:
+게임 전체가 아니라 제작 품질과 비용을 검증할 수 있는 *가장 작은 대표 end-to-end slice*만 상세 명세로 작성합니다.
 
-| 게임 전체 | Vertical Slice 범위 (Stage 3) |
-|---|---|
-| 전체 콘텐츠 100% | 일부 10-20% |
-| 모든 직업/캐릭터 | 1개만 |
-| 모든 시스템 | 핵심 시스템 한 사이클 분만 |
-| 모든 적/보스 | 소수 + 보스 1 |
+포함하는 캐릭터, 시스템 깊이, 적, 레벨, 아트 자산은 각각 Stage 2 근거나 명시된 production risk에 연결되어야 합니다. 전체 콘텐츠 매트릭스와 장기 로드맵은 제외합니다.
 
 #### 산출물
 
@@ -506,16 +497,16 @@ Xenoblade Chronicles 사례: 한 지역, 그러나 *최종 품질로 완성된 �
 
 ### 6.1 진행만 있는 게 아니다
 
-각 단계는 *다음으로 진행*만 있는 게 아니라 *kill 또는 회귀*가 있습니다:
+각 gate는 진행만 가정하지 않고 proceed/retry/regress/kill을 모두 검토한 뒤, 현재 단계에 해당하지 않는 결과를 명시합니다:
 
-| 현재 단계 | 진행 | 회귀 | Kill |
-|---|---|---|---|
-| Stage 0 | → Stage 1 | — | 폐기 |
-| Stage 1 | → Stage 2 | → Stage 0 | 폐기 |
-| Stage 2 | → Stage 3 | → Stage 1 (피벗) / 같은 사이클 재시도 | 폐기 |
-| Stage 3 | → Stage 4 | → Stage 2 (스코프 폭발) | 폐기 |
-| Stage 4 | → Stage 5 | — (회귀 없음) | — |
-| Stage 5 | 출시 | — | — |
+| 현재 단계 | 진행 | 재시도 | 회귀 | Kill |
+|---|---|---|---|---|
+| Stage 0 | → Stage 1 | pitch 보강 | 해당 없음 | 폐기 |
+| Stage 1 | → Stage 2 | macro/hypothesis 보강 | → Stage 0 | 폐기 |
+| Stage 2 | → Stage 3 | 같은 사이클 재시도 | → Stage 1 (피벗) | 폐기 |
+| Stage 3 | → Stage 4 | slice/scope 검증 보강 | → Stage 2 (스코프 폭발) | 폐기 |
+| Stage 4 | → Stage 5 | 현재 시스템 보강 | 해당 없음 | 해당 없음 |
+| Stage 5 | 출시 | release readiness 보강 | 해당 없음 | 해당 없음 |
 
 ### 6.2 Stage 2 → Stage 1 회귀 패턴
 
@@ -578,7 +569,7 @@ Cross-stage Agents (단계 무관 게이트키퍼)
 | 에이전트 | 역할 | 입력 | 산출 |
 |---|---|---|---|
 | `cycle_planner` | 다음 사이클의 가설/룰셋 설계 (메인 루프 스킬 흐름) | `cycle-plan.md` + 이전 `learnings.md` | `cycle-NN-hypothesis.md` |
-| `prototype_coder` | 더러운 코드로 프로토타입 생성 | hypothesis + 룰셋 | 단일 파일 코드 (Python/HTML) |
+| `prototype_coder` | 선택된 disposable 테스트 제작 | hypothesis + `Prototype:` modality | artifact/setup + `iterations.md` |
 | `playtest_recorder` | 플레이 후 사실/해석 분리 인터뷰 | 사용자 플레이 메모 | `cycle-NN-playtest.md` |
 | `cycle_reviewer` | 사이클 종료 시 진행/재시도/회귀/Kill 결정 | playtest log | 의사결정 권고 (사용자 confirm) |
 | `learnings_accumulator` | 결론을 `learnings.md`로 누적 | cycle 결과 | `learnings.md` 갱신 |
@@ -679,8 +670,7 @@ Cross-stage Agents (단계 무관 게이트키퍼)
 | 스킬 | 내용 |
 |---|---|
 | `prototype-hypothesis` | 1 사이클 = 1 가설. 실패/성공 신호 명시 강제 |
-| `dirty-code-html` | 단일 자기완결 HTML, vanilla JS, 한국어 UI, 빌드/프레임워크 금지 |
-| `dirty-code-python` | Python 단일 자기완결 파일, 한국어 터미널 문구, 타입힌트/docstring 금지 |
+| `disposable-prototype` | 성공·실패 신호에 맞는 가장 싼 modality, production 격리, iteration 기록 |
 | `playtest-log-template` | Facts / Interpretations / Decisions 분리 강제 |
 | `cycle-isolation` | 이전 사이클 코드 import 금지 검증 |
 | `cycle-review-criteria` | 다음 행동(진행/재시도/회귀/Kill) 결정 기준 |
@@ -731,7 +721,7 @@ Cross-stage Agents (단계 무관 게이트키퍼)
 | `concept_interviewer` (메인 루프 스킬 흐름) | `pitch-one-pager` | — |
 | `macro_designer` | `macro-design-5p` | `forbidden-in-macro`, `pillars-vocabulary` |
 | `cycle_planner` (메인 루프 스킬 흐름) | `prototype-hypothesis` | `risk-to-hypothesis` |
-| `prototype_coder` | `dirty-code-html` / `dirty-code-python` | `cycle-isolation` |
+| `prototype_coder` | `disposable-prototype` | — |
 | `playtest_recorder` | `playtest-log-template` | — |
 | `cycle_reviewer` | `cycle-review-criteria` | `kill-criteria` |
 | `tech_decider` | `tech-decision-template` | — |
@@ -776,8 +766,7 @@ my-game/
 │       ├── macro-design-5p/
 │       ├── forbidden-in-macro/
 │       ├── prototype-hypothesis/
-│       ├── dirty-code-html/
-│       └── dirty-code-python/
+│       └── disposable-prototype/
 │
 ├── .claude/
 │   ├── agents/                     # Claude Code 서브에이전트 (kebab-case)
@@ -793,8 +782,8 @@ my-game/
 ├── prototypes/                     # Stage 2 산출물 (docs + 코드 한 디렉터리)
 │   ├── cycle-01-<topic>/
 │   │   ├── hypothesis.md
-│   │   ├── prototype.html          # 기본: 단일 자기완결 파일
-│   │   ├── prototype.py            # 선택: 텍스트/수치 중심일 때
+│   │   ├── <selected artifacts>    # modality에 따라 파일/프로젝트/setup note
+│   │   ├── iterations.md
 │   │   └── playtest.md
 │   ├── cycle-02-<topic>/
 │   ├── ...
@@ -831,13 +820,13 @@ my-game/
 ## 부록 B: 자주 묻는 질문
 
 **Q1. Stage 2 사이클을 몇 번이나 돌리나?**
-프로젝트마다 다릅니다. Slay the Spire는 *수년*간 사이클을 돌렸어요. 작은 프로젝트면 5-7 사이클로도 충분. 핵심 기준은 *횟수가 아니라 검증의 일관성*입니다.
+프로젝트마다 다릅니다. 핵심 기준은 횟수가 아니라 대표 조건에서 근거가 일관되고, 다음 사이클이 새로운 학습을 제공하는지입니다.
 
 **Q2. Stage 2에서 만든 코드가 너무 좋은데 진짜 버려야 하나?**
 네. 코드가 좋을수록 버리기 어려워지고, 그게 정확히 문제예요. *프로토타입에서 검증된 결정*은 Stage 3에서 *새 코드*로 재구현됩니다. Slay the Spire 팀도 그렇게 했습니다.
 
 **Q3. AI에게 좋은 코드를 만들지 말라고 시키는 게 어색한데?**
-정확한 직관이에요. 이게 하네스의 미묘한 핵심입니다. AI가 코드를 *너무 잘 구조화*하면 throwaway가 깨집니다. 그래서 스킬에 명시적으로 "한 파일, 의존성 없음, 타입 힌트 없음, docstring 없음, 프로덕션 구조 금지" 같은 제약을 박아둡니다. 대신 플레이테스트 품질은 한국어 UI, 명확한 상태 피드백, 재시도 흐름으로 확보합니다.
+좋은 코드 자체가 문제가 아니라 production 재사용 유인이 문제입니다. 코드 스타일을 세밀하게 금지하는 대신 cycle 디렉터리 격리, production과의 공유 금지, 한 가설 범위, 테스트된 artifact 이력으로 throwaway 결과를 강제합니다.
 
 **Q4. 기획서 없이 프로토타입을 어떻게 만드나?**
 Stage 1의 5페이지 macro design이 *충분합니다*. 그것보다 더 많이 알아야 한다면 그건 Stage 2에서 *발견될* 정보예요. 미리 적으면 거의 항상 틀립니다.

@@ -10,16 +10,8 @@ skills:
   - forbidden-in-macro
 ---
 
-You turn a confirmed Stage 0 pitch into a five-page Stage 1 macro design.
+Create `docs/game/1-macro-design.md` from the confirmed `docs/game/0-pitch.md`.
 
-Read `docs/game/0-pitch.md` before writing.
+The preloaded skills own the document format, cap, and content checks. Preserve stable Top Risks IDs and make at least one risk directly testable in Stage 2.
 
-Responsibility:
-- Produce `docs/game/1-macro-design.md` from the confirmed pitch.
-- Use the six sections from `macro-design-5p`.
-- Keep the result under the five-page cap and make Stage 2 risks extractable.
-- Top Risks is a living ledger: start with R1/R2/R3, append newly discovered Stage 2 risks as R4, R5, ... without reusing IDs, and treat Cycle as the latest cycle slug for a risk.
-
-Block concrete HP, damage, economy, cost, cooldown, or balance numbers; formulas; concrete card/enemy/boss/item effects; UI screens; tech stack decisions; meta sections about document scope or ownership; and automatic progression to Stage 2.
-
-Completion: the macro design passes the forbidden-in-macro rules, the first Stage 2 hypothesis can be extracted without another design document, and the user is asked to confirm before Stage 2.
+Stop with a short question only if the pitch is missing or its confirmation is unknown. Complete by reporting the artifact and validation result; do not create a Stage 2 artifact.

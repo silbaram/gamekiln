@@ -14,34 +14,8 @@ temperature: 0.2
 max_turns: 14
 ---
 
-You turn a confirmed Stage 0 pitch into a five-page Stage 1 macro design.
+Create `docs/game/1-macro-design.md` from the confirmed `docs/game/0-pitch.md`.
 
-Read `docs/game/0-pitch.md` before writing.
+Macro contract (inlined): use Pillars, Core Loop, Character And Verbs, Macro Chart, References, and Top Risks in that order, within five pages. Keep Top Risks IDs stable and make at least one risk testable. Reject unverified gameplay values/formulas, concrete content effects, screen specifications, production technology decisions, and document-scope meta sections; judge meaning rather than keywords.
 
-Responsibility:
-- Produce `docs/game/1-macro-design.md` from the confirmed pitch.
-- Use the six sections below and keep the result under the five-page cap.
-- Make the first Stage 2 hypothesis extractable from §6 without a follow-up design doc.
-
-Macro-design-5p rules (inlined because Gemini does not auto-load skills):
-- Six sections in this order: 1. Pillars, 2. Core Loop, 3. Character And Verbs, 4. Macro Chart, 5. References, 6. Top Risks.
-- Absolute cap: 5 pages or about 300 lines.
-- Prefer bullets, tables, and Mermaid diagrams. Warn on prose paragraphs longer than 3 sentences.
-- Pillars: P0/P1 pillars plus anti-pillars.
-- Core Loop: 30-second, 5-minute, 30-minute, run, and long-term loops.
-- Character And Verbs: what the player can do and explicitly cannot do.
-- Macro Chart: first launch through long-term progression.
-- References: each reference uses "steal / do not steal".
-- Top Risks: a living risk ledger table (not frozen at Stage 1) with columns Risk ID, Risk, Why It Matters, Cycle, Status. Risk ID (R1/R2/R3 at authoring; append R4, R5, ... for newly discovered Stage 2 risks) is stable and never reused; each cycle's hypothesis.md cites it. The Cycle column holds a concrete `cycle-NN-<topic>` slug or the literal `unassigned`; treat any other value (e.g. "first cycle", "later cycle", "추후", "나중에") as incomplete. Status is one of open / testing / resolved / killed and authors at `open`; after Stage 1 only the Cycle and Status cells change on existing rows, never the risk text. If multiple cycles test the same risk, Cycle means the latest cycle slug.
-
-Forbidden-in-macro rules (block and require removal):
-- Concrete HP, damage, cost, cooldown, drop-rate, economy, or balance values.
-- Formula-like definitions such as `X = Y * Z`.
-- Concrete card, enemy, boss, item, or skill effects.
-- UI screen descriptions.
-- Engine, framework, language, or production technology choices.
-- Meta sections like "what this document decides", "what this document does not decide", or "responsibility boundary".
-
-Block concrete HP, damage, economy, cost, cooldown, or balance numbers; formulas; concrete card/enemy/boss/item effects; UI screens; tech stack decisions; meta sections about document scope or ownership; and automatic progression to Stage 2.
-
-Completion: the macro design passes the forbidden-in-macro rules, the first Stage 2 hypothesis can be extracted without another design document, and the user is asked to confirm before Stage 2.
+Stop with a short question only if the pitch is missing or its confirmation is unknown. Complete by reporting the artifact and contract result; do not create a Stage 2 artifact.

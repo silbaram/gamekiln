@@ -1,6 +1,6 @@
 # GameKiln — AI 게임 디자인 하네스
 
-GameKiln은 AI 코딩 어시스턴트를 위한 작고 단계적인 게임 디자인 하네스입니다. 기획 산출물을 짧게 유지하고, 세부 설계 전에 프로토타입 근거를 요구하며, Codex, Claude Code, Gemini CLI용 Tier 1 지원 파일을 함께 제공합니다.
+GameKiln은 AI 코딩 어시스턴트를 위한 작고 단계적인 게임 디자인 하네스입니다. 기획 산출물을 짧게 유지하고, 세부 설계 전에 프로토타입 근거를 요구하며, Codex, Claude Code, Gemini CLI를 지원합니다.
 
 이 패키지는 기본적으로 **Tier 1**만 스캐폴딩합니다. Tier 1은 대화형 피치/사이클 계획을 위한 메인 루프 스킬 플로와, 매크로 디자인, 일회용 프로토타입 코드, 근거 리뷰, 단계 라우팅을 맡는 자율 서브에이전트로 구성됩니다.
 
@@ -14,9 +14,15 @@ node bin/create-gamekiln.js ./my-game
 node bin/create-gamekiln.js ./my-game --provider claude
 node bin/create-gamekiln.js ./my-game --provider codex
 node bin/create-gamekiln.js ./my-game --provider gemini
+
+# Tier 1에 Stage 3 지원을 누적 설치
+node bin/create-gamekiln.js ./my-game --provider codex --tier 2
+
+# 구현된 Tier 3까지 누적 설치
+node bin/create-gamekiln.js ./my-game --tier 3
 ```
 
-생성된 프로젝트는 같은 명령으로 제자리 업데이트할 수 있습니다. 프로토타입 학습 기록 같은 기존 프로젝트 노트는 없을 때만 생성됩니다.
+`--tier` 기본값은 `1`이며 상위 Tier는 하위 Tier를 포함합니다. 이 버전의 신규 scaffold 구성을 기준으로 하며, 이전 릴리스에서 생성한 프로젝트의 자동 migration과 하위 호환은 지원하지 않습니다. 프로젝트 노트는 없을 때만 생성됩니다.
 
 ## 스캐폴딩되는 항목
 
@@ -34,6 +40,16 @@ node bin/create-gamekiln.js ./my-game --provider gemini
 | `prototypes/` | Stage 2 사이클 폴더와 누적 `learnings.md`, `playtest.md`, `killed-hypotheses.md` 파일입니다. |
 | `game/` | 프로토타입 근거가 정당화한 뒤 사용하는 프로덕션 게임 코드 위치입니다. |
 
+## Tier별 노출
+
+| 옵션 | 추가되는 provider agents | 추가되는 runtime skills |
+| --- | --- | --- |
+| 기본 / `--tier 1` | `macro-designer`, `prototype-coder`, `cycle-reviewer`, `stage-router` | pitch, macro, macro review, hypothesis, disposable prototype |
+| `--tier 2` | `tech-decider`, `vs-spec-writer`, `scope-estimator` | playtest log, tech decision, VS spec |
+| `--tier 3` | `art-director`, `decision-recorder`, `kill-arbiter` | art direction, decision record, forbidden meta sections, kill criteria |
+
+각 행은 누적 설치입니다. `docs/harness/`의 상위 Tier 명세는 참고 자료로 복사되지만, provider agent나 runtime skill 선택 후보로 노출되지는 않습니다.
+
 ## 메인 루프 스킬과 서브에이전트
 
 Tier 1은 실행 중 사용자 입력이 필요한지에 따라 역할을 의도적으로 나눕니다.
@@ -43,7 +59,7 @@ Tier 1은 실행 중 사용자 입력이 필요한지에 따라 역할을 의도
 | Stage 0 피치 인터뷰 | 메인 에이전트 + `pitch-one-pager` 스킬 | 인터뷰는 사용자와 직접 주고받는 과정이 필요합니다. |
 | Stage 1 매크로 디자인 | `macro_designer` 서브에이전트 | 이미 존재하는 피치 산출물을 바탕으로, 중간 사용자 입력 없이 초안을 작성합니다. |
 | Stage 2 사이클 계획 | 메인 에이전트 + `prototype-hypothesis` 스킬 | 가설과 성공/실패 신호는 사용자 확인이 필요할 수 있습니다. |
-| Stage 2 프로토타입 코딩 | `prototype_coder` 서브에이전트 | 메인 에이전트가 빌드 차단 질문을 해결한 뒤 확정된 가설에서 프로토타입을 만듭니다. |
+| Stage 2 프로토타입 제작 | `prototype_coder` 서브에이전트 | 확정된 가설의 신호를 관측할 수 있는 가장 싼 형태로 테스트를 만듭니다. |
 | Stage 2 리뷰 게이트 | `cycle_reviewer` 서브에이전트 | 기록된 근거를 검토하고 proceed/retry/regress/kill 중 하나를 추천합니다. |
 | 단계 라우팅 | `stage_router` 서브에이전트 | 프로젝트 상태를 읽고 다음 구성 요소나 게이트 하나를 추천합니다. |
 
@@ -53,8 +69,8 @@ Tier 1은 실행 중 사용자 입력이 필요한지에 따라 역할을 의도
 
 1. **Stage 0 — 피치**: 메인 에이전트가 `pitch-one-pager` 스킬로 Stage 0 인터뷰를 진행하고, 한 페이지 여섯 섹션 형식의 `docs/game/0-pitch.md`를 만듭니다.
 2. **Stage 1 — 매크로 디자인**: `macro_designer`가 다섯 페이지 제한 안에서 `docs/game/1-macro-design.md`를 만들고 Top Risks를 추출합니다.
-3. **Stage 2 — 사이클 계획**: 메인 에이전트가 `prototype-hypothesis` 스킬로 다음 사이클을 계획하고, `Tests: R<N>` 리스크 앵커가 있는 `prototypes/cycle-NN-<topic>/hypothesis.md` 하나를 만듭니다.
-4. **Stage 2 — 일회용 프로토타입**: `prototype_coder`가 해당 사이클 폴더 안에만 자체 완결형 `prototype.html` 또는 `prototype.py` 하나를 만듭니다.
+3. **Stage 2 — 사이클 계획**: 메인 에이전트가 `prototype-hypothesis` 스킬로 다음 사이클을 계획하고, `Tests: R<N>`과 `Prototype: <modality> — <reason>`이 있는 `prototypes/cycle-NN-<topic>/hypothesis.md` 하나를 만듭니다.
+4. **Stage 2 — 일회용 프로토타입**: `prototype_coder`가 성공·실패 신호를 충실히 드러내는 가장 빠르고 싼 테스트를 해당 사이클 폴더에 만듭니다. 브라우저/터미널 코드는 기본 선택지일 뿐이며 물리·조작·사회적 상호작용 가설은 엔진 graybox, tabletop, spreadsheet 등 더 적합한 방식을 쓸 수 있습니다.
 5. **Stage 2 — 플레이테스트 근거**: 플레이 후 관찰을 `prototypes/playtest.md`에 Facts와 Interpretations로 분리해 기록합니다.
 6. **Stage 2 — 리뷰 게이트**: `cycle_reviewer`가 proceed, retry, regress, kill 중 정확히 하나를 추천합니다. 사용자가 게이트를 확정합니다.
 7. **라우팅**: `stage_router`가 파일을 확인하고 단계를 자동 진행하지 않은 채 다음 구성 요소나 게이트 하나를 추천합니다.
@@ -67,15 +83,14 @@ Claude Code는 `.claude/skills/<skill>/SKILL.md`에서 스킬을 로드합니다
 
 GameKiln은 이제 이 저작 저장소에서 로드되어야 하는 Claude 스킬을 실제 복사 디렉터리로 둡니다.
 
-- `dirty-code-html`
-- `dirty-code-python`
+- `disposable-prototype`
 - `forbidden-in-macro`
 - `harness-subagents`(저작 저장소 전용)
 - `macro-design-5p`
 - `pitch-one-pager`
 - `prototype-hypothesis`
 
-`harness-subagents`는 일반 게임 프로젝트로 스캐폴딩되지 않습니다. 이 스킬은 하네스 자체를 저작하고 리뷰하기 위한 것입니다. 스캐폴더는 새 프로젝트에 여섯 개 Tier 1 런타임 스킬만 복사합니다.
+`harness-subagents`는 일반 게임 프로젝트로 스캐폴딩되지 않습니다. 이 스킬은 하네스 자체를 저작하고 리뷰하기 위한 것입니다. 스캐폴더는 새 프로젝트에 다섯 개 Tier 1 런타임 스킬만 복사합니다.
 
 로컬 Claude 스킬 복사본은 다음 명령으로 검증합니다.
 
@@ -127,11 +142,12 @@ Interpretations:
 
 ```bash
 npm run verify:claude-skills
+npm run verify:providers
 npm run smoke
 npm pack --dry-run
 ```
 
-`npm run smoke`는 모든 제공자 파일을 포함한 `./tmp-smoke`를 크로스 플랫폼 상대 경로로 스캐폴딩합니다. 필요하면 확인 후 디렉터리를 삭제하세요.
+`npm run smoke`는 임시 디렉터리에서 Tier 1/2/3의 누적 agent/skill 수와 provider 노출을 검증합니다.
 
 `.agents/skills/`를 수정할 때는 커밋 전에 `.claude/skills/` 아래의 대응되는 실제 디렉터리 복사본도 다시 동기화하세요.
 pre-commit 훅을 활성화하려면 `npm install`을 실행하거나, `git config core.hooksPath .githooks`로 직접 설정하세요.
@@ -140,4 +156,4 @@ pre-commit 훅을 활성화하려면 `npm install`을 실행하거나, `git conf
 
 런타임 규칙은 `AGENTS.md`, 제공자 에이전트 본문, `SKILL.md` 파일에 있습니다. `docs/harness/` 아래 파일은 설계 근거와 더 큰 에이전트/스킬 명단을 설명하지만, 일반 게임 기획 작업은 Tier 1에서 시작해야 하며 참고 문서를 읽을 필요가 없어야 합니다.
 
-하네스 에이전트와 스킬을 만들거나 업데이트하거나 리뷰할 때는 `docs/harness/design-guide.md`, `docs/harness/agents-skills-spec.md`, `.agents/skills/harness-subagents/references/provider-formats.md`를 사용하세요.
+하네스 에이전트와 스킬을 만들거나 업데이트하거나 리뷰할 때는 먼저 `docs/harness/core-contract.md`를 읽고, `agents-skills-spec.md`와 provider format의 대상 구간만 추가로 읽으세요. 단계 경계나 설계 근거가 쟁점일 때만 `design-guide.md`의 관련 구간을 읽습니다.
