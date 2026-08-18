@@ -139,13 +139,19 @@ Cerny가 명시적으로 부정하는 신화들:
 
 문서에는 페이지 캡을 강제한다. 프로토타입 코드는 라인 수가 아니라 *한 가설, 한 파일, 의존성 없음, 프로덕션 구조 금지*로 스코프를 제한한다.
 
-### 원칙 5: 수치/공식은 *관측됨* 또는 *레퍼런스 인용*만
+### 원칙 5: 중요한 수치/공식은 근거 수준을 드러낸다
 
-수치, 공식, 표는 두 조건 중 하나만 허용:
-- (a) 프로토타입/플레이에서 *실제로 관측됨*
-- (b) 명시된 레퍼런스 게임에서 *직접 인용*
+모든 문장이나 표가 아니라 수치·공식·수량·비용·시간·성능·밸런스 주장에만 다음 분류를 적용합니다.
 
-추측은 별도 `assumptions.md`에만 들어가고 본문 출입 금지.
+| 등급 | 태그 | 의미 |
+|---|---|---|
+| 게임 내부 근거 | `Observation`/`관측`, `Measurement`/`측정` | 이 게임의 플레이 관찰 또는 실제 제작·성능·비용 측정 |
+| 선언된 문맥 | `Constraint`/`제약`, `Citation`/`인용` | 사용자-confirmed 제작 조건 또는 명시 외부 참고. 게임성이 작동한다는 증거는 아님 |
+| 미검증 작업값 | `Target`/`목표`, `Estimate`/`추정` | 앞으로 검증할 값 또는 입력·계산·불확실성이 드러난 계산값 |
+
+한국어 game artifact는 한국어 태그를, 영어 artifact는 대응하는 영어 태그를 사용합니다.
+
+실제 근거가 생기면 기존 목표·추정·인용·제약의 이름을 바꾸지 않고 새 관측/측정을 연결합니다. 비수치 Risk/reference/comparison 표와 page cap, section 번호, Risk ID, cycle/version 번호 같은 구조 값은 provenance 태그 대상이 아닙니다.
 
 ### 원칙 6: 상세 문서는 vertical slice *이후*에만 작성
 
@@ -211,7 +217,7 @@ flowchart TD
 #### 들어가는 것
 - 한 문장 게임 설명 (장르 + 시그니처 메커닉)
 - 타겟 플랫폼, 타겟 플레이어
-- 컨셉 또는 Stage 0 gate를 바꾸는 알려진 비협상 제작 제약만 `Target` 안의 짧은 Production Frame으로 기록 (없으면 생략, 각 항목은 `User constraint:`/`사용자 제약:` 또는 `TBD:`/`미정:`으로 출처 표시)
+- 컨셉 또는 Stage 0 gate를 바꾸는 알려진 비협상 제작 제약만 `Target` 안의 짧은 Production Frame으로 기록 (없으면 생략, 사용자-confirmed 항목은 `Constraint:`/`제약:`, 중요한 미정은 `TBD:`/`미정:`으로 표시)
 - 왜 지금 이 게임인가 (시장/개인 동기)
 - **3개 Pillar + 3개 Anti-Pillar**
 - 레퍼런스 게임 3개 (각각 무엇을 훔치고 무엇은 안 훔치는지)
@@ -267,7 +273,7 @@ P0/P1으로 나눈 Pillar 3-5개 + Anti-Pillar. 선언만, 해설 없음.
 
 | 안 적는 것 | 왜 |
 |---|---|
-| 구체 수치 (HP, 데미지) | Stage 2 플레이에서 발견 |
+| 구체 gameplay 수치·목표·추정을 macro 결정으로 단정 | Stage 2 가설/플레이 또는 Stage 3 VS에서 검증 |
 | 공식 | 검증 안 됨 |
 | 카드/적/보스의 구체 효과 | Stage 2에서 즉흥 작성 |
 | UI 화면 | Stage 3의 일 |
@@ -283,6 +289,8 @@ P0/P1으로 나눈 Pillar 3-5개 + Anti-Pillar. 선언만, 해설 없음.
 #### 형식 — 산문이 아니라 *목록과 표*
 
 Cerny 원본 macro design은 글이 거의 없어요. 헤더 + 리스트 + 표 + 차트가 전부. 산문은 분량을 부풀리고 *검증 안 된 추측을 사실처럼 보이게* 만들기 때문입니다.
+
+표 자체는 금지 대상이 아닙니다. 비수치 Risk/reference/comparison 표, page cap, Risk ID, risk count, cycle/version 번호, 명시 인용이나 관측을 문맥으로만 쓰는 값은 gameplay 결정을 검증했다고 주장하지 않는 한 허용합니다.
 
 ---
 
@@ -305,7 +313,8 @@ AI가 코드를 빨리 만들어주면 인간은 자연스럽게 *코드를 더 
 이번 사이클에서 검증할 가설 *하나만* 적습니다.
 
 ```
-가설: 성장 후보 3개 중 선택이 다음 전투를 의미있게 바꾼다.
+가설: 성장 후보 선택이 다음 전투를 의미있게 바꾼다.
+목표: 후보 3개 — 이번 사이클의 비교 조건이며 사전 검증값이 아님.
 실패 신호: 이유를 설명하지 못하고 같은 후보를 반복 선택한다.
 성공 신호: 다음 전투 계획을 근거로 서로 다른 후보를 선택한다.
 프로토타입: 카드형 브라우저 테스트 — 선택과 다음 전투 결과를 한 화면에서 관측 가능
@@ -331,6 +340,8 @@ Interpretations (추측):
 Decision for next cycle:
 - 후보 효과를 같은 턴 대비 같은 기댓값으로 재조정
 ```
+
+`Facts` 섹션 자체가 관측 provenance를 제공합니다. 실제로 기록한 성능·시간·비용이 있으면 `측정:`으로 구분하며, 목표나 추정을 Facts로 승격하지 않습니다.
 
 #### 프로토타입 = 가장 싼 관측 장치
 
@@ -441,7 +452,7 @@ Xenoblade Chronicles 사례: 한 지역, 그러나 *최종 품질로 완성된 �
 
 게임 전체가 아니라 제작 품질과 비용을 검증할 수 있는 *가장 작은 대표 end-to-end slice*만 상세 명세로 작성합니다.
 
-포함하는 캐릭터, 시스템 깊이, 적, 레벨, 아트 자산은 각각 Stage 2 근거나 명시된 production risk에 연결되어야 합니다. 전체 콘텐츠 매트릭스와 장기 로드맵은 제외합니다.
+포함하는 캐릭터, 시스템 깊이, 적, 레벨, 아트 자산은 각각 Stage 2 근거나 명시된 production risk에 연결되어야 합니다. 중요한 수치·공식은 관측/측정, production 제약, 명시 인용, 또는 VS에서 검증할 목표로 분류합니다. 제약과 인용은 gameplay가 작동한다는 증거가 아니며, 목표에는 VS 검증 방법을 붙입니다. 전체 콘텐츠 매트릭스와 장기 로드맵은 제외합니다.
 
 #### 산출물
 
@@ -452,9 +463,11 @@ Xenoblade Chronicles 사례: 한 지역, 그러나 *최종 품질로 완성된 �
 ├─ tech-decision.md       (1-2p)
 ├─ architecture.md        (3-5p)
 ├─ art-direction.md       (5p)
-├─ vertical-slice-spec.md (10-15p, 검증된 수치 포함)
-└─ scope-estimate.md      (2-3p, 전체 게임 추정)
+├─ vertical-slice-spec.md (10-15p, 근거 값 + 검증할 목표)
+└─ scope-estimate.md      (2-3p, 측정 + 목표 → 투명한 추정)
 ```
+
+`scope-estimate.md`의 결과는 모두 `Estimate`/`추정`입니다. 입력값과 출처, 계산 방법, 범위 또는 신뢰 구간, 불확실성, 미측정 항목을 남기며 Target/Constraint/Citation/Estimate를 Measurement로 재라벨하지 않습니다. 기록된 입력만으로 방어 가능한 범위를 만들 수 없으면 값을 발명하지 않고 point estimate를 미완료로 둡니다.
 
 총 문서 25-30페이지 + 플레이 가능 빌드.
 
@@ -476,14 +489,14 @@ Xenoblade Chronicles 사례: 한 지역, 그러나 *최종 품질로 완성된 �
 #### 분량과 형식
 - 시스템당 **1-2페이지 캡**
 - "이 문서가 결정하는 것 / 결정하지 않는 것 / 책임 경계" 메타 섹션 **금지**
-- 수치/공식은 vertical slice에서 *실제로 작동한* 값만
+- Verified Decision과 그 증명에 쓰는 중요한 수치·공식은 이 게임의 관측/측정에 연결. 분류된 인용·제약·목표·추정은 문맥/이력으로 보존할 수 있지만 gameplay 검증 근거가 아니며 단독 또는 조합만으로 결정을 증명할 수 없음
 
 #### 백과사전형 문서와의 비교
 
 같은 자리(`docs/game/details/*.md`)에 들어가지만:
 - 분량 1/20 (1,000줄 → 50줄)
 - 내용은 *과거 결정의 정리*, *미래 스펙* 아님
-- 검증 안 된 가정은 별도 `assumptions.md`로 격리
+- owning artifact의 검증 계획에 연결되지 않은 가정은 별도 `assumptions.md`로 격리. Hypothesis/VS spec의 명시 목표와 scope estimate의 투명한 추정은 검증값으로만 가장하지 않으면 유지
 
 ---
 
@@ -594,10 +607,10 @@ Cross-stage Agents (단계 무관 게이트키퍼)
 | `architecture_designer` | VS 범위 아키텍처 설계 | tech-decision | `architecture.md` (3-5p) |
 | `tech_spike_runner` | 가장 위험한 기술 가정 검증 | architecture | 스파이크 코드 + 검증 보고 |
 | `art_director` | 5p 아트 디렉션 작성 | macro design + learnings | `3-art-direction.md` (5p) |
-| `vs_spec_writer` | VS 범위 상세 명세 (검증된 수치만) | learnings + art-direction | `vertical-slice-spec.md` (10-15p) |
+| `vs_spec_writer` | VS 범위 상세 명세 (근거 값 + 검증할 목표) | learnings + art-direction | `vertical-slice-spec.md` (10-15p) |
 | `vs_builder` | 실제 VS 빌드 진행 관리 | spec | 실제 게임 빌드 |
 | `playtest_coordinator` | 외부 플레이테스트 5-10명 조직/수집 | VS 빌드 | 테스트 보고서 |
-| `scope_estimator` | VS 측정 데이터로 전체 게임 추정 | VS 제작 시간 + 콘텐츠 수량 | `scope-estimate.md` (2-3p) |
+| `scope_estimator` | VS 측정과 전체 게임 목표로 투명한 추정 | 기록된 VS 제작 결과 + 명시 목표 수량 | `scope-estimate.md` (2-3p) |
 
 ### 7.6 Stage 4: Detail Docs
 
@@ -629,7 +642,7 @@ Cross-stage Agents (단계 무관 게이트키퍼)
 **모든 에이전트가 따라야 하는 공통 원칙**:
 
 1. **추측을 단정조로 쓰지 않는다.** "X는 Y이다"가 아니라 "X는 Y로 가정 (Cycle 3에서 검증 예정)" 형식.
-2. **수치/공식은 출처 명시.** "관측: Cycle 3, 5판 평균" 또는 "인용: Slay the Spire 카드 Strike".
+2. **중요한 수치/공식은 근거 수준 명시.** "관측: Cycle 3, 5판", "측정: VS 제작 4시간", "제약: 사용자 확정 플랫폼", "인용: 명시 자료", "목표: VS에서 검증", "추정: 입력·계산·불확실성"처럼 구분하고 인용/제약/목표/추정을 이 게임의 검증값으로 승격하지 않습니다.
 3. **자기 영역 정당화 금지.** "이 문서가 결정하는 것/안 하는 것" 같은 메타 텍스트 작성 금지.
 4. **다음 단계로 자동 진행하지 않는다.** 사용자 confirm 필수.
 5. **분량 캡 위반 시 작성 거부.** 스킬 레벨에서 강제.
@@ -672,7 +685,7 @@ Cross-stage Agents (단계 무관 게이트키퍼)
 | 스킬 | 내용 |
 |---|---|
 | `macro-design-5p` | 6섹션 템플릿(Pillars/Loop/Verbs/Chart/References/Risks), 5p 캡 |
-| `forbidden-in-macro` | 수치, 공식, 카드 효과 등 *금지 항목 검출* |
+| `forbidden-in-macro` | 미검증 수치 결정을 차단하되 구조 표·식별자는 허용 |
 | `risk-to-hypothesis` | Top Risks → Stage 2 가설 자동 변환 패턴 |
 | `pillars-vocabulary` | Pillar / Anti-Pillar 작성 어휘 가이드 |
 
@@ -685,7 +698,7 @@ Cross-stage Agents (단계 무관 게이트키퍼)
 | `playtest-log-template` | Facts / Interpretations / Decisions 분리 강제 |
 | `cycle-isolation` | 이전 사이클 코드 import 금지 검증 |
 | `cycle-review-criteria` | 다음 행동(진행/재시도/회귀/Kill) 결정 기준 |
-| `learnings-format` | 학습 결론 한 줄 형식 ("관측: X. 결정: Y") |
+| `learnings-format` | 학습 결론 한 줄 형식 ("관측: X. 결정: Z" 또는 "관측: X. 측정: Y. 결정: Z") |
 
 ### 8.5 Stage 3 스킬
 
@@ -695,7 +708,7 @@ Cross-stage Agents (단계 무관 게이트키퍼)
 | `architecture-vs-scope` | VS 범위 한정 아키텍처 (게임 전체 아님) |
 | `art-direction-5p` | 시각 방향 5p 템플릿 |
 | `vs-spec-template` | VS 범위만 다루는 상세 명세 형식 |
-| `scope-estimate-method` | VS 제작 시간 → 전체 게임 추정 공식 |
+| `scope-estimate-method` | VS 측정 + 전체 목표 → 입력·계산·범위·불확실성이 드러난 추정 |
 | `vs-only-validator` | VS 범위 초과 작성 검출 |
 
 ### 8.6 Stage 4 스킬
@@ -704,7 +717,7 @@ Cross-stage Agents (단계 무관 게이트키퍼)
 |---|---|
 | `decision-record-1p` | 1-2p 캡, 메타 섹션 금지, 검증 출처 필수 |
 | `forbidden-meta-sections` | "이 문서가 결정하는 것/안 하는 것/책임 경계" 검출 |
-| `verified-source-required` | 모든 수치에 (관측 또는 인용) 출처 강제 |
+| `verified-source-required` | Stage 4 verified gameplay/system 수치에 이 게임의 관측 또는 측정 강제 |
 
 ### 8.7 Stage 5 스킬
 
@@ -721,7 +734,7 @@ Cross-stage Agents (단계 무관 게이트키퍼)
 | `stage-gate-validator` | 단계 전환 게이트 자동 검증 |
 | `regression-protocol` | 회귀 시 보존/폐기 결정 트리 |
 | `kill-criteria` | 각 단계의 kill 조건 명시 |
-| `assumption-tracker` | 미검증 가정을 본문에서 격리 |
+| `assumption-tracker` | 검증 계획 없는 미분류 가정을 격리하고 기존 목표/추정에는 새 근거만 연결 |
 | `cerny-method-knowledge` | Cerny 방법론 도메인 지식 (참조용) |
 | `prototype-best-practices` | 프로토타이핑 베스트 프랙티스 도메인 지식 |
 

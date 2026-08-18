@@ -14,5 +14,5 @@
 2026-06-10 | 마찰 — Codex가 형식 정의된 파일에 append할 때 프롬프트의 리터럴 표기를 따라가 파일의 형식 정의를 위반 | 출처 — Tier 2 구현 PR의 retrospective.md 항목
 2026-06-10 | 마찰 — 에이전트가 참조하는 파일(prototypes/assumptions.md)이 템플릿으로 존재하지 않아 안내가 빈 곳을 가리킴 | 출처 — Tier 3 Stage 4 세트 구현 후 구성 검토
 2026-08-17 | 마찰 — Codex custom agent의 skills.config를 TOML 맵으로 선언해 역할 파일 전체가 무시됨 | 출처 — Tier 2/3 역할 로딩 경고 조사
-2026-08-18 | 마찰 — Codex가 사용자 제공 제작 수치는 보존했지만 Production Frame의 `사용자 제약` 출처 태그를 생략 | 출처 — Issue #12 구현 스폿체크
+2026-08-18 | 마찰 — Codex가 사용자 제공 제작 수치는 보존했지만 Production Frame의 `사용자 제약` 출처 태그를 생략 | 출처 — Issue #12 구현 스폿체크 → resolved (retrospective 2026-08-18)
 2026-08-18 | 마찰 — cycle-level proceed와 Stage 2 전체 proceed가 같은 용어라 단일 Risk 해결이 Stage 3 진입으로 오인될 수 있음 | 출처 — Issue #13 라우팅 검토

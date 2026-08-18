@@ -7,6 +7,8 @@
 
 주의: `stage_router` 분기를 변경할 때만 `docs/harness/routing-scenarios.md` 전체를 대조한다.
 
+근거 태그는 game artifact의 언어를 따른다. 한국어 artifact는 한국어 태그를, 영어 artifact는 대응하는 영어 태그를 사용한다.
+
 ---
 
 ## Tier 1: 필수 (11개) — 첫 프로젝트 최소셋
@@ -21,7 +23,7 @@
 - **사용 스킬**: `pitch-one-pager`
 - **호출 시점**: 새 프로젝트 시작 시
 - **작성 전 질문**: 제작 정보가 없다는 이유만으로 묻지 않음. 컨셉이 특정 미정 제약에 의존하고 그 답이 Stage 0 gate를 바꿀 때만 짧은 묶음 질문
-- **종료 조건**: 6개 섹션을 1p 안에 채우고, 관련 사용자 제약이 있으면 `Target` 안에 Production Frame으로 기록한 뒤 알려진 제작 프레임 안에서 프로토타입할 가치가 있는지 confirm
+- **종료 조건**: 6개 섹션을 1p 안에 채우고, 관련 사용자 제작 제약이 있으면 `Constraint:`/`제약:`으로 `Target` 안의 Production Frame에 기록한 뒤 알려진 제작 프레임 안에서 프로토타입할 가치가 있는지 confirm
 
 #### `cycle_planner` (main-loop skill flow)
 - **단계**: Stage 2
@@ -32,7 +34,8 @@
 - **호출 시점**: 새 사이클 시작 시
 - **작성 전 질문**: 검증할 가설 또는 실패/성공 신호가 모호할 때만 메인 에이전트가 묶음 질문 (명확하면 질문 없이 진행, 모호한데 추측 금지)
 - **원장 갱신**: 위험 선택 후 macro Top Risks의 해당 위험 Cycle=`cycle-NN-<topic>` 슬러그, Status=`testing` (그 두 칸만, 위험 텍스트 불가)
-- **종료 조건**: 가설 1개 + 실패/성공 신호 + `Tests: R<N>` + `Prototype: <modality> — <reason>` + 원장 Status=testing
+- **수치 기준**: 검증 전 수치 성공/실패 기준은 `Target:`/`목표:`이며 사전 근거로 취급하지 않음. 구조 Risk ID·cycle 번호는 태그 대상이 아님
+- **종료 조건**: 가설 1개 + 실패/성공 신호 + `Tests: R<N>` + `Prototype: <modality> — <reason>` + 필요한 수치 목표의 검증 신호 + 원장 Status=testing
 
 ### 에이전트 4개
 
@@ -85,8 +88,8 @@
 - **강제 제약**:
   - 1페이지 캡 (초과 시 작성 거부)
   - 6섹션: 한 문장 / 타겟 / Why now / Pillars / References / Top Risks
-- **제작 프레임**: 컨셉/gate를 바꾸는 사용자 제공 제약과 결과를 바꾸는 미정 사항만 `Target` 안에 기록. 각 항목은 사용자 제공 제약이면 `User constraint:`/`사용자 제약:`, 중요한 미정이면 `TBD:`/`미정:` 출처 태그를 붙이고 태그 없는 항목은 금지. 관련 제약이 없으면 생략하며 전 항목 의무 질문, 추정 일정·예산·인력 계획은 금지
-- **검출/차단**: 근거 없는 수치, 공식, 시스템 상세, UI 설명, 기술 스택, 제작 추정
+- **제작 프레임**: 컨셉/gate를 바꾸는 사용자 제공 제작 제약과 결과를 바꾸는 미정 사항만 `Target` 안에 기록. 사용자-confirmed 제작 조건은 `Constraint:`/`제약:`, 중요한 미정은 `TBD:`/`미정:`으로 표시. gameplay 목표/밸런스 추측을 제약으로 기록하지 않으며, 관련 제약이 없으면 생략하고 전 항목 의무 질문·추정 일정/예산/인력 계획은 금지
+- **검출/차단**: 출처 없는 수치, 제작 제약으로 잘못 분류한 gameplay 목표, 공식, 시스템 상세, UI 설명, 기술 스택, 제작 추정
 - **출력 형식**: 마크다운, 섹션당 ½페이지 이하
 
 #### `macro-design-5p`
@@ -103,13 +106,14 @@
 - **단계**: Stage 1
 - **목적**: macro design에서 금지 항목 자동 검출
 - **강제 제약**: 다음 패턴 검출 시 차단
-  - 구체 수치 (HP, damage, cost 등 단정 표현)
+  - 구체 gameplay 수치·목표·추정 (HP, damage, cost 등)를 macro 결정으로 단정한 표현
   - 공식 (`X = Y * Z` 형태)
   - 카드/적/보스의 구체 효과
   - UI 화면 설명
   - 기술 스택 결정
   - "이 문서가 결정하는 것/안 하는 것" 메타 섹션
-- **검출/차단**: 정규식 + 키워드 매칭
+- **허용 경계**: 비수치 Risk/reference/comparison 표, 구조 식별자·page cap·Risk count/cycle/version 번호, 문맥으로만 쓰는 명시 Citation/관측 근거는 차단하지 않음
+- **검출/차단**: 키워드 존재가 아니라 문맥상 미검증 결정을 의미로 판단
 - **출력 형식**: 검출 보고 + 수정 권고
 
 #### `prototype-hypothesis`
@@ -119,6 +123,7 @@
   - 가설 *1개만* 작성 (다중 가설 차단)
   - 실패 신호와 성공 신호 둘 다 명시 필수
   - 가설 길이: 1~3 문장
+  - 검증 전 수치 threshold는 `Target:`/`목표:`로 표시하고 이번 사이클의 관측 신호에 연결
 - **검출/차단**: 접속사 자체가 아니라 독립적으로 판정해야 하는 claim이 둘 이상인지 의미로 판단
 - **출력 형식**: `Tests:` / `Prototype:` 메타데이터 + 3섹션 (가설 / 실패 신호 / 성공 신호)
 
@@ -167,16 +172,18 @@
 - **산출**: `docs/game/3-vertical-slice-spec.md` (10-15p)
 - **사용 스킬**: `vs-spec-template`
 - **호출 시점**: tech decision confirm 후 art direction이 confirm됐거나 텍스트/터미널 중심 게임이라 명시적으로 skip된 뒤. 아키텍처 스파이크는 수동 작업 또는 Tier 3 안내만
-- **종료 조건**: VS 범위 내 + 모든 수치에 출처 명시 + 사용자 confirm 질문
+- **종료 조건**: VS 범위 내 + 모든 중요한 수치/공식의 근거·문맥·미검증 목표 분류 + 목표별 VS 검증 방법 + 사용자 confirm 질문
 
 #### `scope_estimator`
 - **단계**: Stage 3
 - **목적**: VS 제작 데이터로 전체 게임 비용/시간 추정
-- **입력**: VS 제작 실측 데이터(제작 시간, 콘텐츠 수량 등) + 전체 게임 목표 수량
+- **입력**: 기록된 VS 제작 결과(에이전트가 `Measurement`로 분류) + 명시된 전체 게임 수량(에이전트가 `Target`으로 분류) + (있으면) 사용자-confirmed production `Constraint`
 - **산출**: `docs/game/3-scope-estimate.md` (2-3p)
 - **사용 스킬**: 없음 (계산 중심)
 - **호출 시점**: VS 완성 직후, 메인 에이전트가 실측 데이터를 사용자와 선해소한 뒤
-- **종료 조건**: 시간/비용 추정치 + 신뢰 구간 + 미측정 항목 표기 + Stage 3 게이트 질문
+- **추정 규칙**: 모든 결과는 `Estimate`/`추정`으로 표시하고 입력값과 출처, 계산 방법, 범위 또는 신뢰 구간, 불확실성, 미측정 항목을 노출. Target/Constraint/Citation/Estimate를 Measurement로 재라벨하지 않음
+- **중단 조건**: 기록된 입력만으로 방어 가능한 범위/신뢰 구간을 만들 수 없으면 값을 발명하지 않고 최소 추가 측정 또는 명시적 시나리오 경계만 묻고 point estimate는 미완료로 유지
+- **종료 조건**: 투명한 시간/비용 추정치 + 범위 또는 신뢰 구간 + 미측정 항목 표기 + Stage 3 게이트 질문
 
 ### 스킬 3개
 
@@ -187,6 +194,7 @@
   - 메인 에이전트가 직접 짧게 인터뷰하고, 기록 요청과 매핑이 명확하면 append
   - 3섹션 명확히 분리
   - Facts에 추측 단어 금지 ("아마", "느낌", "보임", "같다", "듯", "probably", "seems", "feels")
+  - `Facts (관측):`/`Facts (Observation):` 섹션 자체가 provenance를 제공하며 bullet마다 태그를 반복하지 않음. 사용자가 실제 제공한 성능/시간/비용 측정만 artifact 언어에 맞는 `측정:`/`Measurement:`로 표시
   - Interpretations은 Facts와 별도 섹션
   - Decisions는 다음 사이클로 가져갈 행동 1-3개
   - `prototypes/learnings.md`와 `killed-hypotheses.md`는 쓰지 않음 (사용자 전용 handoff)
@@ -211,9 +219,10 @@
 - **강제 제약**:
   - `docs/game/3-vertical-slice-spec.md` 10-15p
   - 제작 품질과 비용을 검증할 수 있는 가장 작은 대표 end-to-end slice
-  - 모든 수치/공식은 Stage 2 관측 또는 명시 레퍼런스 출처 필요
+  - 중요한 수치/공식은 `Observation`/`Measurement`/`Constraint`/`Citation`/`Target` 중 하나로 분류하고, Target은 VS 검증 방법에 연결
+  - Constraint/Citation은 이 게임 gameplay 동작 증거가 아니며, 추정은 별도 scope estimate에서만 작성
   - 메타 섹션 금지
-- **검출/차단**: 모든 직업/전체 콘텐츠 매트릭스/장기 로드맵, 출처 없는 수치, Stage 4 detail docs
+- **검출/차단**: 모든 직업/전체 콘텐츠 매트릭스/장기 로드맵, 미분류 수치, 검증값처럼 쓴 Constraint/Citation/Target, Stage 4 detail docs
 - **출력 형식**: VS 범위 한정 명세
 
 ---
@@ -265,7 +274,7 @@
 
 #### `assumption_separator`
 - **단계**: 모든 단계
-- **목적**: 미검증 가정을 본문에서 `assumptions.md`로 격리
+- **목적**: owning artifact의 검증 계획에 연결되지 않은 미검증 가정을 `assumptions.md`로 격리. 명시 Target이나 투명한 Estimate를 키워드만으로 이동하지 않음
 - **입력**: 모든 작성 문서
 - **산출**: `assumptions.md` 갱신
 - **추가 시점**: 가정이 본문에 섞이기 시작할 때
@@ -283,7 +292,8 @@
 - **목적**: `docs/game/details/<slug>.md`의 1-2p 캡 + 검증 출처 강제
 - **강제 제약**:
   - 시스템당 1-2페이지 캡, 호출당 시스템 1개
-  - 모든 수치/공식에 출처 (`관측: cycle-NN-<topic>, ...`, `측정: VS, ...`, 또는 `인용: <명시 레퍼런스>, ...`) 필수
+  - Verified Decision과 그 증명에 쓰는 중요한 수치·공식은 이 게임의 `Observation`/`관측` 또는 `Measurement`/`측정` 필수
+  - 분류된 `Constraint`/`Citation`/`Target`/`Estimate`는 관련 문맥/이력으로 보존할 수 있지만 verified evidence가 아니며, 단독 또는 이들끼리의 조합만으로 decision을 증명할 수 없음
   - 메타 섹션 금지, 미검증 가정은 `prototypes/assumptions.md`로 이동 안내만
 - **추가 시점**: Stage 4 진입 시
 
@@ -301,8 +311,8 @@
 
 #### `assumption-tracker`
 - **단계**: 모든 단계
-- **목적**: 미검증 가정의 본문 진입 차단 + 별도 파일 관리
-- **강제 제약**: "가정" / "추정" / "예상" 키워드 본문 발견 시 격리 권고
+- **목적**: owning artifact의 검증 계획에 연결되지 않은 미검증 가정 격리 + 기존 목표/추정에 새 관측/측정 연결
+- **강제 제약**: 키워드 자체가 아니라 미분류 값 또는 검증된 결정처럼 쓰인 목표/추정을 격리. 기존 항목을 관측/측정으로 재라벨하지 않음
 - **추가 시점**: assumption_separator 만들 때 같이
 
 ---

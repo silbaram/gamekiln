@@ -36,6 +36,8 @@ Then write exactly three sections:
 2. Failure Signal
 3. Success Signal
 
+If the hypothesis or either signal uses an unvalidated numeric threshold, mark it inline as `목표:` in a Korean artifact or `Target:` in an English artifact, and state what this cycle will observe. The label means a test criterion, not prior evidence. Do not tag structural Risk IDs, cycle numbers, page caps, or version numbers.
+
 The anchor must cite a Risk ID (R1/R2/R3, or a later appended R4+) that exists in `docs/game/1-macro-design.md`
 Top Risks. If the cycle primarily tests one risk but touches another, cite the primary
 risk in `Tests:` and add `(also touches R3 — observe-only)`. Only the primary risk
@@ -49,6 +51,8 @@ decides the gate.
 ## Block
 
 Apply the single-hypothesis invariant from `AGENTS.md`: block drafts with more than one independently decidable claim. Treat "and", "also", "while also", and stacked bullet hypotheses as review signals rather than automatic violations.
+
+Also block an unvalidated gameplay number presented as an observed fact, measurement, constraint, or citation. Relabel it as a target when it is genuinely needed for this cycle; otherwise remove it.
 
 ## Completion
 
