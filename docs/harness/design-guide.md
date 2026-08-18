@@ -415,25 +415,26 @@ prototypes/
 
 Xenoblade Chronicles 사례: 한 지역, 그러나 *최종 품질로 완성된 상태*로. 왜? 그것을 만드는 데 얼마가 들었는지 알게 되면, 얼마나 많은 지역이 있을지 알기 때문에, 게임 완성에 시간과 예산이 얼마나 들지 알 수 있다.
 
-#### Stage 3 안에서의 순서
+#### Stage 3 안에서의 점진 루프
+
+Stage 3는 문서를 모두 완성한 뒤 제작하는 고정 파이프라인이 아닙니다. 먼저 기존 Stage 2 근거에서 **Slice Goal**, **현재 가장 큰 Production Risk**, **다음 Playable Increment**를 짧게 기록합니다. 그 뒤 다음 증분을 만들거나 측정하는 데 필요한 가장 작은 행동 하나만 선택합니다.
 
 ```
-1. tech-decision.md 작성 (1-2p)
+Slice Goal + 현재 Production Risk + 다음 Playable Increment
    ↓
-2. 아키텍처 스파이크 (1주)
-   가장 위험한 기술 가정 검증
+다음 증분을 막는 것이 있는가?
+   ├─ 기술 선택/실현 가능성 → 필요한 결정 또는 짧은 spike만
+   ├─ 시각 품질/일관성     → 필요한 visual sample 또는 art direction만
+   ├─ 구조 불확실성        → 필요한 architecture note 또는 spike만
+   └─ 없음                 → 바로 제작
    ↓
-3. 아트 디렉션 결정 (5p)
-   샘플 1개라도 완성품으로
-   ↓
-4. Vertical slice 상세 명세 작성
-   ↓
-5. 실제 제작 (4~8주)
-   ↓
-6. 플레이테스트 (외부 5-10명)
-   ↓
-7. scope-estimate.md 작성
+Build + Playtest + Measure
+   ├─ 새 blocker 발견      → 위험과 다음 증분을 갱신하고 반복
+   ├─ 다음 증분 필요       → 명세를 필요한 만큼만 갱신하고 반복
+   └─ 대표 slice 완성      → scope estimate + Stage 3 gate
 ```
+
+`docs/game/3-vertical-slice-spec.md`는 이 루프의 살아 있는 계획입니다. 첫 버전은 목표·위험·다음 증분과 제작/측정 방법만으로 시작할 수 있고, 실제 제작 결과가 생길 때 필요한 부분만 갱신합니다. 기술·아트·아키텍처 문서는 해당 불확실성이 다음 증분을 실제로 막을 때만 작성합니다. 선택 문서가 없다는 이유만으로 제작을 막지 않습니다.
 
 #### 기술/엔진 결정 (`tech-decision.md`)
 
@@ -441,6 +442,8 @@ Xenoblade Chronicles 사례: 한 지역, 그러나 *최종 품질로 완성된 �
 
 - Stage 2 프로토타입은 *버리는* 코드. 본 게임과 다른 도구가 의도.
 - Stage 3 진입 시점에 Stage 2가 검증한 *재미의 종류*가 보입니다 — 그에 따라 엔진 선택이 달라져요.
+
+하지만 Stage 3마다 새 기술 결정 문서를 요구하지는 않습니다. 사용자 제약이나 기존 프로젝트로 선택이 이미 확정됐고 다음 증분을 막는 기술 위험이 없다면 그대로 제작합니다. 미해결 선택이나 실현 가능성이 현재 증분을 막을 때만 결정 문서 또는 spike를 만듭니다.
 
 예시: Stage 2 결과에 따라:
 - 시각 임팩트가 중요 → Unity, Godot
@@ -450,7 +453,7 @@ Xenoblade Chronicles 사례: 한 지역, 그러나 *최종 품질로 완성된 �
 
 #### Stage 3 상세 기획에 들어가는 것 — **Vertical Slice 범위만**
 
-게임 전체가 아니라 제작 품질과 비용을 검증할 수 있는 *가장 작은 대표 end-to-end slice*만 상세 명세로 작성합니다.
+게임 전체가 아니라 제작 품질과 비용을 검증할 수 있는 *가장 작은 대표 end-to-end slice*만 범위로 삼습니다. 각 갱신에서는 그 slice 전체를 미리 상세화하지 않고, 다음 Playable Increment를 제작·측정하는 데 필요한 상세만 작성합니다.
 
 포함하는 캐릭터, 시스템 깊이, 적, 레벨, 아트 자산은 각각 Stage 2 근거나 명시된 production risk에 연결되어야 합니다. 중요한 수치·공식은 관측/측정, production 제약, 명시 인용, 또는 VS에서 검증할 목표로 분류합니다. 제약과 인용은 gameplay가 작동한다는 증거가 아니며, 목표에는 VS 검증 방법을 붙입니다. 전체 콘텐츠 매트릭스와 장기 로드맵은 제외합니다.
 
@@ -459,17 +462,19 @@ Xenoblade Chronicles 사례: 한 지역, 그러나 *최종 품질로 완성된 �
 ```
 실제 플레이 가능한 vertical slice (외부 5-10명이 "더 하고 싶다"고 말함)
 
-문서:
-├─ tech-decision.md       (1-2p)
-├─ architecture.md        (3-5p)
-├─ art-direction.md       (5p)
-├─ vertical-slice-spec.md (10-15p, 근거 값 + 검증할 목표)
-└─ scope-estimate.md      (2-3p, 측정 + 목표 → 투명한 추정)
+점진 문서:
+├─ vertical-slice-spec.md (최대 15p, 현재 증분의 근거 값 + 검증할 목표)
+└─ scope-estimate.md      (최대 3p, 완성된 VS 측정 + 목표 → 투명한 추정)
+
+현재 blocker에 따라 선택:
+├─ tech-decision.md       (최대 2p)
+├─ architecture.md        (최대 5p)
+└─ art-direction.md       (최대 5p)
 ```
 
 `scope-estimate.md`의 결과는 모두 `Estimate`/`추정`입니다. 입력값과 출처, 계산 방법, 범위 또는 신뢰 구간, 불확실성, 미측정 항목을 남기며 Target/Constraint/Citation/Estimate를 Measurement로 재라벨하지 않습니다. 기록된 입력만으로 방어 가능한 범위를 만들 수 없으면 값을 발명하지 않고 point estimate를 미완료로 둡니다.
 
-총 문서 25-30페이지 + 플레이 가능 빌드.
+모든 페이지 수는 목표나 최소 분량이 아니라 상한입니다. 현재 플레이 가능한 증분을 만들고 측정하는 데 필요한 만큼만 기록합니다.
 
 #### 통과 게이트
 *"이 게임을 끝낼 수 있는가? 비용은?"*
@@ -603,14 +608,14 @@ Cross-stage Agents (단계 무관 게이트키퍼)
 
 | 에이전트 | 역할 | 입력 | 산출 |
 |---|---|---|---|
-| `tech_decider` | Stage 2 발견 기반 엔진/스택 선택 | `learnings.md` | `tech-decision.md` (1-2p) |
-| `architecture_designer` | VS 범위 아키텍처 설계 | tech-decision | `architecture.md` (3-5p) |
-| `tech_spike_runner` | 가장 위험한 기술 가정 검증 | architecture | 스파이크 코드 + 검증 보고 |
-| `art_director` | 5p 아트 디렉션 작성 | macro design + learnings | `3-art-direction.md` (5p) |
-| `vs_spec_writer` | VS 범위 상세 명세 (근거 값 + 검증할 목표) | learnings + art-direction | `vertical-slice-spec.md` (10-15p) |
-| `vs_builder` | 실제 VS 빌드 진행 관리 | spec | 실제 게임 빌드 |
+| `tech_decider` | 다음 증분을 막는 기술 선택 해소 | learnings + 현재 production risk | `tech-decision.md` (최대 2p) |
+| `architecture_designer` | 다음 증분을 막는 구조 위험 해소 | 현재 증분 + production risk | `architecture.md` (최대 5p) |
+| `tech_spike_runner` | 현재 blocker인 기술 가정 검증 | 현재 증분 + production risk | 스파이크 코드 + 측정 기록 |
+| `art_director` | 시각 품질이 현재 blocker일 때 방향과 샘플 계획 작성 | macro design + learnings + 현재 증분 | `3-art-direction.md` (최대 5p) |
+| `vs_spec_writer` | 목표·현재 위험·다음 playable increment를 점진 갱신 | learnings + 사용 가능한 Stage 3 근거 | `vertical-slice-spec.md` (최대 15p) |
+| `vs_builder` | 충분히 정의된 다음 증분 제작·측정 | 현재 증분 | 실제 게임 빌드 + 측정 |
 | `playtest_coordinator` | 외부 플레이테스트 5-10명 조직/수집 | VS 빌드 | 테스트 보고서 |
-| `scope_estimator` | VS 측정과 전체 게임 목표로 투명한 추정 | 기록된 VS 제작 결과 + 명시 목표 수량 | `scope-estimate.md` (2-3p) |
+| `scope_estimator` | 완성된 대표 VS 측정과 전체 게임 목표로 투명한 추정 | 기록된 VS 제작 결과 + 명시 목표 수량 | `scope-estimate.md` (최대 3p) |
 
 ### 7.6 Stage 4: Detail Docs
 
@@ -704,10 +709,10 @@ Cross-stage Agents (단계 무관 게이트키퍼)
 
 | 스킬 | 내용 |
 |---|---|
-| `tech-decision-template` | 결정 + 근거(Stage 2 어느 발견에 연결) + 검증 방법 |
-| `architecture-vs-scope` | VS 범위 한정 아키텍처 (게임 전체 아님) |
-| `art-direction-5p` | 시각 방향 5p 템플릿 |
-| `vs-spec-template` | VS 범위만 다루는 상세 명세 형식 |
+| `tech-decision-template` | 현재 증분을 막는 결정 + 근거 + 증분 내 검증 방법 |
+| `architecture-vs-scope` | 현재 증분을 막는 구조 위험만 기록 |
+| `art-direction-5p` | 시각 blocker가 있을 때만 쓰는 최대 5p 템플릿 |
+| `vs-spec-template` | 목표·현재 위험·다음 증분을 갱신하는 최대 15p 점진 명세 |
 | `scope-estimate-method` | VS 측정 + 전체 목표 → 입력·계산·범위·불확실성이 드러난 추정 |
 | `vs-only-validator` | VS 범위 초과 작성 검출 |
 
@@ -773,11 +778,11 @@ my-game/
 │   ├── game/
 │   │   ├── 0-pitch.md              # Stage 0 (1p)
 │   │   ├── 1-macro-design.md       # Stage 1 (5p)
-│   │   ├── 3-tech-decision.md      # Stage 3
-│   │   ├── 3-architecture.md
-│   │   ├── 3-art-direction.md
-│   │   ├── 3-vertical-slice-spec.md
-│   │   ├── 3-scope-estimate.md
+│   │   ├── 3-tech-decision.md      # Stage 3, blocker가 있을 때
+│   │   ├── 3-architecture.md       # Stage 3, blocker가 있을 때
+│   │   ├── 3-art-direction.md      # Stage 3, blocker가 있을 때
+│   │   ├── 3-vertical-slice-spec.md # Stage 3, 점진 갱신
+│   │   ├── 3-scope-estimate.md     # Stage 3, 대표 VS 측정 후
 │   │   └── details/                # Stage 4 (얇은 detail docs)
 │   │       └── *.md                # 각 1-2p
 │   │

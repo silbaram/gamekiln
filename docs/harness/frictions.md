@@ -16,3 +16,5 @@
 2026-08-17 | 마찰 — Codex custom agent의 skills.config를 TOML 맵으로 선언해 역할 파일 전체가 무시됨 | 출처 — Tier 2/3 역할 로딩 경고 조사
 2026-08-18 | 마찰 — Codex가 사용자 제공 제작 수치는 보존했지만 Production Frame의 `사용자 제약` 출처 태그를 생략 | 출처 — Issue #12 구현 스폿체크 → resolved (retrospective 2026-08-18)
 2026-08-18 | 마찰 — cycle-level proceed와 Stage 2 전체 proceed가 같은 용어라 단일 Risk 해결이 Stage 3 진입으로 오인될 수 있음 | 출처 — Issue #13 라우팅 검토
+2026-08-18 | 마찰 — Stage 3의 고정 산출물 순서가 blocker 유무와 무관하게 기술·아트·전체 명세를 제작 전에 요구 | 출처 — Issue #15 라우팅 검토
+2026-08-18 | 마찰 — scope estimate 최대 분량이 참고 명세에만 있고 runtime skill이 없어 scaffolded agent가 cap을 받지 못함 | 출처 — Issue #15 최종 리뷰

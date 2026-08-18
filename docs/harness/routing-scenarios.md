@@ -18,13 +18,16 @@
 | 사용자-confirmed `risk-resolved` + Stage 2 근거가 더 필요한 core/high-impact Risk 있음 | 메인 에이전트가 `prototype-hypothesis` 스킬로 다음 Risk 계획 |
 | 사용자-confirmed `risk-resolved` + 누적 근거가 Stage 3 투자를 정당화할 수 있음 + Stage 2 exit review 결과 없음 | 메인 에이전트가 Top Risks, learnings, playtest evidence, killed hypotheses를 종합하는 Stage 2 exit review |
 | 사용자-confirmed `stage-3-ready` + Tier 2 agent 미설치 | 누적 `--tier 2` 설치 또는 수동 Stage 3 경로 중 하나 안내 |
-| 사용자-confirmed `stage-3-ready` + Tier 2 agent 설치 + `docs/game/3-tech-decision.md` 없음 | `tech_decider` |
-| tech decision confirm + 시각 표현 게임 + art agent 설치 + art direction 없음 | `art_director` |
-| art direction confirm/skip + VS spec agent 설치 + VS spec 없음 | `vs_spec_writer` |
-| VS build complete + measured production data + scope agent 설치 | `scope_estimator` |
-| VS spec confirm 있음 + completed VS build 없음 | VS production은 자동 harness subagent가 아니라 ordinary coding work라고 설명 |
+| 사용자-confirmed `stage-3-ready` + Slice Goal/현재 Production Risk/다음 Playable Increment가 아직 없음 + VS spec agent 설치 | `vs_spec_writer`가 짧은 `3-vertical-slice-spec.md`를 seed |
+| 현재 Playable Increment를 막는 미해결 기술 선택 + tech agent 설치 | `tech_decider` |
+| 현재 Playable Increment를 막는 기술 실현 가능성 또는 구조 위험 | 해당 위험만 확인하는 ordinary spike/note를 안내; 새 상시 문서나 미설치 agent를 요구하지 않음 |
+| 시각 방향/완성 품질 샘플이 현재 blocker + art agent 설치 | `art_director` |
+| 시각 방향/완성 품질 샘플이 현재 blocker + art agent 미설치 | 누적 `--tier 3` 설치 또는 현재 증분에 한정한 수동 visual sample 경로 안내 |
+| Slice Goal/현재 Risk/다음 Increment가 있고 제작을 막는 미해결 선택 없음 | 선택 tech/art/architecture 문서가 없어도 ordinary VS production 안내 |
+| 증분 build/measurement 뒤 새 blocker 또는 다음 증분이 드러남 | `vs_spec_writer`로 현재 Risk와 다음 Increment를 갱신하거나, blocker를 직접 해소하는 조건부 agent/spike 중 하나만 안내 |
+| 대표 VS build complete + measured production data + scope agent 설치 | `scope_estimator` |
 | scope estimate 완료 + Stage 3 gate 사용자 confirm 없음 | Stage 3 gate 질문 제시: "Can this be finished, and at what cost?" |
-| scope estimate confirm 이후 Stage 3 gate 사용자 confirm + decision agent 설치 | 검증된 시스템별로 `decision_recorder` |
+| scope estimate 완료 + Stage 3 gate 사용자 confirm + decision agent 설치 | 검증된 시스템별로 `decision_recorder` |
 | Stage 3 gate confirm + Tier 3 agent 미설치 | 누적 `--tier 3` 설치 또는 수동 기록 안내 |
 | 검증된 시스템의 detail docs가 충분히 기록됨 | Stage 5 production 지원은 미설치라고 안내 |
 | 사용자-confirmed retry | 같은 cycle의 `prototype_coder`로 복귀 |
@@ -44,4 +47,7 @@
 | 성공 사이클이 여러 번이라는 이유만으로 Stage 3 진입을 요청 | 고정 횟수를 readiness로 취급하지 말고 누적 근거의 대표성·일관성을 검토 |
 | `stage-3-ready` 권고처럼 보이나 사용자 confirm이 없음 | Stage 3 컴포넌트로 보내지 말고 사용자 confirm 요청 |
 | reviewer가 retry를 권고했는데 사용자가 kill을 물어봄 | `kill_arbiter`로 2차 의견을 받되, 최종 결정은 사용자 confirm |
-| 텍스트/터미널 중심 게임에서 `art_director` 라우팅 조건처럼 보임 | art direction skip을 제안하고 `vs_spec_writer`로 라우팅 |
+| `3-tech-decision.md`가 없지만 선택이 사용자 제약/기존 프로젝트로 확정됐고 기술 blocker도 없음 | 문서 생성을 요구하지 않고 다음 Increment 명세 또는 production으로 라우팅 |
+| 시각 표현 게임이지만 최소 visual direction이 VS spec에 있고 시각 blocker가 없음 | `art_director`를 요구하지 않고 다음 Increment 명세 또는 production으로 라우팅 |
+| `3-architecture.md`가 없지만 현재 증분을 막는 구조 위험이 없음 | 문서나 미설치 `architecture_designer`를 요구하지 않고 production으로 라우팅 |
+| VS spec이 15페이지보다 짧음 | 현재 Increment를 제작·측정하기에 충분하면 분량을 채우게 하지 않음 |

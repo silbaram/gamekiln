@@ -78,7 +78,8 @@
 - **사용 스킬**: 없음
 - **호출 시점**: 사용자가 의도 불명확하게 요청할 때
 - **Stage 2 출구**: 확인된 `risk-resolved` 뒤에는 다음 Risk 계획 또는 메인 루프 exit review 중 하나만 안내. exit review는 고영향 Risk의 대표성·일관성, 반대 신호/evidence gap, 열린 Risk의 처리 시점, killed hypotheses 충돌을 종합하되 모든 Risk 해결이나 고정 횟수를 요구하지 않음
-- **종료 조건**: 다음 행동 1개 명시. Stage 3는 exit review의 `stage-3-ready` 권고와 사용자 confirm 뒤에만 라우팅. Optional Tier agent는 현재 provider 파일이 설치됐을 때만 이름으로 라우팅하고, 없으면 누적 Tier 설치 또는 수동 경로를 안내
+- **Stage 3 루프**: exit review의 `stage-3-ready` 사용자 confirm 뒤 Slice Goal, 현재 가장 큰 Production Risk, 다음 Playable Increment를 확인하고, 다음 증분의 제작·측정을 막는 선택만 `tech_decider`, `art_director`, 짧은 기술/구조 spike, 또는 `vs_spec_writer` 갱신으로 해소. 선택 문서가 없다는 이유만으로 제작을 막지 않음
+- **종료 조건**: 다음 행동 1개 명시. Optional Tier agent는 현재 provider 파일이 설치됐을 때만 이름으로 라우팅하고, 없으면 누적 Tier 설치 또는 수동 경로를 안내. 대표 VS와 제작 측정이 완성된 뒤에만 `scope_estimator`로 라우팅
 
 ### 스킬 5개
 
@@ -141,7 +142,7 @@
 
 ---
 
-## Tier 2: 1차 확장 (7개) — 첫 프로젝트 중후반
+## Tier 2: 1차 확장 (8개) — 첫 프로젝트 중후반
 
 ### 메인 루프 스킬 흐름 1개
 
@@ -158,34 +159,34 @@
 
 #### `tech_decider`
 - **단계**: Stage 3
-- **목적**: Stage 2 발견 기반으로 엔진/스택 선택
-- **입력**: `prototypes/learnings.md` + `docs/game/1-macro-design.md`
-- **산출**: `docs/game/3-tech-decision.md` (1-2p)
+- **목적**: 다음 Playable Increment를 막는 기술 선택을 Stage 2 발견 기반으로 해소
+- **입력**: `prototypes/learnings.md` + `docs/game/1-macro-design.md` + 현재 Production Risk/Playable Increment
+- **산출**: `docs/game/3-tech-decision.md` (최대 2p)
 - **사용 스킬**: `tech-decision-template`
-- **호출 시점**: Stage 3 진입 첫 단계
-- **종료 조건**: 결정 1개 + 근거(Stage 2 어느 발견) + 후보 비교 + 검증 방법 + 사용자 confirm 질문
+- **호출 시점**: 미해결 엔진/스택/도구 선택이 다음 증분의 제작·측정을 실제로 막을 때만. 사용자 제약이나 기존 프로젝트로 선택이 확정됐고 기술 blocker가 없으면 skip
+- **종료 조건**: 현재 blocker를 해소하는 결정 1개 + 근거(Stage 2 어느 발견) + 실제 후보 비교 + 다음 증분에서의 검증 방법
 
 #### `vs_spec_writer`
 - **단계**: Stage 3
-- **목적**: vertical slice 범위 한정 상세 명세
-- **입력**: `docs/game/3-tech-decision.md` + `prototypes/learnings.md` + 있으면 art-direction
-- **산출**: `docs/game/3-vertical-slice-spec.md` (10-15p)
+- **목적**: vertical slice의 목표·현재 Production Risk·다음 Playable Increment를 점진적으로 명세
+- **입력**: `docs/game/1-macro-design.md` + `prototypes/learnings.md` + 사용 가능한 tech/art/build 측정 문서
+- **산출**: `docs/game/3-vertical-slice-spec.md` (최대 15p, 초기에는 더 짧아도 됨)
 - **사용 스킬**: `vs-spec-template`
-- **호출 시점**: tech decision confirm 후 art direction이 confirm됐거나 텍스트/터미널 중심 게임이라 명시적으로 skip된 뒤. 아키텍처 스파이크는 수동 작업 또는 Tier 3 안내만
-- **종료 조건**: VS 범위 내 + 모든 중요한 수치/공식의 근거·문맥·미검증 목표 분류 + 목표별 VS 검증 방법 + 사용자 confirm 질문
+- **호출 시점**: Stage 3 진입 시 최소 증분을 seed하거나, 제작·측정 뒤 위험과 다음 증분을 갱신할 때. tech/art/architecture 문서는 현재 blocker를 해소하는 데 필요할 때만 입력
+- **종료 조건**: Slice Goal + 현재 Production Risk + 제작·측정 가능한 다음 Playable Increment + 해당 증분의 중요한 수치/공식 분류와 목표별 검증 방법
 
 #### `scope_estimator`
 - **단계**: Stage 3
 - **목적**: VS 제작 데이터로 전체 게임 비용/시간 추정
 - **입력**: 기록된 VS 제작 결과(에이전트가 `Measurement`로 분류) + 명시된 전체 게임 수량(에이전트가 `Target`으로 분류) + (있으면) 사용자-confirmed production `Constraint`
-- **산출**: `docs/game/3-scope-estimate.md` (2-3p)
-- **사용 스킬**: 없음 (계산 중심)
+- **산출**: `docs/game/3-scope-estimate.md` (최대 3p)
+- **사용 스킬**: `scope-estimate-method`
 - **호출 시점**: VS 완성 직후, 메인 에이전트가 실측 데이터를 사용자와 선해소한 뒤
 - **추정 규칙**: 모든 결과는 `Estimate`/`추정`으로 표시하고 입력값과 출처, 계산 방법, 범위 또는 신뢰 구간, 불확실성, 미측정 항목을 노출. Target/Constraint/Citation/Estimate를 Measurement로 재라벨하지 않음
 - **중단 조건**: 기록된 입력만으로 방어 가능한 범위/신뢰 구간을 만들 수 없으면 값을 발명하지 않고 최소 추가 측정 또는 명시적 시나리오 경계만 묻고 point estimate는 미완료로 유지
 - **종료 조건**: 투명한 시간/비용 추정치 + 범위 또는 신뢰 구간 + 미측정 항목 표기 + Stage 3 게이트 질문
 
-### 스킬 3개
+### 스킬 4개
 
 #### `playtest-log-template` (구현됨)
 - **단계**: Stage 2
@@ -203,27 +204,40 @@
 
 #### `tech-decision-template` (구현됨)
 - **단계**: Stage 3
-- **목적**: 기술 결정의 근거를 Stage 2 발견과 연결 강제
+- **목적**: 현재 Playable Increment를 막는 기술 결정의 근거를 Stage 2 발견과 연결 강제
 - **강제 제약**:
-  - `docs/game/3-tech-decision.md` 1-2p / 약 120줄
+  - `docs/game/3-tech-decision.md` 최대 2p / 약 120줄; 짧아도 됨
   - Decision / Rationale / Candidate Comparison / Validation Plan 4섹션
   - 결정 1개당 근거에 Stage 2 사이클 인덱스 1개 이상 인용
-  - 후보 A/B/C trade-off 표 필수
-  - 검증 방법 명시 필수
-- **검출/차단**: 근거 없는 결정, `stage-3-ready` 사용자 confirm 전 작성(`risk-resolved`만으로는 불충분), VS 범위 밖 기술 결정
+  - 실제로 가능한 후보만 trade-off 표에 포함하며 비교를 채우기 위한 후보를 발명하지 않음
+  - 다음 Playable Increment에서의 검증 방법 명시 필수
+- **검출/차단**: 다음 증분을 막지 않는 선행 기술 문서, 근거 없는 결정, `stage-3-ready` 사용자 confirm 전 작성(`risk-resolved`만으로는 불충분), 현재 증분 밖 기술 결정
 - **출력 형식**: 4섹션 기술 결정 문서
 
 #### `vs-spec-template` (구현됨, Tier 3에서 Tier 2로 승격)
 - **단계**: Stage 3
-- **목적**: vertical slice 명세의 범위·출처 강제
+- **목적**: 점진적인 vertical slice 명세의 범위·출처 강제
 - **강제 제약**:
-  - `docs/game/3-vertical-slice-spec.md` 10-15p
+  - `docs/game/3-vertical-slice-spec.md` 최대 15p; 최소/목표 분량 없음
+  - Slice Goal / Current Production Risk / Next Playable Increment / Build And Measure Plan을 현재 근거만으로 작성·갱신
   - 제작 품질과 비용을 검증할 수 있는 가장 작은 대표 end-to-end slice
+  - 한 번에 현재 Playable Increment에 필요한 상세만 추가
   - 중요한 수치/공식은 `Observation`/`Measurement`/`Constraint`/`Citation`/`Target` 중 하나로 분류하고, Target은 VS 검증 방법에 연결
   - Constraint/Citation은 이 게임 gameplay 동작 증거가 아니며, 추정은 별도 scope estimate에서만 작성
   - 메타 섹션 금지
-- **검출/차단**: 모든 직업/전체 콘텐츠 매트릭스/장기 로드맵, 미분류 수치, 검증값처럼 쓴 Constraint/Citation/Target, Stage 4 detail docs
+- **검출/차단**: 현재 증분을 넘어 미리 작성한 상세, 모든 직업/전체 콘텐츠 매트릭스/장기 로드맵, 미분류 수치, 검증값처럼 쓴 Constraint/Citation/Target, Stage 4 detail docs
 - **출력 형식**: VS 범위 한정 명세
+
+#### `scope-estimate-method` (구현됨)
+- **단계**: Stage 3
+- **목적**: `docs/game/3-scope-estimate.md`의 최대 3페이지 캡과 투명한 측정→추정 계산 강제
+- **강제 제약**:
+  - 최대 3페이지이며 최소/목표 분량 없음
+  - 실제 VS 제작 결과는 `Measurement`/`측정`, 전체 게임 수량은 `Target`/`목표`, 제작 경계는 `Constraint`/`제약`으로 보존
+  - 모든 결과는 `Estimate`/`추정`으로 표시하고 입력·출처·계산·범위 또는 신뢰 구간·불확실성·미측정 항목 노출
+  - Target/Constraint/Citation/Estimate를 Measurement로 재라벨하지 않음
+- **검출/차단**: 입력 발명, 방어 불가능한 point estimate, 출처 재라벨, 3페이지 초과, 계산 밖 전체 게임 계획
+- **출력 형식**: 투명한 scope estimate
 
 ---
 
@@ -258,19 +272,19 @@
 
 #### `art_director` (구현됨)
 - **단계**: Stage 3
-- **목적**: 검증된 재미와 macro Pillar에 연결된 시각 방향 5페이지 작성
-- **입력**: `docs/game/1-macro-design.md` + `prototypes/learnings.md` + (있으면) `docs/game/3-tech-decision.md` + 메인 에이전트가 선해소한 시각 선호(무드, 레퍼런스, 제작 제약)
-- **산출**: `docs/game/3-art-direction.md` (5p)
+- **목적**: 시각 품질이나 일관성이 현재 Production Risk일 때 검증된 재미와 macro Pillar에 연결된 방향 작성
+- **입력**: `docs/game/1-macro-design.md` + `prototypes/learnings.md` + 현재 Playable Increment + (있으면) `docs/game/3-tech-decision.md` + 메인 에이전트가 선해소한 시각 선호(무드, 레퍼런스, 제작 제약)
+- **산출**: `docs/game/3-art-direction.md` (최대 5p)
 - **사용 스킬**: `art-direction-5p`
-- **추가 시점**: tech decision confirm 후, 시각 표현이 있는 게임에서 VS 명세 작성 전
-- **종료 조건**: 6섹션 + Stage 2/macro 연결 + 완성 품질 샘플 1개 계획 + 사용자 confirm 질문
+- **추가 시점**: 시각 방향 또는 완성 품질 샘플이 다음 증분의 제작·측정을 실제로 막을 때만. 시각 표현이 있다는 이유만으로 호출하지 않음
+- **종료 조건**: 6섹션 + Stage 2/macro 연결 + 현재 증분의 완성 품질 샘플 1개 계획
 
 #### `architecture_designer`
 - **단계**: Stage 3
-- **목적**: VS 범위 한정 아키텍처 설계
-- **입력**: tech-decision + VS 명세
-- **산출**: `docs/game/3-architecture.md` (3-5p)
-- **추가 시점**: 1인 개발이 아닐 때, 또는 협업자 합류 시
+- **목적**: 다음 Playable Increment를 막는 구조 위험만 해소
+- **입력**: 현재 Production Risk + Playable Increment + (있으면) tech-decision
+- **산출**: `docs/game/3-architecture.md` (최대 5p)
+- **추가 시점**: 구조 불확실성이 현재 증분을 막고 짧은 note/spike만으로 해소하기 어려울 때
 
 #### `assumption_separator`
 - **단계**: 모든 단계
@@ -306,8 +320,8 @@
 #### `art-direction-5p` (구현됨)
 - **단계**: Stage 3
 - **목적**: `docs/game/3-art-direction.md`의 5페이지 캡 + 검증된 재미 기반 시각 방향 강제
-- **강제 제약**: 5페이지 캡, Visual Pillars / Color Palette / Typography And UI Tone / References / Style Rules / Sample Plan 6섹션, Visual Pillars는 Stage 2 학습과 macro Pillar 연결 필수, VS 전 완성 품질 샘플 1개 계획 필수
-- **추가 시점**: 시각 표현이 있는 게임에서 tech decision confirm 후 VS 명세 작성 전
+- **강제 제약**: 최대 5페이지이며 최소/목표 분량 없음, Visual Pillars / Color Palette / Typography And UI Tone / References / Style Rules / Sample Plan 6섹션, Visual Pillars는 Stage 2 학습과 macro Pillar 연결 필수, 현재 증분에서 검증할 완성 품질 샘플 1개 계획 필수
+- **추가 시점**: 시각 방향 또는 완성 품질 샘플이 다음 Playable Increment의 blocker일 때
 
 #### `assumption-tracker`
 - **단계**: 모든 단계
@@ -337,7 +351,7 @@
 - `paper-prototype` (별도 skill은 불필요 — `disposable-prototype` modality로 통합)
 - `cycle-review-criteria`, `learnings-format` (자유 형식 허용)
 - `cycle-isolation` (추가 권장 안 함: production 격리는 `AGENTS.md`, cycle artifact 규칙은 `disposable-prototype`이 소유)
-- `architecture-vs-scope`, `vs-only-validator`, `scope-estimate-method` (Stage 3 진입 시 결정)
+- `architecture-vs-scope`, `vs-only-validator` (Stage 3 진입 시 결정)
 - `content-batch-generation`, `telemetry-analysis`, `playtest-aggregation` (Stage 5 시)
 - `stage-gate-validator`, `regression-protocol`, `verified-source-required` (다른 스킬에 흡수)
 - `cerny-method-knowledge`, `prototype-best-practices` (도메인 지식은 가이드 문서 참조로 대체)
@@ -349,8 +363,8 @@
 | Tier | 에이전트 | 스킬 | 누계 |
 |---|---|---|---|
 | **Tier 1 (필수)** | 4 (+ main-loop skill flow 2) | 5 | **11** |
-| **Tier 2 (1차 확장)** | 3 (+ main-loop skill flow 1) | 3 | **18** |
-| **Tier 3 (partial)** | 3 구현 / 3 대기 | 4 구현 / 1 대기 | **25 구현 / 4 대기** |
+| **Tier 2 (1차 확장)** | 3 (+ main-loop skill flow 1) | 4 | **19** |
+| **Tier 3 (partial)** | 3 구현 / 3 대기 | 4 구현 / 1 대기 | **26 구현 / 4 대기** |
 
 **시작은 11개.** 기본 scaffold는 이 Tier 1 agent/skill만 노출하고, `--tier 2`와 `--tier 3`이 누적 확장합니다. 현재 Tier 3은 `decision_recorder`, `kill_arbiter`, `art_director`와 관련 스킬 4개가 구현됐고, 나머지는 트리거 대기입니다.
 
