@@ -118,7 +118,7 @@ Tier 1에는 가벼운 근거 로그인 `prototypes/playtest.md`가 포함됩니
 
 ```markdown
 ## cycle-01-example
-Facts:
+Facts (관측):
 - <플레이 중 실제로 일어난 일. 추측 금지.>
 Interpretations:
 - <그 사실이 다음 결정에 시사하는 점.>

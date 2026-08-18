@@ -16,12 +16,14 @@ After a prototype play session, the main agent runs this skill directly.
 3. Draft Facts, Interpretations, and Decisions sections for the relevant `## cycle-NN-<topic>` header.
 4. When the user asked to record the session and the mapping is unambiguous, append it. Show a draft and wait only when an interpretation or decision is materially ambiguous, or when the user requested review before writing.
 
+Use `Facts (관측):` in a Korean artifact or `Facts (Observation):` in an English artifact. That heading supplies provenance, so do not repeat a tag on every observed bullet. Prefix an actual user-supplied production, performance, time, or cost measurement with `측정:` in Korean or `Measurement:` in English. Never label an interpretation, target, or estimate as a Fact.
+
 ## Output Contract
 
 Append under the existing cycle header format:
 
     ## cycle-NN-<topic>
-    Facts:
+    Facts (관측):
     - <observed fact from user answer only>
     Interpretations:
     - <interpretation separated from facts>

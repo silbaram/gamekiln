@@ -8,7 +8,7 @@
 |---|---|
 | 한 Stage 2 사이클은 관측 가능한 가설 하나를 검증 | `AGENTS.md` |
 | 모든 stage gate는 proceed/retry/regress/kill을 검토하고 해당 없는 결과를 명시 | `AGENTS.md` |
-| 수치·공식·밸런스 결정에는 관측·측정 또는 명시 출처 필요 | `AGENTS.md` |
+| 중요한 수치·공식·밸런스 주장은 산출물 언어에 맞춰 근거/문맥/미검증 작업값으로 분류하고, 이 게임의 동작 검증은 관측·측정만 사용 | `AGENTS.md` |
 | Stage 2 구현은 `prototypes/`에 격리하고 production에서 재사용하지 않음 | `AGENTS.md` |
 | 단계 전환·project kill·중대한 범위 확대만 사용자 확인 필요 | `AGENTS.md` |
 | VS 검증 전 Stage 4 detail doc 금지 | `AGENTS.md` |

@@ -1,6 +1,6 @@
 ---
 name: decision-record-1p
-description: Use when writing Stage 4 detail docs for one validated vertical-slice system. Records verified decisions only, with strict 1-2 page caps and sources for every number or formula.
+description: Use when writing Stage 4 detail docs for one validated vertical-slice system. Records verified decisions only, with strict 1-2 page caps and game-local evidence for material gameplay numbers or formulas.
 ---
 
 # Decision Record 1p
@@ -27,13 +27,14 @@ The document records decisions already validated by the vertical slice. It is no
 
 ## Source Rules
 
-Every number, formula, content quantity, timing, cost, HP, damage, cooldown, drop rate, economy value, or balance claim must cite one of:
+Every material number, formula, content quantity, timing, cost, HP, damage, cooldown, drop rate, economy value, or balance claim asserted as a `Verified Decision`, and every `Evidence` item presented as proof of it, must cite this game's evidence. Use Korean labels in a Korean artifact and English labels in an English artifact:
 
-- `관측: cycle-NN-<topic>, ...`
-- `측정: VS, ...`
-- `인용: <explicit source>, ...`
+- `Observation:` / `관측:` with a named Stage 2 cycle or VS play session.
+- `Measurement:` / `측정:` with an actual VS performance, time, cost, or production result.
 
-Refuse to write or accept unsourced numbers or formulas. Remove the value or ask for its source.
+The `Evidence` section may preserve a clearly classified citation, constraint, target, or estimate as relevant context or history. A user-confirmed production condition may also appear in `Implementation Notes`. None of these classes is verified evidence, whether alone or combined with one another. Keep its original source or inputs and link separate observation or measurement rather than relabelling it.
+
+Structural identifiers, section numbers, and version numbers do not need provenance. Refuse unsupported material values; remove them or ask for the missing observation or measurement.
 
 ## Block Immediately
 
@@ -41,7 +42,7 @@ Refuse to write or accept unsourced numbers or formulas. Remove the value or ask
 - Any system not validated by the vertical slice.
 - Multiple systems in one detail doc.
 - Future predictions, roadmaps, full-game plans, or backlog promises.
-- Unverified assumptions entering the body. Tell the user to move them to `prototypes/assumptions.md`; do not create or edit that file.
+- Unverified assumptions presented as decisions or implementation commitments. Point unresolved assumptions to `prototypes/assumptions.md`; do not create or edit that file.
 - Writing under `game/` or production code directories.
 - Bypassing the `AGENTS.md` stage-transition boundary to start Stage 5.
 
@@ -50,6 +51,6 @@ Refuse to write or accept unsourced numbers or formulas. Remove the value or ask
 Complete only when:
 
 - The detail doc is within the 1-2 page cap.
-- Every number and formula has an allowed source.
+- Every material number and formula in the verified decision has observed or measured evidence from this game.
 - No forbidden meta section remains.
 - Control returns to the main agent for the `AGENTS.md` confirmation boundary before another system or Stage 5.

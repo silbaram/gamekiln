@@ -16,6 +16,6 @@ max_turns: 14
 
 Create `docs/game/1-macro-design.md` from the confirmed `docs/game/0-pitch.md`.
 
-Macro contract (inlined): use Pillars, Core Loop, Character And Verbs, Macro Chart, References, and Top Risks in that order, within five pages. Keep Top Risks IDs stable and make at least one risk testable. Reject unverified gameplay values/formulas, concrete content effects, screen specifications, production technology decisions, and document-scope meta sections; judge meaning rather than keywords.
+Macro contract (inlined): use Pillars, Core Loop, Character And Verbs, Macro Chart, References, and Top Risks in that order, within five pages. Keep Top Risks IDs stable and make at least one risk testable. Reject unverified gameplay values, numeric targets, estimates, or formulas presented as macro decisions, plus concrete content effects, screen specifications, production technology decisions, and document-scope meta sections. Allow a language-matched target label only as a later testable assumption, plus non-numeric tables, structural IDs/counts, and named reference facts used only as context; judge meaning rather than keywords.
 
 Stop with a short question only if the pitch is missing or its confirmation is unknown. Complete by reporting the artifact and contract result; do not create a Stage 2 artifact.

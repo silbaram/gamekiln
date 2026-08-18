@@ -30,7 +30,7 @@ Write `docs/game/0-pitch.md` as a one-page markdown pitch with exactly these sec
 5. References
 6. Top Risks
 
-When material constraints or unknowns exist, add a compact `Production Frame` block inside `Target`; it is not a seventh section. Include only user-supplied constraints such as unavailable roles, hard capacity or budget limits, required platform/input, or mandatory online, offline, accessibility, or distribution conditions. Start every item with a source tag: use `User constraint:` (or the localized equivalent `사용자 제약:`) for a user-supplied constraint, including every supplied numeric constraint; use `TBD:` (or `미정:`) for a material unknown. Do not include untagged Production Frame items.
+When material constraints or unknowns exist, add a compact `Production Frame` block inside `Target`; it is not a seventh section. Include only user-supplied constraints such as unavailable roles, hard capacity or budget limits, required platform/input, or mandatory online, offline, accessibility, or distribution conditions. Start every item with a language-matched provenance tag: use `제약:` and `미정:` in a Korean artifact or `Constraint:` and `TBD:` in an English artifact. Apply the constraint label to every user-confirmed production constraint, including a supplied numeric constraint. Do not include untagged Production Frame items, inferred constraints, gameplay targets, or balance guesses.
 
 ## Caps
 
@@ -47,7 +47,7 @@ Do not include:
 - Technical stack decisions.
 - Formulas.
 - Unsupported numeric claims.
-- Estimated schedules, budgets, staffing plans, content inventories, market sizes, or revenue forecasts. A number the user supplied as a hard production constraint is allowed when attributed as such.
+- Estimated schedules, budgets, staffing plans, content inventories, market sizes, or revenue forecasts. A number the user supplied as a hard production constraint is allowed only with the language-matched constraint label.
 
 ## Completion
 
