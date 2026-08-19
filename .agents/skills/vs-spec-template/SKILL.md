@@ -51,7 +51,7 @@ Block the draft when it contains:
 - A target presented as verified, or without a vertical-slice validation method.
 - A scope estimate presented as a VS requirement instead of being recorded in `docs/game/3-scope-estimate.md`.
 - Meta sections such as "what this document decides" or "what this document does not decide".
-- Stage 4 detail docs or instructions to write them before the slice is validated.
+- Stage 4 decision records or implementation specs, or instructions to write them before the slice is validated.
 
 ## Completion
 

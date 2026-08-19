@@ -24,7 +24,7 @@ Keep one living document with these sections:
 - Absolute cap: 3 pages. This is a maximum, not a target or minimum.
 - Detail only the current production batch and its completion evidence.
 - Keep later work at approved-scope summary level; do not create a full content matrix, fixed long-range schedule, or full-game backlog.
-- Keep Stage 4 detail docs separate. This plan may point to a VS-validated system that needs a detail record, but must not specify an unvalidated system.
+- Keep Stage 4 decision records and implementation specs separate from this plan. Under `Current Batch`, point to a VS-validated system that needs a decision record or a current-batch implementation spec, but do not define system behavior here or specify an unvalidated system.
 
 ## Evidence And Updates
 
@@ -50,7 +50,7 @@ Keep one living document with these sections:
 - Throughput, quality evidence, or readiness is invented.
 - A universal throughput threshold or generic release checklist is introduced.
 - A material scope change that has not passed the `AGENTS.md` boundary is written as approved.
-- Unvalidated Stage 4 system detail or automated project termination is added.
+- Unvalidated Stage 4 artifact, implementation-spec behavior inside the plan, or automated project termination is added.
 
 ## Completion
 

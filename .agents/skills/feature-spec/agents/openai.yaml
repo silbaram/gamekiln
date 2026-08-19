@@ -1,0 +1,4 @@
+interface:
+  display_name: "Feature Spec"
+  short_description: "Write one validated Stage 4 implementation spec"
+  default_prompt: "Use $feature-spec to write one implementation-ready spec for the current production batch."

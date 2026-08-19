@@ -10,6 +10,11 @@ const { cumulativeComponents } = require("../lib/component-tiers");
 const ROOT = path.resolve(__dirname, "..");
 const CLI = path.join(ROOT, "bin", "create-gamekiln.js");
 const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "gamekiln-smoke-"));
+const EXPECTED_CUMULATIVE_COUNTS = Object.freeze({
+  1: Object.freeze({ agents: 4, skills: 5 }),
+  2: Object.freeze({ agents: 7, skills: 9 }),
+  3: Object.freeze({ agents: 11, skills: 15 }),
+});
 
 function namesIn(dir, extension) {
   if (!fs.existsSync(dir)) return [];
@@ -36,6 +41,10 @@ function runScaffold(target, args) {
 function assertTier(target, tier, providers) {
   const expectedAgents = cumulativeComponents(tier, "agents").sort();
   const expectedSkills = cumulativeComponents(tier, "skills").sort();
+  const expectedCounts = EXPECTED_CUMULATIVE_COUNTS[tier];
+
+  assert.strictEqual(expectedAgents.length, expectedCounts.agents);
+  assert.strictEqual(expectedSkills.length, expectedCounts.skills);
 
   assert.deepStrictEqual(namesIn(path.join(target, ".agents", "skills"), ""), expectedSkills);
 
@@ -59,11 +68,17 @@ try {
   const tier3 = scaffold("tier3-all", ["--tier=3"]);
   assertTier(tier3, "3", ["codex", "claude", "gemini"]);
   for (const skillPath of [
+    path.join(tier3, ".agents", "skills", "feature-spec", "SKILL.md"),
+    path.join(tier3, ".claude", "skills", "feature-spec", "SKILL.md"),
     path.join(tier3, ".agents", "skills", "production-plan", "SKILL.md"),
     path.join(tier3, ".claude", "skills", "production-plan", "SKILL.md"),
   ]) {
-    assert.ok(fs.existsSync(skillPath), `missing production-plan skill: ${skillPath}`);
+    assert.ok(fs.existsSync(skillPath), `missing Tier 3 skill: ${skillPath}`);
   }
+  assert.ok(
+    fs.existsSync(path.join(tier3, "docs", "game", "specs", ".gitkeep")),
+    "missing specs output directory"
+  );
   assert.match(
     fs.readFileSync(path.join(tier3, "CLAUDE.md"), "utf8"),
     /\.claude\/skills\/production-plan\/SKILL\.md/

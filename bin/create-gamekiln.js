@@ -197,6 +197,7 @@ function scaffold({ target, provider, tier }) {
   copyPath(path.join("docs", "harness"), targetRoot);
   copyPath(path.join("docs", "decisions", ".gitkeep"), targetRoot, { overwrite: false });
   copyPath(path.join("docs", "game", "details", ".gitkeep"), targetRoot, { overwrite: false });
+  copyPath(path.join("docs", "game", "specs", ".gitkeep"), targetRoot, { overwrite: false });
   copyPath(path.join("game", ".gitkeep"), targetRoot, { overwrite: false });
   copyPath(path.join("prototypes", "learnings.md"), targetRoot, { overwrite: false });
   copyPath(path.join("prototypes", "assumptions.md"), targetRoot, { overwrite: false });
