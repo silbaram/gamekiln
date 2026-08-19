@@ -46,9 +46,10 @@ node bin/create-gamekiln.js ./my-game --tier 3
 | --- | --- | --- |
 | 기본 / `--tier 1` | `macro-designer`, `prototype-coder`, `cycle-reviewer`, `stage-router` | pitch, macro, macro review, hypothesis, disposable prototype |
 | `--tier 2` | `tech-decider`, `vs-spec-writer`, `scope-estimator` | playtest log, tech decision, VS spec, scope estimate |
-| `--tier 3` | `art-director`, `decision-recorder`, `kill-arbiter` | art direction, decision record, production plan, forbidden meta sections, kill criteria |
+| `--tier 3` | `art-director`, `decision-recorder`, `kill-arbiter`, `spec-writer` | art direction, decision record, feature spec, production plan, forbidden meta sections, kill criteria |
 
 각 행은 누적 설치입니다. `docs/harness/`의 상위 Tier 명세는 참고 자료로 복사되지만, provider agent나 runtime skill 선택 후보로 노출되지는 않습니다.
+Tier 3까지 누적하면 provider agent 11개와 runtime skill 15개입니다. 저작 저장소 전용 `harness-subagents`는 이 runtime skill 수와 스캐폴드에서 제외됩니다.
 
 ## 메인 루프 스킬과 서브에이전트
 
@@ -63,6 +64,7 @@ Tier 1은 실행 중 사용자 입력이 필요한지에 따라 역할을 의도
 | Stage 2 사이클 리뷰 | `cycle_reviewer` 서브에이전트 | 현재 Risk와 누적 근거를 검토하고 `risk-resolved`/retry/regress/kill 중 하나를 추천합니다. |
 | 단계 라우팅 | `stage_router` 서브에이전트 | 프로젝트 상태를 읽고 다음 Risk, Stage 2 exit review, 또는 다음 구성 요소 하나를 추천합니다. |
 | Stage 4–5 프로덕션 계획 | 메인 에이전트 + `production-plan` 스킬 | 실제 batch 근거와 중대한 scope 변경에는 사용자 판단이 필요합니다. |
+| Stage 4 구현 스펙 | `spec-writer` 서브에이전트 + `feature-spec` 스킬 | current batch의 validated system 또는 콘텐츠 카테고리 하나를 구현·테스트 가능한 계약으로 작성합니다. |
 
 스캐폴드에는 `concept-interviewer`나 `cycle-planner` 제공자 서브에이전트 파일이 없습니다. 이 역할들은 위의 두 메인 루프 스킬로 표현됩니다.
 
@@ -79,7 +81,9 @@ Tier 1은 실행 중 사용자 입력이 필요한지에 따라 역할을 의도
 
 Stage 3는 기술 결정 → 아트 방향 → 전체 명세를 모두 끝내는 고정 순서가 아닙니다. 먼저 Slice Goal, 현재 가장 큰 Production Risk, 다음 Playable Increment를 짧게 잡고, 그 증분을 막는 기술·시각·구조 위험만 해소한 뒤 바로 제작·측정합니다. `3-vertical-slice-spec.md`는 최대 15페이지의 점진 문서이며 기술·아트·아키텍처 문서는 blocker일 때만 만듭니다.
 
-Stage 3 gate를 사용자가 확인하면 Tier 3의 `production-plan` 스킬이 최대 3페이지 안에서 승인 scope, 현재 production batch, estimate-vs-actual, 품질 근거, scope change 제안, 다음 gate를 관리합니다. 다음 여러 batch의 상세 일정이나 공통 처리량·출시 임계값은 만들지 않습니다. Stage 4–5에서도 근거에 따라 proceed/retry/regress/kill을 검토합니다.
+Stage 3 gate를 사용자가 확인하면 Tier 3의 `production-plan` 스킬이 최대 3페이지 안에서 승인 scope, 현재 production batch, estimate-vs-actual, 품질 근거, scope change 제안, 다음 gate를 관리합니다. `decision-recorder`는 검증된 결정과 근거를 `details/`에 기록하고, `spec-writer`는 그 결정을 참조해 현재 batch가 필요로 하는 시스템 또는 콘텐츠 카테고리 하나를 `specs/`에 구현 가능한 형태로 확장합니다. 스펙은 밸런스 값을 복제하지 않고 `game/` 데이터 스키마만 정의하며, 모든 Rule을 테스트 가능한 Acceptance Criteria에 연결합니다. 다음 여러 batch의 상세 일정이나 공통 처리량·출시 임계값은 만들지 않습니다. Stage 4–5에서도 근거에 따라 proceed/retry/regress/kill을 검토합니다.
+
+Phase B의 `spec-auditor`는 구현 스펙 3개 이상과 실제 갭·drift 사례가 생긴 뒤 추가합니다. 현재 Tier 3은 자동 갭·drift 감사를 포함하지 않습니다.
 
 사용자 확인 없이 단계를 진행하거나, 프로젝트를 종료하거나, 중대한 범위 확대·축소를 적용하지 마세요.
 
@@ -87,16 +91,7 @@ Stage 3 gate를 사용자가 확인하면 Tier 3의 `production-plan` 스킬이 
 
 Claude Code는 `.claude/skills/<skill>/SKILL.md`에서 스킬을 로드합니다. 과거의 심볼릭 링크 기반 레이아웃은 Git의 심볼릭 링크 지원이 꺼진 Windows 체크아웃에서 작은 텍스트 파일로 바뀌어 스킬 프리로드가 조용히 비활성화될 수 있습니다.
 
-GameKiln은 이제 이 저작 저장소에서 로드되어야 하는 Claude 스킬을 실제 복사 디렉터리로 둡니다.
-
-- `disposable-prototype`
-- `forbidden-in-macro`
-- `harness-subagents`(저작 저장소 전용)
-- `macro-design-5p`
-- `pitch-one-pager`
-- `prototype-hypothesis`
-
-`harness-subagents`는 일반 게임 프로젝트로 스캐폴딩되지 않습니다. 이 스킬은 하네스 자체를 저작하고 리뷰하기 위한 것입니다. 스캐폴더는 새 프로젝트에 다섯 개 Tier 1 런타임 스킬만 복사합니다.
+GameKiln은 누적 Tier registry에 등록된 모든 runtime skill을 이 저작 저장소의 `.claude/skills/`에 실제 복사 디렉터리로 둡니다. `harness-subagents`도 저작 저장소 전용 실제 복사본으로 유지하지만 일반 게임 프로젝트에는 포함하지 않습니다. 스캐폴더는 사용자가 선택한 Tier까지의 runtime skill만 복사합니다.
 
 로컬 Claude 스킬 복사본은 다음 명령으로 검증합니다.
 

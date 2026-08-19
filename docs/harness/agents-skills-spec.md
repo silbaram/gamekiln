@@ -79,7 +79,7 @@
 - **호출 시점**: 사용자가 의도 불명확하게 요청할 때
 - **Stage 2 출구**: 확인된 `risk-resolved` 뒤에는 다음 Risk 계획 또는 메인 루프 exit review 중 하나만 안내. exit review는 고영향 Risk의 대표성·일관성, 반대 신호/evidence gap, 열린 Risk의 처리 시점, killed hypotheses 충돌을 종합하되 모든 Risk 해결이나 고정 횟수를 요구하지 않음
 - **Stage 3 루프**: exit review의 `stage-3-ready` 사용자 confirm 뒤 Slice Goal, 현재 가장 큰 Production Risk, 다음 Playable Increment를 확인하고, 다음 증분의 제작·측정을 막는 선택만 `tech_decider`, `art_director`, 짧은 기술/구조 spike, 또는 `vs_spec_writer` 갱신으로 해소. 선택 문서가 없다는 이유만으로 제작을 막지 않음
-- **Stage 4–5 루프**: Stage 3 gate 사용자 confirm 뒤 `production-plan`으로 현재 batch를 seed/update하고, 부족한 production/QA/playtest evidence, batch에 필요한 validated decision record, plan 갱신, project-level regress/kill review 중 다음 행동 하나만 안내. 공통 처리량 임계값이나 generic release checklist를 요구하지 않음
+- **Stage 4–5 루프**: Stage 3 gate 사용자 confirm 뒤 `production-plan`으로 현재 batch를 seed/update하고, 부족한 production/QA/playtest evidence, batch에 필요한 validated decision record, 그 record를 참조하는 current-batch implementation spec, plan 갱신, project-level regress/kill review 중 다음 행동 하나만 안내. 스펙은 VS가 검증하지 않은 시스템이나 future batch로 확장하지 않으며, 공통 처리량 임계값이나 generic release checklist를 요구하지 않음
 - **종료 조건**: 다음 행동 1개 명시. Optional Tier agent/skill은 설치됐을 때만 이름으로 라우팅하고, 없으면 누적 Tier 설치 또는 수동 경로를 안내. 대표 VS와 제작 측정이 완성된 뒤에만 `scope_estimator`로 라우팅하며, material scope change와 stage/kill 결과는 사용자 confirm 전 적용하지 않음
 
 ### 스킬 5개
@@ -226,7 +226,7 @@
   - 중요한 수치/공식은 `Observation`/`Measurement`/`Constraint`/`Citation`/`Target` 중 하나로 분류하고, Target은 VS 검증 방법에 연결
   - Constraint/Citation은 이 게임 gameplay 동작 증거가 아니며, 추정은 별도 scope estimate에서만 작성
   - 메타 섹션 금지
-- **검출/차단**: 현재 증분을 넘어 미리 작성한 상세, 모든 직업/전체 콘텐츠 매트릭스/장기 로드맵, 미분류 수치, 검증값처럼 쓴 Constraint/Citation/Target, Stage 4 detail docs
+- **검출/차단**: 현재 증분을 넘어 미리 작성한 상세, 모든 직업/전체 콘텐츠 매트릭스/장기 로드맵, 미분류 수치, 검증값처럼 쓴 Constraint/Citation/Target, Stage 4 decision record 또는 implementation spec
 - **출력 형식**: VS 범위 한정 명세
 
 #### `scope-estimate-method` (구현됨)
@@ -275,10 +275,20 @@
 - **사용 스킬**: `decision-record-1p`, `forbidden-meta-sections`
 - **추가 시점**: Stage 4 진입 시 (= VS 완료 + scope estimate confirm 후)
 
+#### `spec_writer` (구현됨)
+- **단계**: Stage 4
+- **목적**: 현재 production batch가 필요로 하는 VS-validated 시스템 또는 콘텐츠 카테고리 하나를 구현 가능한 스펙으로 작성
+- **입력**: 사용자-confirmed Stage 3 gate + `docs/game/production-plan.md`의 current batch + `docs/game/1-macro-design.md` + 관련 VS 결과 + `docs/game/details/<slug>.md` decision record
+- **산출**: `docs/game/specs/<name>.md` (호출당 시스템 또는 콘텐츠 카테고리 1개)
+- **사용 스킬**: `feature-spec`
+- **중단 조건**: 필수 입력이나 현재 batch 구현을 materially 바꾸는 선택이 없으면 파일을 쓰지 않고 짧은 묶음 질문 목록 반환
+- **추가 시점**: current batch에 필요한 validated decision record는 있으나 구현 스펙이 없을 때
+- **종료 조건**: 필수 섹션 + 모든 Rule의 Acceptance Criteria 대응 + 의존·근거 링크 + 미결정 사항의 명시
+
 #### `kill_arbiter` (구현됨)
 - **단계**: Cross-stage
 - **목적**: 각 단계 kill 조건 자동 검증, 사용자에게 kill/회귀/진행 OK 권고
-- **입력**: 현재 단계 산출물 + `prototypes/learnings.md` + `prototypes/killed-hypotheses.md` + `prototypes/playtest.md` + macro Top Risks 원장 + (있으면) 각 사이클 `iterations.md`; Stage 4–5에서는 `docs/game/production-plan.md` + `docs/game/3-scope-estimate.md` + 관련 detail records + 실제 production/build/QA/playtest 근거
+- **입력**: 현재 단계 산출물 + `prototypes/learnings.md` + `prototypes/killed-hypotheses.md` + `prototypes/playtest.md` + macro Top Risks 원장 + (있으면) 각 사이클 `iterations.md`; Stage 4–5에서는 `docs/game/production-plan.md` + `docs/game/3-scope-estimate.md` + 관련 detail records + current-batch implementation specs + 실제 production/build/QA/playtest 근거
 - **산출**: 읽기 전용 권고 메시지 (진행 / 재시도 / 회귀 / kill 중 1개) + 보존/폐기 자산 목록
 - **사용 스킬**: `kill-criteria`
 - **추가 시점**: 사용자가 kill을 고민하거나 `cycle_reviewer`의 project-level 2차 의견이 필요할 때
@@ -319,7 +329,7 @@
   - full-game estimate를 plan 안에서 재계산하지 않으며 confirmed scope/measurement로 stale해지면 `scope-estimate-method`에 재계산 handoff
   - 공통 throughput 퍼센트나 generic release checklist 없이 프로젝트별 estimate 범위·품질·release evidence를 검토
   - material scope change는 gate와 별도로 기록하고 사용자 confirm 전 승인 scope에 적용하지 않음
-- **검출/차단**: Stage 3 gate confirm 전 작성, 다음 여러 batch 상세/전체 콘텐츠 매트릭스/장기 일정, unvalidated Stage 4 detail, 자동 scope change·stage transition·kill
+- **검출/차단**: Stage 3 gate confirm 전 작성, 다음 여러 batch 상세/전체 콘텐츠 매트릭스/장기 일정, plan 안의 구현 스펙 본문, unvalidated Stage 4 artifact, 자동 scope change·stage transition·kill
 - **출력 형식**: 현재 batch 하나의 living production plan
 
 #### `forbidden-meta-sections` (구현됨)
@@ -338,10 +348,24 @@
   - 메타 섹션 금지, 미검증 가정은 `prototypes/assumptions.md`로 이동 안내만
 - **추가 시점**: Stage 4 진입 시
 
+#### `feature-spec` (구현됨)
+- **단계**: Stage 4
+- **목적**: `docs/game/specs/<name>.md`에서 현재 batch의 시스템 또는 콘텐츠 카테고리 하나를 구현·검증 가능한 계약으로 정의
+- **강제 제약**:
+  - Purpose / Rules / Acceptance Criteria / References 필수, State And Data / Formulas / Edge Cases / Open Questions는 필요할 때만 추가
+  - 모든 Rule에 구현·테스트 가능한 Acceptance Criteria를 1개 이상 연결
+  - 페이지 캡 없이 문서당 시스템 또는 콘텐츠 카테고리 1개와 current-batch-only 범위로 선행 명세 차단
+  - 구현 지시에 근거 라벨을 요구하지 않지만 macro design이나 `details/`의 verified decision과 모순 금지
+  - 밸런스 값은 `game/` 데이터 파일을 단일 소스로 두고 State And Data에는 스키마만 기록; 콘텐츠 카테고리는 프로젝트가 정한 개체 비교 축을 함께 정의
+  - `Depends On`의 기존 스펙을 모두 읽고, 기존 스펙의 exact reference를 검색해 `Used By`를 확인하며, non-`None` reference path를 모두 해소. 없는 관계는 링크를 발명하지 않고 `None`으로 표시
+  - VS가 검증한 시스템의 approved-scope 인스턴스는 허용하고, VS에 없던 신규 시스템은 Stage 3 검증으로 회귀
+  - blocking ambiguity를 지어내지 않고 질문 handoff, non-blocking unknown은 Open Questions에 명시
+- **추가 시점**: decision record와 current batch가 구현 handoff를 요구할 때
+
 #### `kill-criteria` (구현됨)
 - **단계**: Cross-stage
 - **목적**: 각 단계의 kill/회귀 조건 명시 + 보존/폐기 자산 안내
-- **강제 제약**: design-guide §6의 단계별 조건만 사용. Stage 4는 production evidence가 VS/verified decision의 근거를 깨면 Stage 3 회귀를 검토하고, Stage 5는 실제 처리량·품질이 slice/scope/decision 전제를 깨면 Stage 3 또는 관련 Stage 4 회귀를 검토. 방어 가능한 cut/retry/regress 경로가 없을 때만 kill review. 고정 throughput/release 임계값, 증거 없는 kill 권고, 사용자 confirm 없는 확정 차단
+- **강제 제약**: design-guide §6의 단계별 조건만 사용. Stage 4의 repairable decision record·current-batch implementation spec·batch evidence gap은 retry하고, production evidence가 VS/verified decision의 근거를 깨면 Stage 3 회귀를 검토. Stage 5는 실제 처리량·품질이 slice/scope/decision 전제를 깨면 Stage 3 또는 관련 Stage 4 회귀를 검토. 방어 가능한 cut/retry/regress 경로가 없을 때만 kill review. 고정 throughput/release 임계값, 증거 없는 kill 권고, 사용자 confirm 없는 확정 차단
 - **추가 시점**: Kill 판단이 흐려질 때
 
 #### `art-direction-5p` (구현됨)
@@ -391,9 +415,11 @@
 |---|---|---|---|
 | **Tier 1 (필수)** | 4 (+ main-loop skill flow 2) | 5 | **11** |
 | **Tier 2 (1차 확장)** | 3 (+ main-loop skill flow 1) | 4 | **19** |
-| **Tier 3 (partial)** | 3 구현 / 3 대기 (+ main-loop skill flow 1) | 5 구현 / 1 대기 | **28 구현 / 4 대기** |
+| **Tier 3 (partial)** | 4 구현 / 3 대기 (+ main-loop skill flow 1) | 6 구현 / 1 대기 | **30 구현 / 4 대기** |
 
-**시작은 11개.** 기본 scaffold는 이 Tier 1 agent/skill만 노출하고, `--tier 2`와 `--tier 3`이 누적 확장합니다. 현재 Tier 3은 `decision_recorder`, `kill_arbiter`, `art_director`, `production_planner` 메인 루프와 관련 스킬 5개가 구현됐고, 나머지는 트리거 대기입니다.
+**시작은 11개.** 기본 scaffold는 이 Tier 1 agent/skill만 노출하고, `--tier 2`와 `--tier 3`이 누적 확장합니다. 현재 Tier 3은 `decision_recorder`, `spec_writer`, `kill_arbiter`, `art_director`, `production_planner` 메인 루프와 관련 스킬 6개가 구현됐고, 나머지는 트리거 대기입니다.
+
+실제 Tier 3 스캐폴드 registry의 누적 수는 provider agent 11개, runtime skill 15개입니다. 저작 전용 `harness-subagents`와 위 표의 main-loop flow 표기는 이 두 registry 수에 포함하지 않습니다.
 
 ---
 

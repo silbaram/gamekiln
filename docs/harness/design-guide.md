@@ -153,9 +153,9 @@ Cerny가 명시적으로 부정하는 신화들:
 
 실제 근거가 생기면 기존 목표·추정·인용·제약의 이름을 바꾸지 않고 새 관측/측정을 연결합니다. 비수치 Risk/reference/comparison 표와 page cap, section 번호, Risk ID, cycle/version 번호 같은 구조 값은 provenance 태그 대상이 아닙니다.
 
-### 원칙 6: 상세 문서는 vertical slice *이후*에만 작성
+### 원칙 6: Stage 4 산출물은 vertical slice *이후*에만 작성
 
-이게 *단 하나*의 가장 중요한 규칙이에요. 백과사전형 하네스가 가장 크게 빗나간 지점.
+Stage 4는 vertical slice가 검증한 시스템만 다룹니다. Detail doc은 검증된 결정을 기록하고, implementation spec은 그 결정과 모순 없이 승인 범위의 현재 batch 구현을 구체화합니다.
 
 ---
 
@@ -177,7 +177,7 @@ flowchart TD
     S3[Stage 3: Vertical Slice<br/>실제 빌드 일부] -->|만들 수<br/>있다 증명?| S4
     S3 -.->|비용 폭발| S2
 
-    S4[Stage 4: Detail Docs<br/>검증된 결정 기록] -->|현재 batch 준비| S5
+    S4[Stage 4: Micro Design<br/>결정 기록 + 현재 batch 스펙] -->|현재 batch 준비| S5
     S4 -.->|VS 근거가 깨짐| S3
     S4 -.->|지속 불가| Kill4[Kill/Stop]
 
@@ -207,7 +207,7 @@ flowchart TD
 | **1** | 게임 형태 정의 | `macro-design.md` | 5p | 무엇을 검증할까? |
 | **2** | 재미 검증 | `cycle-NN.md` × N + 프로토타입들 | 1p/사이클 | 재미가 있나? |
 | **3** | 제작 가능성 증명 | 플레이 가능한 vertical slice | 빌드 + 25-30p 문서 | 만들 수 있나? |
-| **4** | 검증된 결정 기록 | `details/*.md` (얇음) | 1-2p/시스템 | 무엇이 결정됐나? |
+| **4** | 검증된 결정과 구현 계약 연결 | `details/*.md` + `specs/*.md` | detail 1-2p / spec 범위 기반 | 왜 결정했고 무엇을 만들까? |
 | **5** | 현재 batch 양산·검증 | 본 게임 + `production-plan.md` | plan 3p | 다음 batch/출시가 가능한가? |
 
 ---
@@ -488,29 +488,38 @@ Build + Playtest + Measure
 
 ---
 
-### Stage 4: Detail Docs (수확 단계)
+### Stage 4: Decision Records And Feature Specs (수확 단계)
 
 #### 목적
-**검증된 결정의 기록.** 미래 시스템 스펙이 아닙니다.
+검증된 시스템에 대해 서로 다른 두 질문에 답합니다.
+
+- `details/<slug>.md`: 왜 이 결정을 했는가?
+- `specs/<name>.md`: 현재 production batch에서 무엇을 만들어야 하는가?
 
 #### 작성 트리거
-"코드와 플레이에서 결정이 굳었으니 문서화" — 코드가 먼저, 문서가 뒤.
+- Decision record: 코드와 플레이에서 결정이 굳은 뒤 기록
+- Feature spec: 관련 decision record가 있고 현재 batch의 구현 handoff가 필요할 때 작성
 
 #### 분량과 형식
-- 시스템당 **1-2페이지 캡**
-- "이 문서가 결정하는 것 / 결정하지 않는 것 / 책임 경계" 메타 섹션 **금지**
-- Verified Decision과 그 증명에 쓰는 중요한 수치·공식은 이 게임의 관측/측정에 연결. 분류된 인용·제약·목표·추정은 문맥/이력으로 보존할 수 있지만 gameplay 검증 근거가 아니며 단독 또는 조합만으로 결정을 증명할 수 없음
+- Decision record는 시스템당 **1-2페이지 캡**, 메타 섹션 금지, Verified Decision의 중요한 수치·공식에 이 게임의 관측/측정 연결
+- Feature spec은 페이지 캡 대신 문서당 시스템 또는 콘텐츠 카테고리 1개와 current-batch-only 범위를 강제
+- Feature spec의 모든 Rule은 구현·테스트 가능한 Acceptance Criteria에 연결
+- 밸런스 값은 `game/` 데이터 파일이 단일 소스이며, spec의 State And Data는 스키마만 기록. 콘텐츠 카테고리는 프로젝트가 정한 개체 비교 축을 함께 정의
+- `Depends On`의 기존 스펙을 모두 읽고 exact path로 연결하며, 기존 스펙의 실제 참조를 검색해 `Used By` 역참조를 확인
+- 구현 지시에는 근거 라벨을 요구하지 않고, `References`에서 decision record를 링크
 
 #### 백과사전형 문서와의 비교
 
-같은 자리(`docs/game/details/*.md`)에 들어가지만:
-- 분량 1/20 (1,000줄 → 50줄)
-- 내용은 *과거 결정의 정리*, *미래 스펙* 아님
-- owning artifact의 검증 계획에 연결되지 않은 가정은 별도 `assumptions.md`로 격리. Hypothesis/VS spec의 명시 목표와 scope estimate의 투명한 추정은 검증값으로만 가장하지 않으면 유지
+전체 게임을 미리 설명하지 않습니다.
+
+- `details/`는 검증된 결정만 얇게 기록
+- `specs/`는 현재 batch에 필요한 validated system 하나만 구현 가능할 만큼 완결
+- VS가 검증하지 않은 신규 시스템은 Stage 3 검증으로 회귀
+- blocking ambiguity는 그럴듯하게 채우지 않고 질문 handoff
 
 #### Production handoff
 
-사용자가 Stage 3 gate를 통과 확인하면 메인 에이전트가 `production-plan` 스킬로 `docs/game/production-plan.md`를 시작합니다. 이 문서는 최대 3페이지 안에서 승인 스코프와 **현재 production batch 하나**만 구체화하고, 필요한 VS-validated detail record를 가리킵니다. 전체 콘텐츠 매트릭스나 장기 일정을 미리 만들지 않습니다.
+사용자가 Stage 3 gate를 통과 확인하면 메인 에이전트가 `production-plan` 스킬로 `docs/game/production-plan.md`를 시작합니다. 이 문서는 최대 3페이지 안에서 승인 스코프와 **현재 production batch 하나**만 구체화하고, 필요한 VS-validated decision record와 implementation spec을 가리킵니다. 전체 콘텐츠 매트릭스나 장기 일정을 미리 만들지 않습니다.
 
 ---
 
@@ -546,8 +555,8 @@ Build + Playtest + Measure
 | Stage 1 | → Stage 2 | macro/hypothesis 보강 | → Stage 0 | 폐기 |
 | Stage 2 | `stage-3-ready` + 사용자 confirm → Stage 3 | 같은 사이클 재시도 | → Stage 1 (피벗) | 폐기 |
 | Stage 3 | → Stage 4 | slice/scope 검증 보강 | → Stage 2 (스코프 폭발) | 폐기 |
-| Stage 4 | current batch 준비 → Stage 5 | 현재 decision/batch 근거 보강 | → Stage 3 또는 관련 decision (VS 근거 파손) | 방어 가능한 승인 scope 없음 |
-| Stage 5 | 다음 batch 또는 출시 | 같은 batch의 품질/공정 보강 | → Stage 3 또는 관련 Stage 4 decision (실측이 전제 파손) | cut/retry/regress로도 완주 근거 없음 |
+| Stage 4 | current batch 준비 → Stage 5 | 현재 decision/spec/batch 근거 보강 | → Stage 3 또는 관련 decision (VS 근거 파손) | 방어 가능한 승인 scope 없음 |
+| Stage 5 | 다음 batch 또는 출시 | 같은 batch의 spec/품질/공정 보강 | → Stage 3 또는 관련 Stage 4 decision (실측이 전제 파손) | cut/retry/regress로도 완주 근거 없음 |
 
 ### 6.2 Stage 2 → Stage 1 회귀 패턴
 
@@ -630,11 +639,12 @@ Cross-stage Agents (단계 무관 게이트키퍼)
 | `playtest_coordinator` | 외부 플레이테스트 5-10명 조직/수집 | VS 빌드 | 테스트 보고서 |
 | `scope_estimator` | 완성된 대표 VS 측정과 전체 게임 목표로 투명한 추정 | 기록된 VS 제작 결과 + 명시 목표 수량 | `scope-estimate.md` (최대 3p) |
 
-### 7.6 Stage 4: Detail Docs
+### 7.6 Stage 4: Decision Records And Feature Specs
 
 | 에이전트 | 역할 | 입력 | 산출 |
 |---|---|---|---|
-| `decision_recorder` | 검증된 결정을 1-2p 문서로 정리 | VS 빌드 + spec | `details/<slug>.md` (1-2p) |
+| `decision_recorder` | 검증된 결정을 1-2p 문서로 정리 | VS 빌드 + `3-vertical-slice-spec.md` + 검증 근거 | `details/<slug>.md` (1-2p) |
+| `spec_writer` | current batch의 validated system을 구현 계약으로 작성 | macro + VS 결과 + decision record + production plan | `specs/<name>.md` |
 | `detail_reviewer` | 메타 섹션 없음 / 분량 캡 / 검증 출처 검증 | detail doc | 통과/재작성 |
 | `assumption_separator` | 미검증 가정을 별도 파일로 격리 | detail doc 초안 | `assumptions.md` 갱신 |
 
@@ -643,7 +653,7 @@ Cross-stage Agents (단계 무관 게이트키퍼)
 | 에이전트 | 역할 | 입력 | 산출 |
 |---|---|---|---|
 | `production_planner` (메인 루프 스킬 흐름) | 승인 scope와 현재 batch의 실측·gate 갱신 | scope estimate + 실제 production evidence + 사용자 scope 결정 | `production-plan.md` (최대 3p) |
-| `content_pipeline` | 카드/적/유물 배치 양산 | detail docs + VS 패턴 | 콘텐츠 데이터 파일 |
+| `content_pipeline` | 카드/적/유물 배치 양산 | feature specs + detail records + VS 패턴 | 콘텐츠 데이터 파일 |
 | `balance_tuner` | 텔레메트리 기반 밸런스 조정 | 플레이 데이터 | 수치 패치 |
 | `playtest_aggregator` | 외부 피드백 분석 | 플레이테스트 | 우선순위 이슈 목록 |
 
@@ -735,6 +745,7 @@ Cross-stage Agents (단계 무관 게이트키퍼)
 | 스킬 | 내용 |
 |---|---|
 | `decision-record-1p` | 1-2p 캡, 메타 섹션 금지, 검증 출처 필수 |
+| `feature-spec` | current-batch-only 시스템 1개, Rule↔Acceptance Criteria, schema-only 데이터 계약 |
 | `forbidden-meta-sections` | "이 문서가 결정하는 것/안 하는 것/책임 경계" 검출 |
 | `verified-source-required` | Stage 4 verified gameplay/system 수치에 이 게임의 관측 또는 측정 강제 |
 
@@ -772,6 +783,7 @@ Cross-stage Agents (단계 무관 게이트키퍼)
 | `vs_spec_writer` | `vs-spec-template` | `vs-only-validator` |
 | `scope_estimator` | `scope-estimate-method` | — |
 | `decision_recorder` | `decision-record-1p` | `forbidden-meta-sections`, `verified-source-required` |
+| `spec_writer` | `feature-spec` | — |
 | `production_planner` (메인 루프 스킬 흐름) | `production-plan` | `kill-criteria` |
 | `stage_router` | `stage-gate-validator` | — |
 | `kill_arbiter` | `kill-criteria` | — |
@@ -800,8 +812,10 @@ my-game/
 │   │   ├── 3-vertical-slice-spec.md # Stage 3, 점진 갱신
 │   │   ├── 3-scope-estimate.md     # Stage 3, 대표 VS 측정 후
 │   │   ├── production-plan.md      # Stage 4-5, 현재 batch living plan (최대 3p)
-│   │   └── details/                # Stage 4 (얇은 detail docs)
-│   │       └── *.md                # 각 1-2p
+│   │   ├── details/                # Stage 4, 검증된 결정과 근거
+│   │   │   └── *.md                # 각 1-2p
+│   │   └── specs/                  # Stage 4, current-batch 구현 스펙
+│   │       └── *.md                # 시스템/콘텐츠 카테고리당 1개
 │   │
 │   └── decisions/
 │       └── stage-transitions.md    # 단계 전환 이력
@@ -877,8 +891,8 @@ my-game/
 **Q4. 기획서 없이 프로토타입을 어떻게 만드나?**
 Stage 1의 5페이지 macro design이 *충분합니다*. 그것보다 더 많이 알아야 한다면 그건 Stage 2에서 *발견될* 정보예요. 미리 적으면 거의 항상 틀립니다.
 
-**Q5. Stage 4 detail docs를 안 만들어도 되나?**
-Stage 5(production)와 외부 협업자(아티스트, 다른 프로그래머)가 있을 때 필요해집니다. 1인 개발이면 코드 자체가 문서가 되어 Stage 4가 짧아질 수 있어요. 다만 *검증된 결정의 기록*으로서는 항상 가치 있습니다.
+**Q5. Stage 4 문서를 안 만들어도 되나?**
+Decision record는 나중에 결정 근거를 확인하게 하고, feature spec은 지금 구현하는 팀원이나 agent의 모호성을 제거합니다. 현재 batch에 구현 handoff가 필요하면 둘을 구분해 작성하되, 미래 batch나 미검증 시스템까지 선행 명세하지 않습니다.
 
 ---
 

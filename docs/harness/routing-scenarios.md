@@ -31,6 +31,8 @@
 | Stage 3 gate confirm + production-plan skill 미설치 | 누적 `--tier 3` 설치 또는 현재 batch만 담는 수동 production plan 안내 |
 | Stage 3 gate confirm + production-plan skill 설치 + `docs/game/production-plan.md` 없음 | 메인 에이전트가 `production-plan` 스킬로 현재 batch를 seed |
 | production plan의 현재 batch가 VS-validated system 기록을 필요로 함 + decision agent 설치 | 해당 시스템 하나만 `decision_recorder` |
+| current batch가 validated system의 구현 스펙을 필요로 함 + 관련 decision record 있음 + spec agent 설치 + `docs/game/specs/<name>.md` 없음 | 해당 시스템 또는 콘텐츠 카테고리 하나만 `spec_writer` |
+| current batch가 구현 스펙을 필요로 함 + spec agent 미설치 | 누적 `--tier 3` 설치 또는 같은 current-batch-only 수동 스펙 경로 안내 |
 | 현재 batch의 build/품질/playtest 근거가 아직 없음 | 필요한 근거 하나를 만드는 ordinary production/QA/playtest 작업 |
 | 현재 batch의 새 실측 근거가 있지만 production plan에 반영되지 않음 | 메인 에이전트가 `production-plan` 스킬로 estimate-versus-actual과 gate snapshot 갱신 |
 | confirmed scope 또는 새 실측으로 기존 scope estimate가 stale | 기존 estimate를 plan에서 덮어쓰지 않고 `scope_estimator`로 재계산 |
@@ -55,7 +57,7 @@
 | 열린 Risk가 있지만 Vertical Slice로 미뤄도 된다는 근거가 있음 | 열린 Risk만으로 차단하지 말고 exit review에서 처리 시점의 타당성을 판단 |
 | 성공 사이클이 여러 번이라는 이유만으로 Stage 3 진입을 요청 | 고정 횟수를 readiness로 취급하지 말고 누적 근거의 대표성·일관성을 검토 |
 | `stage-3-ready` 권고처럼 보이나 사용자 confirm이 없음 | Stage 3 컴포넌트로 보내지 말고 사용자 confirm 요청 |
-| scope estimate는 있지만 Stage 3 gate 사용자 confirm이 없음 | production plan이나 detail docs를 시작하지 않고 Stage 3 gate 질문 제시 |
+| scope estimate는 있지만 Stage 3 gate 사용자 confirm이 없음 | production plan이나 Stage 4 decision record·implementation spec을 시작하지 않고 Stage 3 gate 질문 제시 |
 | Stage 3 gate는 confirm됐지만 approved-scope basis가 없음 | 승인만으로 scope를 추정하지 않고 `scope_estimator` 입력/측정 gap을 보고 |
 | reviewer가 retry를 권고했는데 사용자가 kill을 물어봄 | `kill_arbiter`로 2차 의견을 받되, 최종 결정은 사용자 confirm |
 | `3-tech-decision.md`가 없지만 선택이 사용자 제약/기존 프로젝트로 확정됐고 기술 blocker도 없음 | 문서 생성을 요구하지 않고 다음 Increment 명세 또는 production으로 라우팅 |
@@ -64,5 +66,9 @@
 | VS spec이 15페이지보다 짧음 | 현재 Increment를 제작·측정하기에 충분하면 분량을 채우게 하지 않음 |
 | 실제 처리량이 VS estimate와 다름 | 고정 퍼센트로 자동 회귀하지 않고 현재 estimate 범위·품질·release 조건이 방어 가능한지 검토 |
 | production plan이 다음 여러 batch의 상세 일정/전체 콘텐츠 매트릭스를 포함함 | 현재 batch 밖 상세를 제거하고 승인 scope 요약만 유지 |
+| current batch 스펙이 필요하지만 관련 verified decision record가 없음 | `spec_writer`보다 해당 시스템 하나의 `decision_recorder`를 먼저 안내 |
+| future batch의 스펙이 없다는 이유만으로 선행 작성을 요청 | 현재 batch에 필요하지 않으면 `spec_writer`로 라우팅하지 않음 |
+| VS가 시스템을 검증하지 않았는데 구현 스펙 작성을 요청 | 스펙을 쓰지 않고 해당 시스템의 Stage 3 검증으로 회귀 |
+| VS가 시스템의 대표 인스턴스만 검증했고 승인 scope 안의 나머지 인스턴스 스펙이 필요 | 신규 시스템으로 취급하지 않고 `spec_writer` 허용 |
 | material scope cut이 제안됐지만 사용자 confirm이 없음 | 승인 scope에 적용하지 않고 `Scope Change` 제안으로만 기록 |
 | approved scope 안에서 batch 순서만 바뀜 | material scope change confirm을 요구하지 않고 plan 갱신 허용 |

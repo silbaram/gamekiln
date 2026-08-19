@@ -21,6 +21,7 @@
     "docs/harness/",
     "docs/decisions/.gitkeep",
     "docs/game/details/.gitkeep",
+    "docs/game/specs/.gitkeep",
     "game/.gitkeep",
     "prototypes/learnings.md",
     "prototypes/assumptions.md",

@@ -58,6 +58,15 @@ function entriesByName(dirPath) {
   );
 }
 
+function assertExactSkillSet(rootDir, label) {
+  const expected = new Set(CLAUDE_SKILL_COPIES);
+  for (const entry of fs.readdirSync(rootDir, { withFileTypes: true })) {
+    if (!expected.has(entry.name)) {
+      fail(`unexpected ${label}: ${relative(path.join(rootDir, entry.name))}`);
+    }
+  }
+}
+
 function compareDirectories(canonicalDir, claudeDir, skill, subdir = "") {
   const canonicalCurrent = path.join(canonicalDir, subdir);
   const claudeCurrent = path.join(claudeDir, subdir);
@@ -112,6 +121,9 @@ function compareDirectories(canonicalDir, claudeDir, skill, subdir = "") {
     fail(`unsupported file type in skill directory (${skill}): ${relative(claudePath)}`);
   }
 }
+
+assertExactSkillSet(path.join(ROOT, ".agents", "skills"), "canonical skill entry");
+assertExactSkillSet(path.join(ROOT, ".claude", "skills"), "Claude skill entry");
 
 for (const skill of CLAUDE_SKILL_COPIES) {
   const canonicalDir = path.join(ROOT, ".agents", "skills", skill);
