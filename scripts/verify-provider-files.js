@@ -61,7 +61,7 @@ const AGENT_REQUIRED_TERMS = Object.freeze({
 });
 
 function read(relativePath) {
-  return fs.readFileSync(path.join(ROOT, relativePath), "utf8");
+  return fs.readFileSync(path.join(ROOT, relativePath), "utf8").replace(/\r\n/g, "\n");
 }
 
 function agentNames(provider, extension) {
@@ -100,7 +100,14 @@ for (const agent of AGENTS) {
   assert.strictEqual(yamlValue(claude, "description"), codexDescription[1]);
   assert.ok(yamlValue(claude, "tools"));
   assert.ok(yamlValue(claude, "maxTurns"));
-  assert.deepStrictEqual(yamlList(claude, "skills"), CLAUDE_SKILLS[agent] || []);
+  const expectedClaudeSkills = CLAUDE_SKILLS[agent] || [];
+  const declaredClaudeSkills = yamlList(claude, "skills");
+  assert.strictEqual(
+    declaredClaudeSkills.length,
+    expectedClaudeSkills.length,
+    `${agent}: expected ${expectedClaudeSkills.length} Claude skills, found ${declaredClaudeSkills.length}`
+  );
+  assert.deepStrictEqual(declaredClaudeSkills, expectedClaudeSkills);
 
   assert.strictEqual(yamlValue(gemini, "name"), agent);
   assert.strictEqual(yamlValue(gemini, "description"), codexDescription[1]);

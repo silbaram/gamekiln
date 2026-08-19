@@ -19,3 +19,4 @@
 2026-08-18 | 마찰 — Stage 3의 고정 산출물 순서가 blocker 유무와 무관하게 기술·아트·전체 명세를 제작 전에 요구 | 출처 — Issue #15 라우팅 검토
 2026-08-18 | 마찰 — scope estimate 최대 분량이 참고 명세에만 있고 runtime skill이 없어 scaffolded agent가 cap을 받지 못함 | 출처 — Issue #15 최종 리뷰
 2026-08-18 | 마찰 — Stage 4–5 런타임이 production plan과 batch 라우팅 없이 끝나고 regression/kill을 해당 없음으로 고정 | 출처 — Issue #16 검토
+2026-08-19 | 마찰 — provider 검증기가 CRLF의 다항목 Claude skills 목록을 첫 항목까지만 파싱하고 자동 게이트에서도 누락 | 출처 — Issue #25 Windows 체크아웃 재현
