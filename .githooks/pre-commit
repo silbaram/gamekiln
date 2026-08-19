@@ -9,3 +9,13 @@ if [ "$status" -ne 0 ]; then
   echo "fix: copy .agents/skills/<name> to .claude/skills/<name>, then run npm run verify:claude-skills"
   exit "$status"
 fi
+
+node scripts/verify-provider-files.js
+status=$?
+
+if [ "$status" -ne 0 ]; then
+  echo ""
+  echo "Provider definitions are invalid or out of sync."
+  echo "fix: run npm run verify:providers and update the Codex, Claude, and Gemini agent definitions together"
+  exit "$status"
+fi

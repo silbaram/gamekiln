@@ -154,6 +154,8 @@ npm run smoke
 npm pack --dry-run
 ```
 
+CI는 push와 pull request에서 앞의 세 검증 명령을 실행합니다. pre-commit 훅은 `verify:claude-skills`와 `verify:providers`를 실행하며, `npm pack --dry-run`은 배포 전 수동 확인입니다.
+
 `npm run smoke`는 임시 디렉터리에서 Tier 1/2/3의 누적 agent/skill 수와 provider 노출을 검증합니다.
 
 `.agents/skills/`를 수정할 때는 커밋 전에 `.claude/skills/` 아래의 대응되는 실제 디렉터리 복사본도 다시 동기화하세요.

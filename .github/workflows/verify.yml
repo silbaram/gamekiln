@@ -16,5 +16,7 @@ jobs:
           node-version: 18.x
       - name: Verify Claude skill copies
         run: npm run verify:claude-skills
+      - name: Verify provider definitions
+        run: npm run verify:providers
       - name: Smoke test scaffold
         run: npm run smoke
